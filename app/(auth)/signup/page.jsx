@@ -28,8 +28,8 @@ export default function SignUp() {
   };
   return (
     <main>
-      <h2 className="text-center">Sign Up</h2>
-      <AuthForm handleSubmit={handleSubmit} />
+      <h5 className="text-center text-xl my-4">Sign Up</h5>
+      <AuthForm isSignUp={true} handleSubmit={handleSubmit} />
       {error && <div className="error">{error}</div>}
     </main>
   );

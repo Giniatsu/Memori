@@ -2,6 +2,7 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import Navigationbar from "../components/Navbar";
 
 export default async function AuthLayout({ children }) {
   const supabase = createServerComponentClient({ cookies });
@@ -12,11 +13,7 @@ export default async function AuthLayout({ children }) {
   }
   return (
     <>
-      <nav>
-        <h1>GraveFinder</h1>
-        <Link href="/signup">Sign Up</Link>
-        <Link href="/login">Log in</Link>
-      </nav>
+      <Navigationbar />
       {children}
     </>
   );

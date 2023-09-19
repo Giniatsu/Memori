@@ -26,9 +26,9 @@ export default function Login() {
     };
   return (
     <main>
-      <h2 className="text-center">Log in</h2>
+      <h5 className="text-center text-xl my-4">Log in</h5>
 
-      <AuthForm handleSubmit={handleSubmit} />
+      <AuthForm isSignUp={false} handleSubmit={handleSubmit} />
       {error && <div className="error">{error}</div>}
     </main>
   );
