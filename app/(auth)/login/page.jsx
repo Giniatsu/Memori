@@ -9,21 +9,21 @@ export default function Login() {
     const router = useRouter();
     const [error, setError] = useState("");
     const handleSubmit = async (e, email, password) => {
-      e.preventDefault();
-      setError("");
+      e.preventDefault()
+      setError('')
 
       const supabase = createClientComponentClient();
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
-      });
+      })
       if (error) {
         setError(error.message);
       }
       if (!error) {
-        router.push("/");
+        router.push("/")
       }
-    };
+    }
   return (
     <main>
       <h5 className="text-center text-xl my-4">Log in</h5>

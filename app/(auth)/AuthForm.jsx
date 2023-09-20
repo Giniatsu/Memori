@@ -4,9 +4,10 @@ import { Button, Card, Checkbox, Label, TextInput } from "flowbite-react";
 import Link from "next/link";
 import { useState } from "react"
 
-export default function AuthForm(props,{ handleSubmit }) {
+export default function AuthForm(props) {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const { handleSubmit } = props
   return (
     <div className="flex justify-center items-center">
       <Card className="w-3/4 max-w-sm">
