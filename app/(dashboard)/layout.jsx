@@ -3,8 +3,6 @@ import { cookies } from "next/headers";
 
 // components
 import Navigationbar from "@/app/components/Navbar";
-import { redirect } from "next/navigation";
-import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
