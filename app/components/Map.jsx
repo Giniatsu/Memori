@@ -49,8 +49,8 @@ function MyComponent() {
 
     // State for the target's position
     const [targetPosition, setTargetPosition] = React.useState({
-        lat: 7.076674,
-        lng: 125.597120,
+      lat: 7.077117,
+      lng: 125.596862,
     });
 
     const [centerPosition, setCenterPosition] = React.useState(center);
