@@ -1,6 +1,8 @@
 "use client"
 
 import { Button, Card, Checkbox, Label, TextInput } from "flowbite-react";
+import { HiMail } from "react-icons/hi";
+import { RiLockPasswordFill } from "react-icons/ri";
 import Link from "next/link";
 import { useState } from "react"
 
@@ -23,6 +25,7 @@ export default function AuthForm(props) {
               <Label value="Your email" />
             </div>
             <TextInput
+              icon={HiMail}
               type="email"
               onChange={(e) => setEmail(e.target.value)}
               value={email}
@@ -35,6 +38,7 @@ export default function AuthForm(props) {
               <Label value="Your password" />
             </div>
             <TextInput
+              icon={RiLockPasswordFill}
               type="password"
               onChange={(e) => setPassword(e.target.value)}
               value={password}
