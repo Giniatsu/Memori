@@ -36,7 +36,7 @@ export default function Search() {
               First name
             </Label>
           </div>
-          <div class="relative z-0 w-full group">
+          <div className="relative z-0 w-full group">
             <TextInput
               type="text"
               name="last_name"
@@ -85,7 +85,7 @@ export default function Search() {
             </Label>
           </div>
           <div className="col-span-2">
-            <div class="relative z-0 w-full mb-6 group">
+            <div className="relative z-30 w-full mb-6 group">
               <Datepicker id="birthpicker" title="Birth" />
               <Label
                 htmlfor="birthpicker"
@@ -94,7 +94,7 @@ export default function Search() {
                 Birth
               </Label>
             </div>
-            <div class="relative z-0 w-full mb-6 group">
+            <div className="relative z-20 w-full mb-6 group">
               <Datepicker id="deathpicker" title="Death" />
               <Label
                 htmlfor="deathpicker"
@@ -103,7 +103,7 @@ export default function Search() {
                 Death
               </Label>
             </div>
-            <div class="relative z-0 w-full mb-2 group">
+            <div className="relative z-10 w-full mb-2 group">
               <Datepicker id="internmentpicker" title="Internment" />
               <Label
                 htmlfor="internmentpicker"
@@ -113,12 +113,14 @@ export default function Search() {
               </Label>
             </div>
           </div>
+          <div className="z-0">
             <Link href="">
               <Button>
                 <FaSearchLocation className="mr-2 h-5 w-5" />
                 <p>Search</p>
               </Button>
             </Link>
+          </div>
         </form>
       </Card>
     </div>
