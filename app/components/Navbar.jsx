@@ -81,7 +81,6 @@ export default function Navigationbar({ user }) {
               />
             }
           >
-            <Dropdown.Divider />
             <Dropdown.Item>
               <Link href="/signup">Sign Up</Link>
             </Dropdown.Item>
