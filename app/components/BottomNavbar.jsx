@@ -8,12 +8,11 @@ import { MdAccountCircle } from "react-icons/md";
 
 export default function BottomNavbar() {
   return (
-    <div className="fixed z-50 w-full h-16 max-w-lg -translate-x-1/2 bg-white border border-gray-200 rounded-full bottom-4 left-1/2 dark:bg-gray-700 dark:border-gray-600">
-      <div className="grid h-full max-w-lg grid-cols-5 mx-auto">
+    <div className="fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-gray-200 dark:bg-gray-700 dark:border-gray-600">
+      <div className="grid h-full max-w-lg grid-cols-5 mx-auto font-medium">
         <button
-          data-tooltip-target="tooltip-home"
           type="button"
-          className="inline-flex flex-col items-center justify-center px-5 rounded-l-full hover:bg-gray-50 dark:hover:bg-gray-800 group"
+          className="inline-flex flex-col items-center justify-center px-5 border-gray-200 border-x hover:bg-gray-50 dark:hover:bg-gray-800 group dark:border-gray-600"
         >
           <Link href="/">
             <AiFillHome
@@ -21,20 +20,13 @@ export default function BottomNavbar() {
               className="mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
             />
           </Link>
-          <span className="sr-only">Home</span>
+          <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">
+            Home
+          </span>
         </button>
-        <div
-          id="tooltip-home"
-          role="tooltip"
-          className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
-        >
-          Home
-          <div className="tooltip-arrow" data-popper-arrow></div>
-        </div>
         <button
-          data-tooltip-target="tooltip-wallet"
           type="button"
-          className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
+          className="inline-flex flex-col items-center justify-center px-5 border-r border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 group dark:border-gray-600"
         >
           <Link href="/search">
             <FaSearchLocation
@@ -42,36 +34,22 @@ export default function BottomNavbar() {
               className="mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
             />
           </Link>
-          <span className="sr-only">Search</span>
+          <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">
+            Search
+          </span>
         </button>
-        <div
-          id="tooltip-wallet"
-          role="tooltip"
-          className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
-        >
-          Search a grave
-          <div className="tooltip-arrow" data-popper-arrow></div>
-        </div>
-        <div className="flex items-center justify-center">
-          <button
-            data-tooltip-target="tooltip-new"
-            type="button"
-            className="inline-flex items-center justify-center w-10 h-10 font-medium bg-blue-600 rounded-full hover:bg-blue-700 group focus:ring-4 focus:ring-blue-300 focus:outline-none dark:focus:ring-blue-800"
-          >
-            <RiMapPinAddFill size={25} />
-            <span className="sr-only">Contribute</span>
-          </button>
-        </div>
-        <div
-          id="tooltip-new"
-          role="tooltip"
-          className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
-        >
-          Create new grave
-          <div className="tooltip-arrow" data-popper-arrow></div>
-        </div>
+
         <button
-          data-tooltip-target="tooltip-settings"
+          type="button"
+          className="inline-flex flex-col items-center justify-center px-5 border-r border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 group dark:border-gray-600"
+        >
+          <RiMapPinAddFill size={25} />
+          <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">
+            New Item
+          </span>
+        </button>
+
+        <button
           type="button"
           className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
         >
@@ -79,20 +57,13 @@ export default function BottomNavbar() {
             size={25}
             className="mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
           />
-          <span className="sr-only">Settings</span>
+          <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">
+            Settings
+          </span>
         </button>
-        <div
-          id="tooltip-settings"
-          role="tooltip"
-          className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
-        >
-          Settings
-          <div className="tooltip-arrow" data-popper-arrow></div>
-        </div>
         <button
-          data-tooltip-target="tooltip-profile"
           type="button"
-          className="inline-flex flex-col items-center justify-center px-5 rounded-r-full hover:bg-gray-50 dark:hover:bg-gray-800 group"
+          className="inline-flex flex-col items-center justify-center px-5 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 group border-x dark:border-gray-600"
         >
           <Link href="/account">
             <MdAccountCircle
@@ -100,16 +71,10 @@ export default function BottomNavbar() {
               className="mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
             />
           </Link>
-          <span className="sr-only">Profile</span>
+          <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">
+            Profile
+          </span>
         </button>
-        <div
-          id="tooltip-profile"
-          role="tooltip"
-          className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
-        >
-          Profile
-          <div className="tooltip-arrow" data-popper-arrow></div>
-        </div>
       </div>
     </div>
   );
