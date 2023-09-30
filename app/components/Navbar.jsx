@@ -6,14 +6,14 @@ import Link from "next/link";
 import LogoutButton from "./LogoutButton";
 import Image from "next/image";
 
-export default function Navigationbar({ user }) {
+export default function Navigationbar({ user, profile, avatarUrl }) {
   if (user) {
     return (
       <Navbar fluid className="bg-vintage-army">
         <Navbar.Brand href="/">
           {/* <Image
           className="mr-3"
-          src="/"
+          src={avatarUrl}
           alt=""
           width={50}
           height={50}
@@ -26,16 +26,21 @@ export default function Navigationbar({ user }) {
           <Dropdown
             inline
             label={
-              <Avatar
-                alt="User settings"
-                img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-                rounded
-              />
+              <Avatar alt="User settings" rounded>
+                <Image
+                  src={avatarUrl}
+                  alt="Avatar"
+                  width={50}
+                  height={50}
+                />
+
+                {console.log(avatarUrl)}
+              </Avatar>
             }
           >
             <Dropdown.Header>
               <span className="block truncate text-sm font-medium">
-                {user && <span>Hello, {user.email}</span>}
+                <span>Hello, {profile.username}</span>
               </span>
             </Dropdown.Header>
             <Dropdown.Item>Settings</Dropdown.Item>
@@ -76,7 +81,6 @@ export default function Navigationbar({ user }) {
             label={
               <Avatar
                 alt="User settings"
-                img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
                 rounded
               />
             }
@@ -98,28 +102,4 @@ export default function Navigationbar({ user }) {
       </Navbar>
     );
   }
-  
-    
-    /* <nav>
-      <div>
-        <Link href="/">
-          <Image
-            className="mr-3"
-            src="/app/samplelogo.jpg"
-            alt=""
-            width={50}
-            height={50}
-          />
-          <span>GraveFinder</span>
-        </Link>
-        
-        <Link href="/">Home</Link>
-        <Link href="/search" className="mr-auto">
-          Search
-        </Link>
-        {user && <span>Hello, {user.email}</span>}
-        <LogoutButton />
-      </div>
-    </nav> */
-  
 }
