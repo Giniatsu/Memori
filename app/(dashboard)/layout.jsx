@@ -21,10 +21,6 @@ export default async function DashboardLayout({ children }) {
       .eq("id", data.session.user.id)
       .single();
     profile = profileData;
-    const avatarUrl = await supabase.storage
-      .from("avatars")
-      .createSignedUrl(profile.avatar_url, 60000);
-    profile.avatar_url = avatarUrl;
   }
   
 
@@ -32,7 +28,7 @@ export default async function DashboardLayout({ children }) {
     <div>
       {data.session && (
         <>
-          <Navigationbar user={data.session.user} profile={profile} avatarUrl={profile.avatar_url}/>
+          <Navigationbar user={data.session.user} profile={profile} />
           <BottomNavbar />
         </>
       )}

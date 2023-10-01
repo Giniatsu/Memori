@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 // components
 import Navigationbar from "@/app/components/Navbar";
 import BottomNavbar from "../components/BottomNavbar";
+import Image from "next/image";
 
 export const dynamic = "force-dynamic";
 
@@ -21,19 +22,12 @@ export default async function AccountLayout({ children }) {
       .single();
     profile = profileData;
   }
-  const avatarUrl = await supabase.storage
-    .from("avatars")
-    .createSignedUrl(profile.avatar_url, 60000);
 
   return (
     <div>
       {data.session && (
         <>
-          <Navigationbar
-            user={data.session.user}
-            profile={profile}
-            avatarUrl={avatarUrl}
-          />
+          <Navigationbar user={data.session.user} profile={profile} />
           <BottomNavbar />
         </>
       )}
