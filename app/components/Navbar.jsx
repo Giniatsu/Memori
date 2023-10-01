@@ -6,7 +6,7 @@ import Link from "next/link";
 import LogoutButton from "./LogoutButton";
 import Image from "next/image";
 
-export default function Navigationbar({ user, profile, avatarUrl }) {
+export default function Navigationbar({ user, profile }) {
   if (user) {
     return (
       <Navbar fluid className="bg-vintage-army">
@@ -26,16 +26,17 @@ export default function Navigationbar({ user, profile, avatarUrl }) {
           <Dropdown
             inline
             label={
-              <Avatar alt="User settings" rounded>
-                <Image
+              <Avatar
+                alt="User settings"
+                rounded
+                img={`https://plmqhcualnnsirfqjcsj.supabase.co/storage/v1/object/public/avatars/${profile.avatar_url}`}
+              />
+              /*  <Image
                   src={avatarUrl}
                   alt="Avatar"
                   width={50}
                   height={50}
-                />
-
-                {console.log(avatarUrl)}
-              </Avatar>
+                /> */
             }
           >
             <Dropdown.Header>
