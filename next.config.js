@@ -6,4 +6,7 @@ const nextConfig = {}
 
 module.exports = withPWA({
   // Your Next.js config
+  experimental: {
+    serverActions: true
+  }
 });
