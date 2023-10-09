@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 // component
 import DeleteButton from "./DeleteButton";
+import UpdateModalForm from "./UpdateModalForm";
 
 export const dynamicParams = true; // default val = true
 
@@ -45,7 +46,10 @@ export default async function GraveDetails({ params }) {
         <h2>Grave Details</h2>
         <div className="ml-auto">
           {data.session.user.email === grave.user_email && (
-            <DeleteButton id={grave.id} />
+            <>
+              <DeleteButton id={grave.id} />
+              <UpdateModalForm id={grave.id} />
+            </>
           )}
         </div>
       </nav>

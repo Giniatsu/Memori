@@ -157,7 +157,7 @@ export default function CreateForm() {
         </form> */}
         {/* Testing form below */}
         <form action={addGrave}>
-          <input type="file" id="grave_image" name="grave_image" multiple/>
+          <input type="file" id="grave_image" name="grave_images" multiple/>
           <select id="cemetery" name="cemetery">
             <option>Cemetery 1</option>
             <option>Cemetery 2</option>
