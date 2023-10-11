@@ -27,7 +27,11 @@ export default function UpdateModalForm({graveInfo}) {
           <form action={updateGravewithID}>
             {/* <input type="text" id="grave_images" name="grave_images" /> */}
             <input type="file" id="grave_image" name="grave_images" multiple />
-            <select id="cemetery" name="cemetery" value={graveInfo.cemetery}>
+            <select
+              id="cemetery"
+              name="cemetery"
+              defaultValue={graveInfo.cemetery}
+            >
               <option>Cemetery 1</option>
               <option>Cemetery 2</option>
               <option>Cemetery 3</option>
@@ -37,44 +41,49 @@ export default function UpdateModalForm({graveInfo}) {
               type="text"
               id="firstname"
               name="firstname"
-              value={graveInfo.firstname}
+              defaultValue={graveInfo.firstname}
             />
             <input
               type="text"
               id="lastname"
               name="lastname"
-              value={graveInfo.lastname}
+              defaultValue={graveInfo.lastname}
             />
             <input
               type="text"
               id="aliases"
               name="aliases"
-              value={graveInfo.aliases}
+              defaultValue={graveInfo.aliases}
             />
-            <input type="text" id="age" name="age" value={graveInfo.age} />
+            <input
+              type="text"
+              id="age"
+              name="age"
+              defaultValue={graveInfo.age}
+            />
             <input
               type="date"
               id="birth"
               name="birth"
-              value={graveInfo.birth}
+              defaultValue={graveInfo.birth}
             />
             <input
               type="date"
               id="death"
               name="death"
-              value={graveInfo.death}
+              defaultValue={graveInfo.death}
             />
             <input
               type="date"
               id="internment"
               name="internment"
-              value={graveInfo.internment}
+              defaultValue={graveInfo.internment}
             />
             <input
               type="text"
               id="location"
               name="location"
-              value={graveInfo.location}
+              defaultValue={graveInfo.location}
             />
             <UpdateButton />
           </form>
