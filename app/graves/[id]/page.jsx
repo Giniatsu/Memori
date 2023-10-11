@@ -48,7 +48,7 @@ export default async function GraveDetails({ params }) {
           {data.session.user.email === grave.user_email && (
             <>
               <DeleteButton id={grave.id} />
-              <UpdateModalForm id={grave.id} />
+              <UpdateModalForm graveInfo={grave}/>
             </>
           )}
         </div>
