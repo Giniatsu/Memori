@@ -5,7 +5,14 @@ import Image from "next/image";
 
 async function getGraves() {
   const supabase = createServerComponentClient({ cookies });
-  const { data, error } = await supabase.from("graves").select();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { data, error } = await supabase
+    .from("graves")
+    .select()
+    .eq("user_email", user.email);
 
   if (error) {
     console.log(error.message);

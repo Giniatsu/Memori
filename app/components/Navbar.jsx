@@ -44,7 +44,7 @@ export default function Navigationbar({ user, profile }) {
                 <span>Hello, {profile.username}</span>
               </span>
             </Dropdown.Header>
-            <Dropdown.Item>Settings</Dropdown.Item>
+            <Dropdown.Item href="/account">Profile</Dropdown.Item>
             <Dropdown.Divider />
             <Dropdown.Item>
               <LogoutButton />

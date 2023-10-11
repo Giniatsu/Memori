@@ -7,6 +7,11 @@ import { redirect } from "next/navigation";
 
 export async function addGrave(formData) {
   const grave = Object.fromEntries(formData);
+  const filteredGrave = Object.fromEntries(
+    Object.entries(grave).filter(([_, value]) => value != "")
+  ); 
+  console.log(filteredGrave)
+  //console.log(grave)
 
   const supabase = createServerActionClient({ cookies });
 
@@ -16,7 +21,7 @@ export async function addGrave(formData) {
 
   // insert the data
   const { error } = await supabase.from("graves").insert({
-    ...grave,
+    ...filteredGrave,
     user_email: session.user.email,
   });
 
@@ -30,7 +35,10 @@ export async function addGrave(formData) {
 
 export async function updateGrave(id,formData) {
   const grave = Object.fromEntries(formData);
-  console.log(grave);
+  const filteredGrave = Object.fromEntries(
+    Object.entries(grave).filter(([_, value]) => value != "")
+  );
+  console.log(filteredGrave);
   const supabase = createServerActionClient({ cookies });
 
   const {
@@ -41,7 +49,7 @@ export async function updateGrave(id,formData) {
   const { error } = await supabase
     .from("graves")
     .update({
-      ...grave,
+      ...filteredGrave,
       user_email: session.user.email,
     })
     .eq("id", id);
