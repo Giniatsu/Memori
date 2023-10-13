@@ -29,8 +29,8 @@ export async function addGrave(formData) {
     throw new Error("Could not add the new grave");
   }
 
-  revalidatePath("/graves");
-  redirect("/graves");
+  revalidatePath("/graves/contributions");
+  redirect("/graves/contributions");
 }
 
 export async function updateGrave(id,formData) {
@@ -58,8 +58,8 @@ export async function updateGrave(id,formData) {
     throw new Error("Could not update the grave");
   }
 
-  revalidatePath("/graves");
-  redirect("/graves");
+  revalidatePath("/graves/contributions");
+  redirect("/graves/contributions");
 }
 
 export async function deleteGrave(id) {
@@ -72,6 +72,6 @@ export async function deleteGrave(id) {
     throw new Error("Could not delete the new graves");
   }
 
-  revalidatePath("/graves");
-  redirect("/graves");
+  revalidatePath("/graves/contributions");
+  redirect("/graves/contributions");
 }
