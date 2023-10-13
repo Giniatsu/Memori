@@ -3,7 +3,7 @@ import Link from "next/link";
 import { FaSearchLocation } from "react-icons/fa";
 import { RiMapPinAddFill } from "react-icons/ri";
 import { AiFillHome } from "react-icons/ai";
-import { HiOutlineAdjustments } from "react-icons/hi";
+import { GiGraveyard } from "react-icons/gi";
 import { MdAccountCircle } from "react-icons/md";
 
 export default function BottomNavbar() {
@@ -44,7 +44,7 @@ export default function BottomNavbar() {
           className="inline-flex flex-col items-center justify-center px-5 border-r border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 group dark:border-gray-600"
         >
           <Link href="/graves">
-          <RiMapPinAddFill size={25} />
+            <RiMapPinAddFill size={25} />
           </Link>
           <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">
             New Item
@@ -55,12 +55,14 @@ export default function BottomNavbar() {
           type="button"
           className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
         >
-          <HiOutlineAdjustments
-            size={25}
-            className="mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
-          />
+          <Link href="/graves/contributions">
+            <GiGraveyard
+              size={25}
+              className="mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
+            />
+          </Link>
           <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">
-            Settings
+            Contributions
           </span>
         </button>
         <button

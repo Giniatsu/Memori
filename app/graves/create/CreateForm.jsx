@@ -8,38 +8,38 @@ import {
   Label,
   Select,
   TextInput,
+  FileInput
 } from "flowbite-react";
 
 export default function CreateForm() {
   return (
     <div className="flex justify-center items-center my-4">
       <Card className="w-4/5 max-w-sm">
-        {/* <form action={addGrave} className="grid grid-cols-2 gap-4">
-          <div class="relative z-0 w-full group col-span-2">
-            <TextInput
-              type="text"
-              name="grave_image"
-              id="grave_image"
-              className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
-              required
+        <form action={addGrave} className="grid grid-cols-2 gap-4">
+          <div className="max-w-md" id="fileUpload">
+            <div className="mb-2 block">
+              <Label htmlFor="file" value="Upload file" />
+            </div>
+            <FileInput
+              helperText="A profile picture is useful to confirm your are logged into your account"
+              id="file"
+              multiple
+              name="grave_images"
             />
-            <Label
-              htmlfor="grave_image"
-              className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >
-              Upload an Image
-            </Label>
           </div>
           <div className="max-w-md col-span-2" id="select">
             <div className="mb-2 block">
               <Label htmlFor="cemeteries" value="Select your cemetery" />
             </div>
             <Select name="cemetery" id="cemeteries" required>
-              <option>Cemetery 1</option>
-              <option>Cemetery 2</option>
-              <option>Cemetery 3</option>
-              <option>Cemetery 4</option>
+              <optgroup id="region" label="Davao Del Sur">
+                <optgroup id="city" label="Davao City">
+                  <option>Cemetery 1</option>
+                  <option>Cemetery 2</option>
+                  <option>Cemetery 3</option>
+                  <option>Cemetery 4</option>
+                </optgroup>
+              </optgroup>
             </Select>
           </div>
           <div class="relative z-0 w-full group block">
@@ -81,7 +81,6 @@ export default function CreateForm() {
               id="aliases"
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               placeholder=" "
-              required
             />
             <Label
               htmlfor="aliases"
@@ -93,17 +92,16 @@ export default function CreateForm() {
           <div class="relative z-0 w-full group col-span-2">
             <TextInput
               type="text"
-              name="age_range"
-              id="floating_last_name"
+              name="age"
+              id="age"
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               placeholder=" "
-              required
             />
             <Label
-              htmlfor="agerange"
+              htmlfor="age"
               className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
-              Age Range
+              Age
             </Label>
           </div>
           <div className="col-span-2">
@@ -126,7 +124,11 @@ export default function CreateForm() {
               </Label>
             </div>
             <div className="relative z-10 w-full mb-6 group">
-              <Datepicker name="internment" id="internmentpicker" title="Internment" />
+              <Datepicker
+                name="internment"
+                id="internmentpicker"
+                title="Internment"
+              />
               <Label
                 htmlfor="internmentpicker"
                 className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
@@ -154,10 +156,10 @@ export default function CreateForm() {
           <div className="z-0">
             <SubmitButton />
           </div>
-        </form> */}
+        </form>
         {/* Testing form below */}
-        <form action={addGrave}>
-          <input type="file" id="grave_image" name="grave_images" multiple/>
+        {/* <form action={addGrave}>
+          <input type="file" id="grave_image" name="grave_images" multiple />
           <select id="cemetery" name="cemetery">
             <option>Cemetery 1</option>
             <option>Cemetery 2</option>
@@ -173,7 +175,7 @@ export default function CreateForm() {
           <input type="date" id="internment" name="internment" />
           <input type="text" id="location" name="location" />
           <SubmitButton />
-        </form>
+        </form> */}
       </Card>
     </div>
   );
