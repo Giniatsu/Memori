@@ -119,11 +119,31 @@ export async function updateGrave(id,formData) {
 export async function deleteGrave(id) {
   const supabase = createServerActionClient({ cookies });
 
-  // delete the data
+  // delete the grave data
   const { error } = await supabase.from("graves").delete().eq("id", id);
 
   if (error) {
+    console.log(error);
     throw new Error("Could not delete the new graves");
+  }
+
+  // delete all null images
+  const { data, error: imageError } = await supabase
+    .from("images")
+    .delete()
+    .is("grave", null)
+    .select();
+  if (imageError) {
+    console.log(imageError);
+  }
+
+  // delete images from actual storage
+  const { error: storageError } = await supabase.storage
+    .from("grave_images")
+    .remove(data.map((image) => image.file_name));
+
+  if (storageError) {
+    console.log(storageError);
   }
 
   revalidatePath("/graves/contributions");
