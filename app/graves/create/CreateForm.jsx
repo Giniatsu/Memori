@@ -10,12 +10,23 @@ import {
   TextInput,
   FileInput
 } from "flowbite-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
+import { usePlacesWidget } from "react-google-autocomplete";
+import CemeteryField from "./CemeteryField";
 
 export default function CreateForm() {
   const [birth, setBirth] = useState(new Date());
   const [death, setDeath] = useState(new Date());
   const [age, setAge] = useState(0);
+
+  const [location, setLocation] = useState("");
+  const [hasLocation, setHasLocation] = useState(false);
+  const [cemetery, setCemetery] = useState("");
+
+  const [locationCoordinates, setLocationCoordinates] = useState([0, 0]);
+  const supabasePointGeo = useMemo(() => {
+    return `POINT(${locationCoordinates[0]} ${locationCoordinates[1]})`;
+  }, [locationCoordinates]);
 
   useEffect(() => {
     const diff = Math.abs(new Date(death) - new Date(birth));
@@ -23,10 +34,21 @@ export default function CreateForm() {
     setAge(years);
   }, [birth, death]);
 
+  const { ref } = usePlacesWidget({
+    apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY,
+    onPlaceSelected: (place) => {
+      const coords = [place?.geometry.location.lng() ?? 0, place?.geometry.location.lat() ?? 0];
+      setLocationCoordinates(coords);
+      setLocation(place?.formatted_address ?? '');
+      setHasLocation(true);
+    }
+  });
+
   return (
     <div className="flex items-center justify-center my-4">
       <Card className="w-4/5 max-w-sm">
         <form action={addGrave} className="grid grid-cols-2 gap-4">
+          <input type="hidden" value={supabasePointGeo} name="cemeterycoordinates" />
           <div className="max-w-md" id="fileUpload">
             <div className="block mb-2">
               <Label htmlFor="file" value="Upload file" />
@@ -38,17 +60,36 @@ export default function CreateForm() {
               name="grave_images"
             />
           </div>
-          <div className="max-w-md col-span-2" id="select">
-            <div className="block mb-2">
-              <Label htmlFor="cemeteries" value="Select your cemetery" />
-            </div>
-            <Select name="cemetery" id="cemeteries" required>
-              <option>Cemetery 1</option>
-              <option>Cemetery 2</option>
-              <option>Cemetery 3</option>
-              <option>Cemetery 4</option>
-            </Select>
+          <div className="relative z-0 w-full col-span-2 group">
+            <TextInput
+              ref={ref}
+              type="text"
+              name="cemeterylocation"
+              id="cemetery_location"
+              className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              placeholder="Search for a cemetery location (City, State, Country)"
+              onChange={e => {
+                setHasLocation(false);
+              }}
+              required
+            />
+            <Label
+              htmlFor="cemetery_location"
+              className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            >
+              Cemetery Location
+            </Label>
           </div>
+          { hasLocation && (
+            <div className="relative z-0 w-full col-span-2 group">
+              <CemeteryField
+                hasLocation={hasLocation}
+                location={location}
+                cemetery={cemetery}
+                setCemetery={setCemetery}
+              />
+            </div>
+          ) }
           <div className="relative z-0 block w-full group">
             <TextInput
               type="text"

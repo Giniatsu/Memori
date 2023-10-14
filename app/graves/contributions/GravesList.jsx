@@ -11,7 +11,10 @@ async function getGraves() {
 
   const { data, error } = await supabase
     .from("graves")
-    .select()
+    .select(`
+      *,
+      cemetery ( * )
+    `)
     .eq("user_email", user.email);
 
   if (error) {
@@ -42,7 +45,7 @@ export default async function GravesList() {
               {grave.firstname} {grave.lastname}
             </h5>
             <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-              {grave.cemetery}
+              {grave.cemetery.name}
             </p>
           </div>
         </Link>

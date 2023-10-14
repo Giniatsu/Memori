@@ -25,7 +25,10 @@ async function getGrave(id) {
   const supabase = createServerComponentClient({ cookies });
   const { data } = await supabase
     .from("graves")
-    .select()
+    .select(`
+      *,
+      cemetery ( * )
+    `)
     .eq("id", id)
     .single();
 
@@ -64,7 +67,7 @@ export default async function GraveDetails({ params }) {
         <h5>Death:{grave.death}</h5>
         <h5>Internment:{grave.internment}</h5>
         <span>Location: {grave.location}</span>
-        <div>Cemetery: {grave.cemetery}</div>
+        <div>Cemetery: {grave.cemetery.name}</div>
       </div>
     </main>
   );
