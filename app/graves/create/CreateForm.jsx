@@ -56,7 +56,6 @@ export default function CreateForm() {
             <FileInput
               helperText="A profile picture is useful to confirm your are logged into your account"
               id="file"
-              multiple
               name="grave_images"
             />
           </div>

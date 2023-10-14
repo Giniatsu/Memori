@@ -8,5 +8,8 @@ module.exports = withPWA({
   // Your Next.js config
   experimental: {
     serverActions: true
+  },
+  images: {
+    domains: ['plmqhcualnnsirfqjcsj.supabase.co'],
   }
 });
