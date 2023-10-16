@@ -218,6 +218,7 @@ export default function CreateForm() {
               />
               <Textarea
                 id="comment"
+                type="text"
                 placeholder="Leave a note..."
                 required
                 rows={4}
