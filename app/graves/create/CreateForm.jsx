@@ -220,7 +220,6 @@ export default function CreateForm() {
                 id="comment"
                 type="text"
                 placeholder="Leave a note..."
-                required
                 rows={4}
                 name="notes"
                 className="block w-full text-sm"
