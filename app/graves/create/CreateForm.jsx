@@ -221,6 +221,7 @@ export default function CreateForm() {
                 placeholder="Leave a note..."
                 required
                 rows={4}
+                name="notes"
                 className="block w-full text-sm"
               />
             </div>
