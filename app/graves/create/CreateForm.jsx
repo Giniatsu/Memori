@@ -8,7 +8,8 @@ import {
   Label,
   Select,
   TextInput,
-  FileInput
+  FileInput,
+  Textarea
 } from "flowbite-react";
 import { useEffect, useState, useMemo } from "react";
 import { usePlacesWidget } from "react-google-autocomplete";
@@ -48,7 +49,11 @@ export default function CreateForm() {
     <div className="flex items-center justify-center my-4">
       <Card className="w-4/5 max-w-sm">
         <form action={addGrave} className="grid grid-cols-2 gap-4">
-          <input type="hidden" value={supabasePointGeo} name="cemeterycoordinates" />
+          <input
+            type="hidden"
+            value={supabasePointGeo}
+            name="cemeterycoordinates"
+          />
           <div className="max-w-md" id="fileUpload">
             <div className="block mb-2">
               <Label htmlFor="file" value="Upload file" />
@@ -67,7 +72,7 @@ export default function CreateForm() {
               id="cemetery_location"
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               placeholder="Search for a cemetery location (City, State, Country)"
-              onChange={e => {
+              onChange={(e) => {
                 setHasLocation(false);
               }}
               required
@@ -79,7 +84,7 @@ export default function CreateForm() {
               Cemetery Location
             </Label>
           </div>
-          { hasLocation && (
+          {hasLocation && (
             <div className="relative z-0 w-full col-span-2 group">
               <CemeteryField
                 hasLocation={hasLocation}
@@ -88,7 +93,7 @@ export default function CreateForm() {
                 setCemetery={setCemetery}
               />
             </div>
-          ) }
+          )}
           <div className="relative z-0 block w-full group">
             <TextInput
               type="text"
@@ -162,7 +167,7 @@ export default function CreateForm() {
                 title="Birth"
                 className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                 placeholder=""
-                onChange={e => {
+                onChange={(e) => {
                   setBirth(e.target.value);
                 }}
               />
@@ -189,7 +194,7 @@ export default function CreateForm() {
                 title="Death"
                 className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                 placeholder=""
-                onChange={e => {
+                onChange={(e) => {
                   setDeath(e.target.value);
                 }}
               />
@@ -205,18 +210,19 @@ export default function CreateForm() {
                 Death
               </Label>
             </div>
-            <div className="relative z-10 w-full mb-6 group">
-              <Datepicker
-                name="internment"
-                id="internmentpicker"
-                title="Internment"
-              />
+            <div className="relative z-0 w-full col-span-2 group mb-6">
               <Label
-                htmlFor="internmentpicker"
+                htmlFor="comment"
+                value="Grave Notes"
                 className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >
-                Internment
-              </Label>
+              />
+              <Textarea
+                id="comment"
+                placeholder="Leave a note..."
+                required
+                rows={4}
+                className="block w-full text-sm"
+              />
             </div>
             <div className="relative z-0 w-full col-span-2 group">
               <TextInput
