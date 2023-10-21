@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 // component
 import DeleteButton from "./DeleteButton";
 import UpdateModalForm from "./UpdateModalForm";
+import Link from "next/link";
 
 export const dynamicParams = true; // default val = true
 
@@ -43,9 +44,18 @@ export default async function GraveDetails({ params }) {
   const grave = await getGrave(params.id);
   const supabase = createServerComponentClient({ cookies });
   const { data } = await supabase.auth.getSession();
+
+  // NEED TO REPLACE THIS WITH ACTUAL DATA FROM DATABASE
+  // DI KO ALAM HOW TO GET THE ACTUAL COORDINATESFROM SUPABASE
+  const test_lat = 7.076674;
+  const test_lng = 125.597120;
+
   return (
     <main>
       <nav>
+        <Link href={`/map?lat=${test_lat}&lng=${test_lng}`}>
+          LOCATE GRAVE HERE (MAP)
+        </Link>
         <h2>Grave Details</h2>
         <div className="ml-auto">
           {data.session.user.email === grave.user_email && (
