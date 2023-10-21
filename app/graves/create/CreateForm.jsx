@@ -210,7 +210,7 @@ export default function CreateForm() {
                 Death
               </Label>
             </div>
-            <div className="relative z-0 w-full col-span-2 group mb-6">
+            <div className="relative z-0 w-full col-span-2 mb-6 group">
               <Label
                 htmlFor="comment"
                 value="Grave Notes"

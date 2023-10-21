@@ -1,0 +1,112 @@
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import Link from "next/link";
+import SearchImage from "./SearchImage";
+
+import { useSearchParams } from 'next/navigation'
+import { useEffect, useState } from "react";
+
+async function getGraves(query) {
+  const supabase = createClientComponentClient();
+
+  // base query
+  let supabase_query = supabase
+    .from("graves")
+    .select(`
+      *,
+      cemetery ( * )
+    `);
+
+  // add more params here if needed, follow lang sa format/pattern
+  // ani siya kay para optional tanan fields, so if naay value ang field, i-add siya sa query
+  // better for me if optional tanan fields kay para dili kaayo strict ang search
+  if (query.cemetery) {
+    supabase_query = supabase_query.eq("cemetery", query.cemetery)
+  }
+
+  if (query.firstName) {
+    supabase_query = supabase_query.ilike("firstname", `%${query.firstName}%`)
+  }
+
+  if (query.lastName) {
+    supabase_query = supabase_query.eq("lastname", `%${query.lastName}%`)
+  }
+
+  if (query.aliases) {
+    supabase_query = supabase_query.ilike("aliases", `%${query.aliases}%`)
+  }
+
+  if (query.birth) {
+    supabase_query = supabase_query.eq("birth", `%${query.birth}%`)
+  }
+
+  if (query.death) {
+    supabase_query = supabase_query.eq("death", `%${query.death}%`)
+  }
+
+  const { data, error } = await supabase_query;
+
+  if (error) {
+    console.log(error.message);
+  }
+
+  return data;
+}
+
+export default async function GravesList() {
+  const searchParams = useSearchParams()
+
+  // get params from url (basically gamita lang tong name na element sa fields)
+  // add more params here if needed, follow lang sa format/pattern
+  const cemetery = searchParams.get('cemetery')
+  const firstName = searchParams.get('first_name')
+  const lastName = searchParams.get('last_name')
+  const aliases = searchParams.get('aliases')
+  const birth = searchParams.get('birth')
+  const death = searchParams.get('death')
+
+  const [graves, setGraves] = useState([]);
+
+  useEffect(() => {
+    // add more params here if needed, follow lang sa format/pattern
+    getGraves({
+      cemetery,
+      firstName,
+      lastName,
+      aliases,
+      birth,
+      death,
+    }).then((data) => {
+      setGraves(data)
+    })
+  }, [
+    cemetery,
+    firstName,
+    lastName,
+    aliases,
+    birth,
+    death,
+  ])
+
+  return (
+    <>
+      {graves.map((grave) => (
+        <Link
+          key={grave.id}
+          href={`/graves/${grave.id}`}
+          className="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+        >
+          <SearchImage grave_id={grave.id} />
+          <div className="flex flex-col justify-between p-4 leading-normal">
+            <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+              {grave.firstname} {grave.lastname}
+            </h5>
+            <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+              {grave.cemetery.name}
+            </p>
+          </div>
+        </Link>
+      ))}
+      {graves.length === 0 && <p className="text-center">No Graves</p>}
+    </>
+  );
+}

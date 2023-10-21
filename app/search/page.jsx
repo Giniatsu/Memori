@@ -1,23 +1,65 @@
 "use client"
 
+import { useState, useEffect } from "react";
 import { Button, Card, Datepicker, Label, Select, TextInput } from "flowbite-react";
-import Link from "next/link";
 import { FaSearchLocation } from "react-icons/fa";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { search } from "./actions";
+
+import { experimental_useFormStatus as useFormStatus } from "react-dom";
+
+function SearchButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button type="submit" disabled={pending}>
+      <FaSearchLocation className="w-5 h-5 mr-2" />
+      {pending && <span>Searching...</span>}
+      {!pending && <span>Search</span>}
+    </Button>
+  );
+}
 
 export default function Search() {
+
+  const [loading, setLoading] = useState(true);
+  const [cemeteries, setCemeteries] = useState([]);
+
+  useEffect(() => {
+    setLoading(true);
+    const load = async () => {
+      const supabase = createClientComponentClient();
+  
+      let { data: cemeteries, error } = await supabase
+        .from('cemetery')
+        .select('*')
+      
+      if (error) {
+        console.log(error.message);
+      }
+
+      setCemeteries(cemeteries);
+      console.log(cemeteries);
+      setLoading(false);
+    }
+    load();
+  }, []);
+
   return (
-    <div className="flex justify-center items-center my-4">
+    <div className="flex items-center justify-center my-4">
       <Card className="w-4/5 max-w-sm">
-        <form className="grid grid-cols-2 gap-4">
+        <form action={search} className="grid grid-cols-2 gap-4">
           <div className="max-w-md col-span-2" id="select">
-            <div className="mb-2 block">
+            <div className="block mb-2">
               <Label htmlFor="cemeteries" value="Select your cemetery" />
             </div>
-            <Select id="cemeteries" required>
-              <option>Cemetery 1</option>
-              <option>Cemetery 2</option>
-              <option>Cemetery 3</option>
-              <option>Cemetery 4</option>
+            <Select id="cemeteries" name="cemetery">
+              <option value="">Select your cemetery</option>
+              { !loading && (
+                cemeteries.map(cemetery => (
+                  <option key={cemetery.id} value={cemetery.id}>{cemetery.name}</option>
+                ))
+              ) }
             </Select>
           </div>
           <div class="relative z-0 w-full group block">
@@ -27,7 +69,6 @@ export default function Search() {
               id="first_name"
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               placeholder=" "
-              required
             />
             <Label
               htmlfor="first_name"
@@ -43,7 +84,6 @@ export default function Search() {
               id="last_name"
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               placeholder=" "
-              required
             />
             <Label
               htmlfor="last_name"
@@ -59,7 +99,6 @@ export default function Search() {
               id="aliases"
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               placeholder=" "
-              required
             />
             <Label
               htmlfor="aliases"
@@ -75,7 +114,6 @@ export default function Search() {
               id="floating_last_name"
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               placeholder=" "
-              required
             />
             <Label
               htmlfor="agerange"
@@ -86,7 +124,7 @@ export default function Search() {
           </div>
           <div className="col-span-2">
             <div className="relative z-30 w-full mb-6 group">
-              <Datepicker id="birthpicker" title="Birth" />
+              <Datepicker name="birth" id="birthpicker" title="Birth" />
               <Label
                 htmlfor="birthpicker"
                 className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
@@ -95,7 +133,7 @@ export default function Search() {
               </Label>
             </div>
             <div className="relative z-20 w-full mb-6 group">
-              <Datepicker id="deathpicker" title="Death" />
+              <Datepicker name="death" id="deathpicker" title="Death" />
               <Label
                 htmlfor="deathpicker"
                 className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
@@ -103,23 +141,18 @@ export default function Search() {
                 Death
               </Label>
             </div>
-            <div className="relative z-10 w-full mb-2 group">
-              <Datepicker id="internmentpicker" title="Internment" />
+            {/*<div className="relative z-10 w-full mb-2 group">
+              <Datepicker name="internment" id="internmentpicker" title="Internment" />
               <Label
                 htmlfor="internmentpicker"
                 className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
               >
                 Internment
               </Label>
-            </div>
+            </div>*/}
           </div>
           <div className="z-0">
-            <Link href="">
-              <Button>
-                <FaSearchLocation className="mr-2 h-5 w-5" />
-                <p>Search</p>
-              </Button>
-            </Link>
+            <SearchButton />
           </div>
         </form>
       </Card>
