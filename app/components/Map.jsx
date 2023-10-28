@@ -30,7 +30,8 @@ function Map({ src, dst }) {
         })
 
         setMap(map)
-    }, [src])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
     const onUnmount = React.useCallback(function callback(map) {
         setMap(null)
     }, [])
@@ -61,6 +62,9 @@ function Map({ src, dst }) {
     const [arrowRotation, setArrowRotation] = React.useState(45);
 
     React.useEffect(() => {
+        if (!map) return;
+        if (!src || !dst) return;
+
         const initialBearing = calculateInitialBearing(
             src,
             dst
