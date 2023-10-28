@@ -22,6 +22,7 @@ export default function MapPage() {
     positionOptions: {
       enableHighAccuracy: true
     },
+    watchPosition: true,
     userDecisionTimeout: 5000
   });
 
