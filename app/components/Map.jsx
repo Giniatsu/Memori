@@ -4,13 +4,42 @@ import commaNumber from 'comma-number';
 import * as turf from "@turf/turf";
 import Sheet from 'react-modal-sheet';
 import { Button } from 'flowbite-react';
+import { useGeolocated } from "react-geolocated";
 
 const containerStyle = {
     width: '100vw',
     height: '100vh'
 };
 
-function Map({ src, dst }) {
+function Map({ dst }) {
+    const {
+        coords,
+        isGeolocationAvailable,
+        isGeolocationEnabled
+    } = useGeolocated({
+        positionOptions: {
+            enableHighAccuracy: true
+        },
+        watchPosition: true,
+        userDecisionTimeout: 5000
+    });
+
+    const [src, setSrc] = React.useState({ lat: 0, lng: 0 });
+
+    const locationHandler = (coords) => {
+        const { latitude, longitude } = coords;
+        setSrc({ lat: latitude, lng: longitude });
+    };
+
+    React.useEffect(() => {
+        if (!isGeolocationAvailable) {
+        } else if (!isGeolocationEnabled) {
+        } else if (coords) {
+            locationHandler(coords);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [coords, isGeolocationAvailable, isGeolocationEnabled]);
+
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
         googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY
@@ -76,14 +105,27 @@ function Map({ src, dst }) {
         map
     ]);
 
+    if (isGeolocationAvailable && !isGeolocationEnabled) {
+        return (
+            <main className="w-100 h-100">
+            <h1>Geolocation is not enabled, Please allow the location check your setting</h1>
+            </main>
+        );
+    }
+
+    if (!isGeolocationAvailable) {
+        return (
+            <main className="w-100 h-100">
+            <h1>Your browser does not support Geolocation</h1>
+            </main>
+        );
+    }
+
     return isLoaded ? (
         <>
             <GoogleMap
                 mapContainerStyle={containerStyle}
-                center={{
-                    lat: 7.076674, // Initial position (same as target for demonstration)
-                    lng: 125.597120,
-                }}
+                center={src}
                 zoom={10}
                 onLoad={onLoad}
                 onUnmount={onUnmount}
