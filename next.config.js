@@ -6,10 +6,15 @@ const nextConfig = {}
 
 module.exports = withPWA({
   // Your Next.js config
-  experimental: {
-    serverActions: true
-  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'plmqhcualnnsirfqjcsj.supabase.co',
+      },
+    ],
+  }/* ,
   images: {
     domains: ['plmqhcualnnsirfqjcsj.supabase.co'],
-  }
+  } */
 });

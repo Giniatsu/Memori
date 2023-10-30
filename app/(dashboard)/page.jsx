@@ -19,19 +19,21 @@ export default async function Home() {
             </Link>
           </div>
           <div className="w-40 flex flex-col items-center bg-slate-200 rounded">
-            <IconButton
-              icon={<MdAddLocationAlt size={50} />}
-              text={data.session ? "Add Location" : "Login to Add Location"}
-            />
+            <Link href='/login'>
+              <IconButton
+                icon={<MdAddLocationAlt size={50} />}
+                text={data.session ? "Add Location" : "Login to Add Location"}
+              />
+            </Link>
           </div>
-          <div className="w-40 flex flex-col items-center bg-slate-200 rounded justify-center">
+          {/* <div className="w-40 flex flex-col items-center bg-slate-200 rounded justify-center">
             <Link href="/map">
               <IconButton
                 icon={<SiOpenstreetmap size={50} />}
                 text="View Map"
               />
             </Link>
-          </div>
+          </div> */}
         </div>
       )}
     </main>
