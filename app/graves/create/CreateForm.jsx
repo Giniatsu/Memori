@@ -47,7 +47,7 @@ export default function CreateForm() {
 
   return (
     <div className="flex items-center justify-center my-4">
-      <Card className="w-4/5 max-w-sm">
+      <Card className="w-4/5 max-w-sm mb-16">
         <form action={addGrave} className="grid grid-cols-2 gap-4">
           <input
             type="hidden"
@@ -246,25 +246,6 @@ export default function CreateForm() {
             <SubmitButton />
           </div>
         </form>
-        {/* Testing form below */}
-        {/* <form action={addGrave}>
-          <input type="file" id="grave_image" name="grave_images" multiple />
-          <select id="cemetery" name="cemetery">
-            <option>Cemetery 1</option>
-            <option>Cemetery 2</option>
-            <option>Cemetery 3</option>
-            <option>Cemetery 4</option>
-          </select>
-          <input type="text" id="firstname" name="firstname" />
-          <input type="text" id="lastname" name="lastname" />
-          <input type="text" id="aliases" name="aliases" />
-          <input type="text" id="age" name="age" />
-          <input type="date" id="birth" name="birth" />
-          <input type="date" id="death" name="death" />
-          <input type="date" id="internment" name="internment" />
-          <input type="text" id="location" name="location" />
-          <SubmitButton />
-        </form> */}
       </Card>
     </div>
   );

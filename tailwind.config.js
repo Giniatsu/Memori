@@ -17,6 +17,9 @@ module.exports = {
         "vintage-army": "#698269",
         "sandy-brown": "#B99B6B",
       },
+      zIndex: {
+        100: "100",
+      },
     },
   },
   plugins: [require("flowbite/plugin")],

@@ -6,7 +6,7 @@ import { FaSearchLocation } from "react-icons/fa";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { search } from "./actions";
 
-import { experimental_useFormStatus as useFormStatus } from "react-dom";
+import { useFormStatus } from "react-dom";
 
 function SearchButton() {
   const { pending } = useFormStatus();
@@ -47,7 +47,7 @@ export default function Search() {
 
   return (
     <div className="flex items-center justify-center my-4">
-      <Card className="w-4/5 max-w-sm">
+      <Card className="w-4/5 max-w-sm mb-16">
         <form action={search} className="grid grid-cols-2 gap-4">
           <div className="max-w-md col-span-2" id="select">
             <div className="block mb-2">
@@ -62,7 +62,7 @@ export default function Search() {
               ) }
             </Select>
           </div>
-          <div class="relative z-0 w-full group block">
+          <div className="relative z-0 w-full group block">
             <TextInput
               type="text"
               name="first_name"
@@ -71,7 +71,7 @@ export default function Search() {
               placeholder=" "
             />
             <Label
-              htmlfor="first_name"
+              htmlFor="first_name"
               className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
               First name
@@ -86,13 +86,13 @@ export default function Search() {
               placeholder=" "
             />
             <Label
-              htmlfor="last_name"
+              htmlFor="last_name"
               className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
               Last name
             </Label>
           </div>
-          <div class="relative z-0 w-full group col-span-2">
+          <div className="relative z-0 w-full group col-span-2">
             <TextInput
               type="text"
               name="aliases"
@@ -101,13 +101,13 @@ export default function Search() {
               placeholder=" "
             />
             <Label
-              htmlfor="aliases"
+              htmlFor="aliases"
               className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
               Aliases
             </Label>
           </div>
-          <div class="relative z-0 w-full group col-span-2">
+          <div className="relative z-0 w-full group col-span-2">
             <TextInput
               type="text"
               name="agerange"
@@ -116,7 +116,7 @@ export default function Search() {
               placeholder=" "
             />
             <Label
-              htmlfor="agerange"
+              htmlFor="agerange"
               className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
               Age Range
@@ -126,7 +126,7 @@ export default function Search() {
             <div className="relative z-30 w-full mb-6 group">
               <Datepicker name="birth" id="birthpicker" title="Birth" />
               <Label
-                htmlfor="birthpicker"
+                htmlFor="birthpicker"
                 className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
               >
                 Birth
@@ -135,7 +135,7 @@ export default function Search() {
             <div className="relative z-20 w-full mb-6 group">
               <Datepicker name="death" id="deathpicker" title="Death" />
               <Label
-                htmlfor="deathpicker"
+                htmlFor="deathpicker"
                 className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
               >
                 Death
