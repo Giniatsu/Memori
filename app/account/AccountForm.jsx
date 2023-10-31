@@ -67,89 +67,88 @@ export default function AccountForm({ session }) {
   }
 
   return (
-    <div className="my-4">
-      <Card className="w-4/5 max-w-sm">
-        <TheAvatar
-          uid={user.id}
-          url={avatar_url}
-          size={150}
-          onUpload={(url) => {
-            setAvatarUrl(url);
-            updateProfile({ fullname, username, contact, avatar_url: url });
-          }}
+    <Card className="w-4/5 max-w-sm">
+      <TheAvatar
+        uid={user.id}
+        url={avatar_url}
+        size={150}
+        onUpload={(url) => {
+          setAvatarUrl(url);
+          updateProfile({ fullname, username, contact, avatar_url: url });
+        }}
+      />
+      <div>
+        <div className="mb-2 block">
+          <Label htmlFor="email" value="Email" />
+        </div>
+        <TextInput
+          id="email"
+          required
+          type="email"
+          value={session?.user.email}
+          disabled
         />
-        <div>
-          <div className="mb-2 block">
-            <Label htmlFor="email" value="Email" />
-          </div>
-          <TextInput
-            id="email"
-            required
-            type="email"
-            value={session?.user.email}
-            disabled
-          />
+      </div>
+      <div>
+        <div className="mb-2 block">
+          <Label htmlFor="fullName" value="Full Name" />
         </div>
-        <div>
-          <div className="mb-2 block">
-            <Label htmlFor="fullName" value="Full Name" />
-          </div>
-          <TextInput
-            id="fullName"
-            type="text"
-            value={fullname || ""}
-            onChange={(e) => setFullname(e.target.value)}
-          />
+        <TextInput
+          id="fullName"
+          type="text"
+          value={fullname || ""}
+          onChange={(e) => setFullname(e.target.value)}
+        />
+      </div>
+      <div>
+        <div className="mb-2 block">
+          <Label htmlFor="username" value="Username" />
         </div>
-        <div>
-          <div className="mb-2 block">
-            <Label htmlFor="username" value="Username" />
-          </div>
-          <TextInput
-            id="username"
-            type="text"
-            value={username || ""}
-            onChange={(e) => setUsername(e.target.value)}
-          />
+        <TextInput
+          id="username"
+          type="text"
+          value={username || ""}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+      </div>
+      <div>
+        <div className="mb-2 block">
+          <Label htmlFor="contact" value="Contact Number" />
         </div>
-        <div>
-          <div className="mb-2 block">
-            <Label htmlFor="contact" value="Contact Number" />
-          </div>
-          <TextInput
-            id="contact"
-            type="text"
-            value={contact || ""}
-            onChange={(e) => setContact(e.target.value)}
-          />
-        </div>
+        <TextInput
+          id="contact"
+          type="text"
+          value={contact || ""}
+          onChange={(e) => setContact(e.target.value)}
+        />
+      </div>
 
-        <div>
-          {loading ? (
-            <Button
+      <div>
+        {loading ? (
+          <Button
             className="mx-auto"
-              isProcessing
-              processingSpinner={
-                <AiOutlineLoading className="h-6 w-6 animate-spin" />
-              }
-              onClick={() =>
-                updateProfile({ fullname, username, contact, avatar_url })
-              }
-              disabled={loading}
-            >
-              Updating...{" "}
-            </Button>
-          ) : (
-            <Button className="mx-auto"
-              onClick={() =>
-                updateProfile({ fullname, username, contact, avatar_url })
-              }
-            >
-              Update
-            </Button>
-          )}
-        </div>
-      </Card>
-    </div>
+            isProcessing
+            processingSpinner={
+              <AiOutlineLoading className="h-6 w-6 animate-spin" />
+            }
+            onClick={() =>
+              updateProfile({ fullname, username, contact, avatar_url })
+            }
+            disabled={loading}
+          >
+            Updating...{" "}
+          </Button>
+        ) : (
+          <Button
+            className="mx-auto"
+            onClick={() =>
+              updateProfile({ fullname, username, contact, avatar_url })
+            }
+          >
+            Update
+          </Button>
+        )}
+      </div>
+    </Card>
   );
 }
