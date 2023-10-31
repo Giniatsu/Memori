@@ -1,6 +1,8 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { Card, Button, Label, TextInput } from "flowbite-react";
+import { AiOutlineLoading } from "react-icons/ai";
 import TheAvatar from "./Avatar";
 
 export default function AccountForm({ session }) {
@@ -65,59 +67,61 @@ export default function AccountForm({ session }) {
   }
 
   return (
-    <div className="form-widget">
-      <TheAvatar
-        uid={user.id}
-        url={avatar_url}
-        size={150}
-        onUpload={(url) => {
-          setAvatarUrl(url);
-          updateProfile({ fullname, username, contact, avatar_url: url });
-        }}
-      />
-      <div>
-        <label htmlFor="email">Email</label>
-        <input id="email" type="text" value={session?.user.email} disabled />
-      </div>
-      <div>
-        <label htmlFor="fullName">Full Name</label>
-        <input
-          id="fullName"
-          type="text"
-          value={fullname || ""}
-          onChange={(e) => setFullname(e.target.value)}
+    <div className="flex flex-col items-center justify-center my-4">
+      <Card className="w-4/5 max-w-sm">
+        <TheAvatar
+          uid={user.id}
+          url={avatar_url}
+          size={150}
+          onUpload={(url) => {
+            setAvatarUrl(url);
+            updateProfile({ fullname, username, contact, avatar_url: url });
+          }}
         />
-      </div>
-      <div>
-        <label htmlFor="username">Username</label>
-        <input
-          id="username"
-          type="text"
-          value={username || ""}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="contact">Contact</label>
-        <input
-          id="contact"
-          type="url"
-          value={contact || ""}
-          onChange={(e) => setContact(e.target.value)}
-        />
-      </div>
+        <div>
+          <label htmlFor="email">Email</label>
+          <input id="email" type="text" value={session?.user.email} disabled />
+        </div>
+        <div>
+          <label htmlFor="fullName">Full Name</label>
+          <input
+            id="fullName"
+            type="text"
+            value={fullname || ""}
+            onChange={(e) => setFullname(e.target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="username">Username</label>
+          <input
+            id="username"
+            type="text"
+            value={username || ""}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="contact">Contact</label>
+          <input
+            id="contact"
+            type="url"
+            value={contact || ""}
+            onChange={(e) => setContact(e.target.value)}
+          />
+        </div>
 
-      <div>
-        <button
-          className="button primary block"
-          onClick={() =>
-            updateProfile({ fullname, username, contact, avatar_url })
-          }
-          disabled={loading}
-        >
-          {loading ? "Loading ..." : "Update"}
-        </button>
-      </div>
+        <div>
+          <button
+            className="button primary block"
+            onClick={() =>
+              updateProfile({ fullname, username, contact, avatar_url })
+            }
+            disabled={loading}
+          >
+            {loading ? "Loading ..." : "Update"}
+          </button>
+        </div>
+      </Card>
     </div>
   );
 }
