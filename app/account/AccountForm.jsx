@@ -67,8 +67,8 @@ export default function AccountForm({ session }) {
   }
 
   return (
-    <div className="flex justify-center my-4">
-      <Card className="w-4/5 max-w-sm">
+    <div className="my-4">
+      <Card className="w-4/5 max-w-sm mb-20">
         <TheAvatar
           uid={user.id}
           url={avatar_url}
@@ -79,12 +79,22 @@ export default function AccountForm({ session }) {
           }}
         />
         <div>
-          <label htmlFor="email">Email</label>
-          <input id="email" type="text" value={session?.user.email} disabled />
+          <div className="mb-2 block">
+            <Label htmlFor="email" value="Email" />
+          </div>
+          <TextInput
+            id="email"
+            required
+            type="email"
+            value={session?.user.email}
+            disabled
+          />
         </div>
         <div>
-          <label htmlFor="fullName">Full Name</label>
-          <input
+          <div className="mb-2 block">
+            <Label htmlFor="fullName" value="Full Name" />
+          </div>
+          <TextInput
             id="fullName"
             type="text"
             value={fullname || ""}
@@ -92,8 +102,10 @@ export default function AccountForm({ session }) {
           />
         </div>
         <div>
-          <label htmlFor="username">Username</label>
-          <input
+          <div className="mb-2 block">
+            <Label htmlFor="username" value="Username" />
+          </div>
+          <TextInput
             id="username"
             type="text"
             value={username || ""}
@@ -101,25 +113,41 @@ export default function AccountForm({ session }) {
           />
         </div>
         <div>
-          <label htmlFor="contact">Contact</label>
-          <input
+          <div className="mb-2 block">
+            <Label htmlFor="contact" value="Contact Number" />
+          </div>
+          <TextInput
             id="contact"
-            type="url"
+            type="text"
             value={contact || ""}
             onChange={(e) => setContact(e.target.value)}
           />
         </div>
 
         <div>
-          <button
-            className="button primary block"
-            onClick={() =>
-              updateProfile({ fullname, username, contact, avatar_url })
-            }
-            disabled={loading}
-          >
-            {loading ? "Loading ..." : "Update"}
-          </button>
+          {loading ? (
+            <Button
+            className="mx-auto"
+              isProcessing
+              processingSpinner={
+                <AiOutlineLoading className="h-6 w-6 animate-spin" />
+              }
+              onClick={() =>
+                updateProfile({ fullname, username, contact, avatar_url })
+              }
+              disabled={loading}
+            >
+              Updating...{" "}
+            </Button>
+          ) : (
+            <Button className="mx-auto"
+              onClick={() =>
+                updateProfile({ fullname, username, contact, avatar_url })
+              }
+            >
+              Update
+            </Button>
+          )}
         </div>
       </Card>
     </div>

@@ -59,7 +59,7 @@ export default function TheAvatar({ uid, url, size, onUpload }) {
   };
 
   return (
-    <div>
+    <div className="flex flex-col items-center">
       {avatarUrl ? (
         <Image
           width={size}
