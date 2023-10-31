@@ -59,7 +59,7 @@ export default function TheAvatar({ uid, url, size, onUpload }) {
   };
 
   return (
-    <div className="flex flex-col">
+    <div>
       {avatarUrl ? (
         <Image
           width={size}
@@ -70,36 +70,38 @@ export default function TheAvatar({ uid, url, size, onUpload }) {
           style={{ height: size, width: size }}
         />
       ) : (
-        <Avatar rounded size="xl" style={{ height: size, width: size }}/>
+        <Avatar rounded size="xl" style={{ height: size, width: size }} />
       )}
-      <div className="self-center">
-        {uploading ? (
-          <Button
-            isProcessing
-            processingSpinner={
-              <AiOutlineLoading className="h-6 w-6 animate-spin" />
-            }
+      <div style={{ width: size }}>
+        <div>
+          {uploading ? (
+            <Button
+              isProcessing
+              processingSpinner={
+                <AiOutlineLoading className="h-6 w-6 animate-spin" />
+              }
+              disabled={uploading}
+              className="mx-auto"
+            >
+              <label htmlFor="single">Uploading...</label>
+            </Button>
+          ) : (
+            <Button className="mx-auto">
+              <label htmlFor="single">Upload</label>
+            </Button>
+          )}
+          <input
+            style={{
+              visibility: "hidden",
+              position: "absolute",
+            }}
+            type="file"
+            id="single"
+            accept="image/*"
+            onChange={uploadAvatar}
             disabled={uploading}
-          >
-            <label htmlFor="single">Uploading...</label>
-          </Button>
-        ) : (
-          <Button
-          >
-            <label htmlFor="single">Upload</label>
-          </Button>
-        )}
-        <input
-          style={{
-            visibility: "hidden",
-            position: "absolute",
-          }}
-          type="file"
-          id="single"
-          accept="image/*"
-          onChange={uploadAvatar}
-          disabled={uploading}
-        />
+          />
+        </div>
       </div>
     </div>
   );
