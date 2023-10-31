@@ -67,6 +67,7 @@ export default function AccountForm({ session }) {
   }
 
   return (
+    <div className="flex justify-center my-4">
       <Card className="w-4/5 max-w-sm">
         <TheAvatar
           uid={user.id}
@@ -121,5 +122,6 @@ export default function AccountForm({ session }) {
           </button>
         </div>
       </Card>
+    </div>
   );
 }
