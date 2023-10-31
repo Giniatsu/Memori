@@ -1,8 +1,6 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { Card, Button, Label, TextInput } from "flowbite-react";
-import { AiOutlineLoading } from 'react-icons/ai';
 import TheAvatar from "./Avatar";
 
 export default function AccountForm({ session }) {
@@ -67,85 +65,59 @@ export default function AccountForm({ session }) {
   }
 
   return (
-    <div className="flex items-center justify-center my-4">
-      <Card className="w-4/5 max-w-sm mb-16">
-        <div className="flex flex-col items-center gap-4 pb-10">
-          <TheAvatar
-            uid={user.id}
-            url={avatar_url}
-            size={150}
-            onUpload={(url) => {
-              setAvatarUrl(url);
-              updateProfile({ fullname, username, contact, avatar_url: url });
-            }}
-          />
-          <div>
-            <div className="mb-2 block">
-              <Label htmlFor="email" value="Email" />
-            </div>
-            <TextInput
-              id="email"
-              required
-              type="email"
-              value={session?.user.email}
-              disabled
-            />
-          </div>
-          <div>
-            <div className="mb-2 block">
-              <Label htmlFor="fullName" value="Full Name" />
-            </div>
-            <TextInput
-              id="fullName"
-              type="text"
-              value={fullname || ""}
-              onChange={(e) => setFullname(e.target.value)}
-            />
-          </div>
-          <div>
-            <div className="mb-2 block">
-              <Label htmlFor="username" value="Username" />
-            </div>
-            <TextInput
-              id="username"
-              type="text"
-              value={username || ""}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </div>
-          <div>
-            <div className="mb-2 block">
-              <Label htmlFor="contact" value="Contact Number" />
-            </div>
-            <TextInput
-              id="contact"
-              type="text"
-              value={contact || ""}
-              onChange={(e) => setContact(e.target.value)}
-            />
-          </div>
-          <div>
-            {loading ? (
-              <Button
-                isProcessing
-                processingSpinner={
-                  <AiOutlineLoading className="h-6 w-6 animate-spin" />
-                }
-                onClick={() =>
-                  updateProfile({ fullname, username, contact, avatar_url })
-                }
-                disabled={loading}
-              >Updating... </Button>
-            ) : (
-              <Button
-                onClick={() =>
-                  updateProfile({ fullname, username, contact, avatar_url })
-                }
-              >Update</Button>
-            )}
-          </div>
-        </div>
-      </Card>
+    <div className="form-widget">
+      <TheAvatar
+        uid={user.id}
+        url={avatar_url}
+        size={150}
+        onUpload={(url) => {
+          setAvatarUrl(url);
+          updateProfile({ fullname, username, contact, avatar_url: url });
+        }}
+      />
+      <div>
+        <label htmlFor="email">Email</label>
+        <input id="email" type="text" value={session?.user.email} disabled />
+      </div>
+      <div>
+        <label htmlFor="fullName">Full Name</label>
+        <input
+          id="fullName"
+          type="text"
+          value={fullname || ""}
+          onChange={(e) => setFullname(e.target.value)}
+        />
+      </div>
+      <div>
+        <label htmlFor="username">Username</label>
+        <input
+          id="username"
+          type="text"
+          value={username || ""}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+      </div>
+      <div>
+        <label htmlFor="contact">Contact</label>
+        <input
+          id="contact"
+          type="url"
+          value={contact || ""}
+          onChange={(e) => setContact(e.target.value)}
+        />
+      </div>
+
+      <div>
+        <button
+          className="button primary block"
+          onClick={() =>
+            updateProfile({ fullname, username, contact, avatar_url })
+          }
+          disabled={loading}
+        >
+          {loading ? "Loading ..." : "Update"}
+        </button>
+      </div>
     </div>
   );
 }
