@@ -1,9 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { Avatar, Button } from "flowbite-react";
+import { AiOutlineLoading } from "react-icons/ai";
 import Image from "next/image";
 
-export default function Avatar({ uid, url, size, onUpload }) {
+export default function TheAvatar({ uid, url, size, onUpload }) {
   const supabase = createClientComponentClient();
   const [avatarUrl, setAvatarUrl] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -57,26 +59,36 @@ export default function Avatar({ uid, url, size, onUpload }) {
   };
 
   return (
-    <div>
+    <div className="flex flex-col">
       {avatarUrl ? (
         <Image
           width={size}
           height={size}
           src={avatarUrl}
           alt="Avatar"
-          className="avatar image"
+          className="mb-3 rounded-full shadow-lg"
           style={{ height: size, width: size }}
         />
       ) : (
-        <div
-          className="avatar no-image"
-          style={{ height: size, width: size }}
-        />
+        <Avatar rounded size="xl" style={{ height: size, width: size }}/>
       )}
-      <div style={{ width: size }}>
-        <label className="button primary block" htmlFor="single">
-          {uploading ? "Uploading ..." : "Upload"}
-        </label>
+      <div className="self-center">
+        {uploading ? (
+          <Button
+            isProcessing
+            processingSpinner={
+              <AiOutlineLoading className="h-6 w-6 animate-spin" />
+            }
+            disabled={uploading}
+          >
+            <label htmlFor="single">Uploading...</label>
+          </Button>
+        ) : (
+          <Button
+          >
+            <label htmlFor="single">Upload</label>
+          </Button>
+        )}
         <input
           style={{
             visibility: "hidden",

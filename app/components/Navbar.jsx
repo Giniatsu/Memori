@@ -26,17 +26,18 @@ export default function Navigationbar({ user, profile }) {
           <Dropdown
             inline
             label={
-              <Avatar
-                alt="User settings"
-                rounded
-                img={`https://plmqhcualnnsirfqjcsj.supabase.co/storage/v1/object/public/avatars/${profile.avatar_url}`}
-              />
-              /*  <Image
-                  src={avatarUrl}
-                  alt="Avatar"
-                  width={50}
-                  height={50}
-                /> */
+              <>
+                {profile.avatar_url ? (
+                  <Avatar
+                    rounded
+                    img={`https://plmqhcualnnsirfqjcsj.supabase.co/storage/v1/object/public/avatars/${profile.avatar_url}`}
+                  />
+                ) : (
+                  <Avatar
+                    rounded
+                  />
+                )}
+              </>
             }
           >
             <Dropdown.Header>
@@ -81,7 +82,6 @@ export default function Navigationbar({ user, profile }) {
             inline
             label={
               <Avatar
-                alt="User settings"
                 rounded
               />
             }

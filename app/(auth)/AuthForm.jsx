@@ -18,7 +18,7 @@ export default function AuthForm(props) {
           onSubmit={(e) => handleSubmit(e, email, password)}
         >
           <h5 className="text-xl font-medium text-gray-900 dark:text-white">
-            Sign in to our platform
+            {props.isSignUp ? "Create an account" : "Sign in to our platform"}
           </h5>
           <div>
             <div className="mb-2 block">
