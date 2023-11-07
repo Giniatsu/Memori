@@ -33,9 +33,7 @@ export default function Navigationbar({ user, profile }) {
                     img={`https://plmqhcualnnsirfqjcsj.supabase.co/storage/v1/object/public/avatars/${profile.avatar_url}`}
                   />
                 ) : (
-                  <Avatar
-                    rounded
-                  />
+                  <Avatar rounded />
                 )}
               </>
             }
@@ -58,6 +56,7 @@ export default function Navigationbar({ user, profile }) {
             Home
           </Navbar.Link>
           <Navbar.Link href="/search">Search</Navbar.Link>
+          <Navbar.Link href="/activity">Activity</Navbar.Link>
         </Navbar.Collapse>
       </Navbar>
     );
