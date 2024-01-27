@@ -6,10 +6,10 @@ import { useGeolocated } from "react-geolocated";
 
 export const UserMarker = ({ dst }) => {
   const {
-    coords
+    coords,
   } = useGeolocated({
       positionOptions: {
-          enableHighAccuracy: true
+        enableHighAccuracy: true
       },
       watchPosition: true,
       userDecisionTimeout: 5000
@@ -21,6 +21,7 @@ export const UserMarker = ({ dst }) => {
   const coreLib = useMapsLibrary('core')
   const map = useMap()
 
+  /*
   // Function to calculate the initial bearing between two points on Earth
   const calculateBearing = useCallback(() => {
     if (geometryLib && coreLib && coords && dst && 'lng' in dst && 'lat' in dst) {
@@ -37,6 +38,13 @@ export const UserMarker = ({ dst }) => {
     const heading = calculateBearing();
     setRotation(heading);
   }, [calculateBearing]);
+  */
+
+  useEffect(() => {
+    if (coords) {
+      setRotation(coords.heading)
+    }
+  }, [coords])
 
   useEffect(() => {
     if (coreLib && map && coords) {
