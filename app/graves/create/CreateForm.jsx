@@ -16,7 +16,21 @@ import { usePlacesWidget } from "react-google-autocomplete";
 import { IoMdLocate } from "react-icons/io";
 import CemeteryField from "./CemeteryField";
 
+import { useGeolocated } from "react-geolocated";
+
 export default function CreateForm() {
+  const {
+    coords: deviceCoords,
+    isGeolocationAvailable,
+    isGeolocationEnabled,
+    getPosition,
+  } = useGeolocated({
+    positionOptions: {
+      enableHighAccuracy: true
+    },
+    userDecisionTimeout: 5000
+  });
+  
   const [birth, setBirth] = useState(new Date());
   const [death, setDeath] = useState(new Date());
   const [age, setAge] = useState(0);
@@ -39,12 +53,24 @@ export default function CreateForm() {
   const { ref } = usePlacesWidget({
     apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY,
     onPlaceSelected: (place) => {
-      const coords = [place?.geometry.location.lng() ?? 0, place?.geometry.location.lat() ?? 0];
+      /* const coords = [place?.geometry.location.lng() ?? 0, place?.geometry.location.lat() ?? 0];
       setLocationCoordinates(coords);
+      */
       setLocation(place?.formatted_address ?? '');
       setHasLocation(true);
     }
   });
+
+  const updateLocation = (e) => {
+    console.log('Triggering getPosition()')
+    getPosition()
+  }
+
+  useEffect(() => {
+    if (deviceCoords) {
+      setLocationCoordinates([deviceCoords?.longitude, deviceCoords?.latitude])
+    }
+  }, [deviceCoords])
 
   return (
     <div className="flex items-center justify-center my-4">
@@ -234,11 +260,12 @@ export default function CreateForm() {
                   id="location"
                   className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                   placeholder=" "
-                  value={`POINT(${location.latitude} ${location.longitude})`}
+                  value={supabasePointGeo}
+                  readOnly
                   required
                 />
-                <Button color="light" className="m-2">
-                  <IoMdLocate className="h-6 w-6" />
+                <Button color="light" className="m-2" onClick={updateLocation} disabled={!isGeolocationAvailable || !isGeolocationEnabled}>
+                  <IoMdLocate className="w-6 h-6" />
                 </Button>
               </div>
               <Label
