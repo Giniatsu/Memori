@@ -13,10 +13,12 @@ export default function MapPage() {
   const dstLat = searchParams.get('lat');
   const dstLng = searchParams.get('lng');
 
+  console.log(dstLat, dstLng)
+
   return (
     <main className="w-screen h-screen">
       <Map2
-        destination={{ lat: parseFloat(dstLat), lng: parseFloat(dstLng) }}
+        dst={{ lat: parseFloat(dstLat), lng: parseFloat(dstLng) }}
       />
     </main>
   );

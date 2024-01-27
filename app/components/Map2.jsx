@@ -1,5 +1,6 @@
-import React from 'react';
-import {createRoot} from 'react-dom/client';
+'use client'
+
+import React, { useState, useEffect, useCallback } from 'react';
 
 import {
   AdvancedMarker,
@@ -7,18 +8,54 @@ import {
   InfoWindow,
   Map,
   Marker,
-  Pin
+  Pin,
+  useApiIsLoaded
 } from '@vis.gl/react-google-maps';
+
+import { useGeolocated } from "react-geolocated";
 
 import {MovingMarker} from './map/moving-marker';
 import {MarkerWithInfowindow} from './map/marker-with-infowindow';
+import { UserMarker } from './map/user-marker';
 
 const API_KEY =
   globalThis.NEXT_PUBLIC_GOOGLE_MAP_API_KEY ?? (process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY);
 
-const App = () => {
+const Map2 = ({ dst }) => {
+  console.log(dst)
+  const {
+    coords,
+    isGeolocationAvailable,
+    isGeolocationEnabled
+  } = useGeolocated({
+      positionOptions: {
+          enableHighAccuracy: true
+      },
+      watchPosition: true,
+      userDecisionTimeout: 5000
+  });
+
+  useEffect(() => {
+    // Check geolocation status and render elements conditionally
+    if (isGeolocationAvailable && !isGeolocationEnabled) {
+      const geolocationNotEnabledElement = document.getElementById('geolocationNotEnabled');
+      if (geolocationNotEnabledElement) {
+        geolocationNotEnabledElement.innerHTML = "<h1>Geolocation is not enabled, Please allow the location check your setting</h1>";
+      }
+    }
+
+    if (!isGeolocationAvailable) {
+      const geolocationNotSupportedElement = document.getElementById('geolocationNotSupported');
+      if (geolocationNotSupportedElement) {
+        geolocationNotSupportedElement.innerHTML = "<h1>Your browser does not support Geolocation</h1>";
+      }
+    }
+  }, [isGeolocationAvailable, isGeolocationEnabled]);
+
   return (
     <APIProvider apiKey={API_KEY} libraries={['marker']}>
+      <div id="geolocationNotEnabled"></div>
+      <div id="geolocationNotSupported"></div>
       <Map
         mapId={'bf51a910020fa25a'}
         zoom={3}
@@ -32,6 +69,8 @@ const App = () => {
           onClick={() => alert('marker was clicked!')}
           title={'clickable google.maps.Marker'}
         />
+
+        <UserMarker dst={dst} />
 
         {/* advanced marker with customized pin */}
         <AdvancedMarker
@@ -79,9 +118,6 @@ const App = () => {
           </p>
         </InfoWindow>
 
-        {/* continously updated marker */}
-        <MovingMarker />
-
         {/* simple stateful infowindow */}
         <MarkerWithInfowindow />
       </Map>
@@ -89,4 +125,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Map2;
