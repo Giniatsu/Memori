@@ -1,11 +1,16 @@
 'use client'
 
-import Head from "next/head";
-import Image from "next/image";
-import Map2 from "../components/Map2";
+import Map from "../components/Map";
 import React from "react";
 
+import {
+  APIProvider,
+} from '@vis.gl/react-google-maps';
+
 import { useSearchParams } from 'next/navigation'
+
+const API_KEY =
+  globalThis.NEXT_PUBLIC_GOOGLE_MAP_API_KEY ?? (process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY);
 
 export default function MapPage() {
   const searchParams = useSearchParams()
@@ -13,13 +18,13 @@ export default function MapPage() {
   const dstLat = searchParams.get('lat');
   const dstLng = searchParams.get('lng');
 
-  console.log(dstLat, dstLng)
-
   return (
     <main className="w-screen h-screen">
-      <Map2
-        dst={{ lat: parseFloat(dstLat), lng: parseFloat(dstLng) }}
-      />
+      <APIProvider apiKey={API_KEY} libraries={['marker']}>
+        <Map
+          dst={{ lat: parseFloat(dstLat), lng: parseFloat(dstLng) }}
+        />
+      </APIProvider>
     </main>
   );
 }

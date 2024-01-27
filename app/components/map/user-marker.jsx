@@ -1,28 +1,10 @@
-import React, {useEffect, useState, useMemo} from 'react';
-import {AdvancedMarker, Marker, useMap} from '@vis.gl/react-google-maps';
+'use client'
 
+import React, {useCallback, useState, useEffect} from 'react';
+import { useMapsLibrary, Marker } from "@vis.gl/react-google-maps";
 import { useGeolocated } from "react-geolocated";
-import { UserArrow } from './user-arrow';
 
-export const UserMarker = ({ asd }) => {
-
-  const [dst, setTest] = useState({
-    lat: 0,
-    lng: 0
-  });
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const t = performance.now();
-      const lat = Math.sin(t / 2000) * 5;
-      const lng = Math.cos(t / 3000) * 5;
-
-      setTest({lat, lng});
-    }, 200);
-
-    return () => clearInterval(interval);
-  });
-
+export const UserMarker = ({ dst }) => {
   const {
     coords
   } = useGeolocated({
@@ -33,19 +15,43 @@ export const UserMarker = ({ asd }) => {
       userDecisionTimeout: 5000
   });
 
-  const src = useMemo(() => {
-    return { lat: coords?.latitude ?? 0, lng: coords?.longitude ?? 0 }
-  }, [coords])
+  const [rotation, setRotation] = useState(0);
+
+  const geometryLib = useMapsLibrary('geometry')
+  const coreLib = useMapsLibrary('core')
+
+  // Function to calculate the initial bearing between two points on Earth
+  const calculateBearing = useCallback(() => {
+    if (geometryLib && coreLib && coords && dst && 'lng' in dst && 'lat' in dst) {
+      const fromLatLng = new coreLib.LatLng(coords.latitude, coords.longitude)
+      const toLatLng = new coreLib.LatLng(dst.lat, dst.lng)
+      const heading = geometryLib.spherical.computeHeading(fromLatLng, toLatLng)
+
+      return heading;
+    }
+    return 0;
+  }, [coords, dst, geometryLib, coreLib]);
+
+  useEffect(() => {
+    const heading = calculateBearing();
+    setRotation(heading);
+  }, [calculateBearing]);
+
+  // Handle the case when coords are not available yet
+  if (!coords || !geometryLib || !coreLib) {
+    return <div>Loading...</div>; // You can replace this with a loading indicator or any placeholder
+  }
 
   return (
-    <>
-    <Marker position={dst}></Marker>
-    <AdvancedMarker
-      position={src}
-    >
-      <UserArrow src={src} dst={dst} />
-    </AdvancedMarker>
-    </>
-    
+    <Marker
+      icon={{
+        path: coreLib.SymbolPath.FORWARD_CLOSED_ARROW,
+        scale: 4,
+        rotation: rotation,
+        strokeColor: 'red',
+        strokeWeight: 3,
+      }}
+      position={{lat: coords.latitude, lng: coords.longitude}}
+    />
   );
 };
