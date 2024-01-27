@@ -1,7 +1,7 @@
 'use client'
 
 import React, {useCallback, useState, useEffect} from 'react';
-import { useMapsLibrary, Marker } from "@vis.gl/react-google-maps";
+import { useMapsLibrary, Marker, useMap } from "@vis.gl/react-google-maps";
 import { useGeolocated } from "react-geolocated";
 
 export const UserMarker = ({ dst }) => {
@@ -19,6 +19,7 @@ export const UserMarker = ({ dst }) => {
 
   const geometryLib = useMapsLibrary('geometry')
   const coreLib = useMapsLibrary('core')
+  const map = useMap()
 
   // Function to calculate the initial bearing between two points on Earth
   const calculateBearing = useCallback(() => {
@@ -36,6 +37,22 @@ export const UserMarker = ({ dst }) => {
     const heading = calculateBearing();
     setRotation(heading);
   }, [calculateBearing]);
+
+  useEffect(() => {
+    if (coreLib && map && coords) {
+      const bounds = new coreLib.LatLngBounds()
+
+      bounds.extend({ lat: coords?.latitude, lng: coords?.longitude })
+      bounds.extend(dst)
+
+      map.fitBounds(bounds, {
+        top: 200,
+        right: 200,
+        left: 200,
+        bottom: 300,
+      })
+    }
+  }, [coreLib, map, coords, dst])
 
   // Handle the case when coords are not available yet
   if (!coords || !geometryLib || !coreLib) {

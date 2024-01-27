@@ -8,6 +8,7 @@ import {
 
 import Sheet from 'react-modal-sheet';
 import { Button } from 'flowbite-react';
+import { useGeolocated } from "react-geolocated";
 
 import { GraveMarker } from './map/grave-marker';
 import { UserMarker } from './map/user-marker';
@@ -15,7 +16,19 @@ import SheetDetails from './map/sheet-details';
 import DirectionPolyline from './map/direction-polyline';
 
 const Map = ({ dst }) => {
+  const {
+    isGeolocationAvailable,
+    isGeolocationEnabled
+  } = useGeolocated({
+      watchLocationPermissionChange: true,
+      userDecisionTimeout: 5000
+  });
+
   const [isOpen, setOpen] = useState(true);
+
+  if (!isGeolocationAvailable || !isGeolocationEnabled) {
+    return <div>Geolocation unavailable. Please enable them first!</div>
+  }
 
   return (
     <>
