@@ -53,12 +53,8 @@ export const UserMarker = ({ dst }) => {
       bounds.extend({ lat: coords?.latitude, lng: coords?.longitude })
       bounds.extend(dst)
 
-      map.fitBounds(bounds, {
-        top: 200,
-        right: 200,
-        left: 200,
-        bottom: 300,
-      })
+      map.fitBounds(bounds)
+      map.setZoom(map.getZoom() - 1)
     }
   }, [coreLib, map, coords, dst])
 
