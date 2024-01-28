@@ -23,16 +23,46 @@ export async function generateMetadata({ params }) {
 }
 
 async function getGrave(id) {
+  /*
+    Postgres query to build the get_graves() function:
+    
+    ```
+      drop function get_graves();
+
+      create
+      or replace function get_graves () returns table (
+        grave_id integer,
+        cemetery_id bigint,
+        cemetery_name text,
+        grave_images text,
+        firstname text,
+        lastname text,
+        aliases text,
+        age integer,
+        birth date,
+        death date,
+        grave_location geography,
+        latitude double precision,
+        longitude double precision,
+        user_email text,
+        notes text
+      ) as $$
+      BEGIN
+        RETURN QUERY
+        SELECT g.id AS grave_id, c.id AS cemetery_id, c.name AS cemetery_name, g.grave_images, g.firstname, g.lastname, g.aliases, g.age, g.birth, g.death, g.location AS grave_location, ST_X(g.location::geometry) AS latitude, ST_Y(g.location::geometry) AS longitude, g.user_email, g.notes
+        FROM graves g
+        JOIN cemetery c ON g.cemetery = c.id;
+      END;
+      $$ language plpgsql;
+    ```
+  */
   const supabase = createServerComponentClient({ cookies });
-  const { data } = await supabase
-    .from("graves")
-    .select(`
-      *,
-      cemetery ( * )
-    `)
-    .eq("id", id)
+  const { data, error } = await supabase
+    .rpc("get_graves")
+    .eq("grave_id", id)
     .single();
 
+  console.log(error)
   if (!data) {
     notFound();
   }
@@ -76,8 +106,8 @@ export default async function GraveDetails({ params }) {
         <h5>Birth:{grave.birth}</h5>
         <h5>Death:{grave.death}</h5>
         <h5>Internment:{grave.internment}</h5>
-        <span>Location: {grave.location}</span>
-        <div>Cemetery: {grave.cemetery.name}</div>
+        <span>Location: {grave.longitude}, {grave.latitude}</span>
+        <div>Cemetery: {grave.cemetery_name}</div>
       </div>
     </main>
   );
