@@ -40,9 +40,14 @@ export default function CreateForm() {
   const [cemetery, setCemetery] = useState("");
 
   const [locationCoordinates, setLocationCoordinates] = useState([0, 0]);
+  const [cemeteryLocationCoordinates, setCemeteryLocationCoordinates] = useState([0, 0]);
   const supabasePointGeo = useMemo(() => {
     return `POINT(${locationCoordinates[0]} ${locationCoordinates[1]})`;
   }, [locationCoordinates]);
+
+  const supabasePointGeoCemetery = useMemo(() => {
+    return `POINT(${cemeteryLocationCoordinates[0]} ${cemeteryLocationCoordinates[1]})`;
+  }, [cemeteryLocationCoordinates]);
 
   useEffect(() => {
     const diff = Math.abs(new Date(death) - new Date(birth));
@@ -53,9 +58,8 @@ export default function CreateForm() {
   const { ref } = usePlacesWidget({
     apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY,
     onPlaceSelected: (place) => {
-      /* const coords = [place?.geometry.location.lng() ?? 0, place?.geometry.location.lat() ?? 0];
-      setLocationCoordinates(coords);
-      */
+      const coords = [place?.geometry.location.lng() ?? 0, place?.geometry.location.lat() ?? 0];
+      setCemeteryLocationCoordinates(coords);
       setLocation(place?.formatted_address ?? '');
       setHasLocation(true);
     }
@@ -78,7 +82,7 @@ export default function CreateForm() {
         <form action={addGrave} className="grid grid-cols-2 gap-4">
           <input
             type="hidden"
-            value={supabasePointGeo}
+            value={supabasePointGeoCemetery}
             name="cemeterycoordinates"
           />
           <div className="max-w-md" id="fileUpload">
