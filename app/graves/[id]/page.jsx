@@ -90,7 +90,7 @@ export default async function GraveDetails({ params }) {
         <div className="ml-auto">
           {data.session.user.email === grave.user_email && (
             <>
-              <DeleteButton id={grave.id} />
+              <DeleteButton id={grave.grave_id} />
               <UpdateModalForm graveInfo={grave}/>
             </>
           )}
