@@ -54,6 +54,7 @@ export default async function GraveImage({ grave_id }) {
     <>
       { imageUrls.map((imageUrl) => (
         <Image
+          key={imageUrl}
           src={imageUrl ?? ""}
           alt=""
           height={384}
