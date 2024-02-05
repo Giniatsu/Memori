@@ -1,6 +1,6 @@
 "use client";
 
-import useFormStatus from "react-dom";
+import { useFormStatus } from "react-dom";
 
 export default function UpdateButton() {
   const { pending } = useFormStatus();
