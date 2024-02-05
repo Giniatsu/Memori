@@ -49,7 +49,7 @@ async function getGrave(id) {
       ) as $$
       BEGIN
         RETURN QUERY
-        SELECT g.id AS grave_id, c.id AS cemetery_id, c.name AS cemetery_name, g.grave_images, g.firstname, g.lastname, g.aliases, g.age, g.birth, g.death, g.location AS grave_location, ST_X(g.location::geometry) AS latitude, ST_Y(g.location::geometry) AS longitude, g.user_email, g.notes
+        SELECT g.id AS grave_id, c.id AS cemetery_id, c.name AS cemetery_name, g.grave_images, g.firstname, g.lastname, g.aliases, g.age, g.birth, g.death, g.location AS grave_location, ST_Y(g.location::geometry) AS latitude, ST_X(g.location::geometry) AS longitude, g.user_email, g.notes
         FROM graves g
         JOIN cemetery c ON g.cemetery = c.id;
       END;
