@@ -30,8 +30,8 @@ const Map = ({ graveId }) => {
 
   const dst = useMemo(() => {
     return {
-      lat: graveTarget?.latitude ?? 0,
-      lng: graveTarget?.longitude ?? 0,
+      lat: parseFloat(graveTarget?.latitude ?? 0),
+      lng: parseFloat(graveTarget?.longitude ?? 0),
     }
   }, [graveTarget])
 
