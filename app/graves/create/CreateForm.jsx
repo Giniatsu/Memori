@@ -90,9 +90,10 @@ export default function CreateForm() {
               <Label htmlFor="file" value="Upload file" />
             </div>
             <FileInput
-              helperText="A profile picture is useful to confirm your are logged into your account"
+              helperText="Add helpful images to identify gravesite"
               id="file"
               name="grave_images"
+              multiple
             />
           </div>
           <div className="relative z-0 w-full col-span-2 group">
