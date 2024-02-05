@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import DeleteButton from "./DeleteButton";
 import UpdateModalForm from "./UpdateModalForm";
 import Link from "next/link";
+import GraveImage from "../contributions/GraveImage";
 
 export const dynamicParams = true; // default val = true
 
@@ -78,6 +79,7 @@ export default async function GraveDetails({ params }) {
   return (
     <main>
       <nav>
+        <GraveImage grave_id={params.id} multiple />
         <Link href={`/map?grave_id=${params.id}`}>
           LOCATE GRAVE HERE (MAP)
         </Link>

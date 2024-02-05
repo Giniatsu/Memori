@@ -24,9 +24,9 @@ async function getImage(grave_id) {
     return null;
   }
 
-  return dbData.map((data) => {
-    return BASE_URL + data.file_name;
-  });
+  return dbData.map((data) => (
+    BASE_URL + data.file_name
+  ))
 
   /*
   try {
@@ -47,21 +47,40 @@ async function getImage(grave_id) {
   */
 }
 
-export default async function GraveImage({ grave_id }) {
+export default async function GraveImage({ grave_id, multiple }) {
   const imageUrls = await getImage(grave_id);
+  
+  if (!imageUrls) {
+    return <></>
+  }
+ 
+  if (multiple) {
+    return (
+      <>
+        { imageUrls.map((imageUrl) => (
+          <Image
+            key={imageUrl}
+            src={imageUrl ?? ""}
+            alt=""
+            height={384}
+            width={384}
+            className="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-l-lg"
+          />
+        ))
+        }
+      </>
+    )
+  }
 
   return (
     <>
-      { imageUrls.map((imageUrl) => (
-        <Image
-          key={imageUrl}
-          src={imageUrl ?? ""}
-          alt=""
-          height={384}
-          width={384}
-          className="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-l-lg"
-        />
-      )) }
+      <Image
+        src={imageUrls[0] ?? ""}
+        alt=""
+        height={384}
+        width={384}
+        className="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-l-lg"
+      />
     </>
   );
 }

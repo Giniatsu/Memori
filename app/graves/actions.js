@@ -54,7 +54,9 @@ export async function addGrave(formData) {
     throw new Error("Could not add the new grave");
   }
 
-  for await (const file of filteredGrave.grave_images) {
+  console.log(formData.getAll("grave_images"))
+
+  for await (const file of formData.getAll("grave_images")) {
     const fileExt = file.name.split(".").pop();
     const filePath = `${uuidv4()}.${fileExt}`;
 
