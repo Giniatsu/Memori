@@ -78,7 +78,7 @@ const Map = ({ graveId }) => {
         disableDefaultUI={true}
       >
         <UserMarker dst={dst} />
-        <GraveMarker coords={dst} />
+        <GraveMarker grave={graveTarget} coords={dst} />
         <DirectionPolyline dst={dst} />
       </GoogleMap>
 
