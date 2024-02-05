@@ -15,14 +15,15 @@ const API_KEY =
 export default function MapPage() {
   const searchParams = useSearchParams()
 
-  const dstLat = searchParams.get('lat');
-  const dstLng = searchParams.get('lng');
+  // const dstLat = searchParams.get('lat');
+  // const dstLng = searchParams.get('lng');
+  const graveId = searchParams.get('grave_id');
 
   return (
     <main className="w-screen h-screen">
       <APIProvider apiKey={API_KEY} libraries={['marker']}>
         <Map
-          dst={{ lat: parseFloat(dstLat), lng: parseFloat(dstLng) }}
+          graveId={graveId}
         />
       </APIProvider>
     </main>
