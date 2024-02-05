@@ -23,10 +23,21 @@ export const GraveMarker = ({ coords, grave }) => {
         <InfoWindow
           anchor={marker}
           maxWidth={200}
-          onCloseClick={() => setInfowindowOpen(false)}>
-          {grave.firstname}{' '}{grave.lastname}
-          <code style={{whiteSpace: 'nowrap'}}>&lt;GraveMarker /&gt;</code>{' '}
-          with an Infowindow.
+          onCloseClick={() => setInfowindowOpen(false)}
+        >
+          <p>
+            <b>{grave.firstname}{' '}{grave.lastname}</b> lies here.
+          </p>
+          <p>
+            <b>Date of Birth:</b>{' '}{grave.birth}
+          </p>
+          <p>
+            <b>Date of Death:</b>{' '}{grave.death}
+          </p>
+          <b>Notes:</b>
+          <p>
+            {grave.notes ?? 'N/A'}
+          </p>
         </InfoWindow>
       )}
     </>
