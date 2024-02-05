@@ -54,32 +54,33 @@ export async function addGrave(formData) {
     throw new Error("Could not add the new grave");
   }
 
-  const file = filteredGrave.grave_images;
-  const fileExt = file.name.split(".").pop();
-  const filePath = `${uuidv4()}.${fileExt}`;
+  for await (const file of filteredGrave.grave_images) {
+    const fileExt = file.name.split(".").pop();
+    const filePath = `${uuidv4()}.${fileExt}`;
 
-  // upload image to storage
-  let { error: uploadError } = await supabase.storage
-    .from("grave_images")
-    .upload(filePath, file);
+    // upload image to storage
+    let { error: uploadError } = await supabase.storage
+      .from("grave_images")
+      .upload(filePath, file);
 
-  if (uploadError) {
-    console.log(uploadError);
-    throw new Error("Could not upload image");
-  }
+    if (uploadError) {
+      console.log(uploadError);
+      throw new Error("Could not upload image");
+    }
 
-  // add image to database
-  const { error: imageDbError } = await supabase
-    .from("images")
-    .insert({
-      file_name: filePath,
-      owner: session.user.id,
-      grave: graveData[0].id,
-    });
-  
-  if (imageDbError) {
-    console.log(imageDbError);
-    throw new Error("Could not add image to database");
+    // add image to database
+    const { error: imageDbError } = await supabase
+      .from("images")
+      .insert({
+        file_name: filePath,
+        owner: session.user.id,
+        grave: graveData[0].id,
+      });
+    
+    if (imageDbError) {
+      console.log(imageDbError);
+      throw new Error("Could not add image to database");
+    }
   }
   //*/
 
@@ -128,11 +129,18 @@ export async function deleteGrave(id) {
   }
 
   // delete all null images
-  const { data, error: imageError } = await supabase
+  const { data, error: imageSelectError } = await supabase
+    .from("images")
+    .select("*")
+    .is("grave", null);
+  if (imageSelectError) {
+    console.log(imageSelectError);
+  }
+
+  const { error: imageError } = await supabase
     .from("images")
     .delete()
-    .is("grave", null)
-    .select();
+    .is("grave", null);
   if (imageError) {
     console.log(imageError);
   }
