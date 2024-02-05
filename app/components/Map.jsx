@@ -1,6 +1,6 @@
 // Import necessary dependencies and components
 
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Map as GoogleMap } from '@vis.gl/react-google-maps';
 import { Button } from 'flowbite-react';
 import { useGeolocated } from 'react-geolocated';
@@ -10,8 +10,31 @@ import { GraveMarker } from './map/grave-marker';
 import { UserMarker } from './map/user-marker';
 import SheetDetails from './map/sheet-details';
 import DirectionPolyline from './map/direction-polyline';
+import { createClient } from '@supabase/supabase-js';
 
-const Map = ({ dst }) => {
+const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
+
+const Map = ({ graveId }) => {
+  const [graveTarget, setGraveTarget] = useState(null)
+
+  const getGrave = async () => {
+    const { data } = await supabase.rpc("get_graves")
+      .eq("grave_id", graveId)
+      .single();
+    setGraveTarget(data) 
+  }
+
+  useEffect(() => {
+    getGrave()
+  }, [])
+
+  const dst = useMemo(() => {
+    return {
+      lat: graveTarget?.latitude ?? 0,
+      lng: graveTarget?.longitude ?? 0,
+    }
+  }, [graveTarget])
+
   const {
     coords,
     isGeolocationAvailable,

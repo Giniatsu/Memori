@@ -75,15 +75,10 @@ export default async function GraveDetails({ params }) {
   const supabase = createServerComponentClient({ cookies });
   const { data } = await supabase.auth.getSession();
 
-  // NEED TO REPLACE THIS WITH ACTUAL DATA FROM DATABASE
-  // DI KO ALAM HOW TO GET THE ACTUAL COORDINATESFROM SUPABASE
-  const test_lat = 7.076674;
-  const test_lng = 125.597120;
-
   return (
     <main>
       <nav>
-        <Link href={`/map?lat=${test_lat}&lng=${test_lng}`}>
+        <Link href={`/map?grave_id=${params.id}`}>
           LOCATE GRAVE HERE (MAP)
         </Link>
         <h2>Grave Details</h2>
