@@ -4,8 +4,6 @@ import { cookies } from "next/headers";
 // components
 import Navigationbar from "@/app/components/Navbar";
 import BottomNavbar from "../components/BottomNavbar";
-import Image from "next/image";
-import { redirect } from "next/navigation";
 export const dynamic = "force-dynamic";
 
 export default async function GravesLayout({ children }) {
@@ -21,10 +19,6 @@ export default async function GravesLayout({ children }) {
       .eq("id", data.session.user.id)
       .single();
     profile = profileData;
-  }
-
-  if (!data.session) {
-    redirect("/login");
   }
 
   return (
