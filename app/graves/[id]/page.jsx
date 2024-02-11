@@ -85,7 +85,7 @@ export default async function GraveDetails({ params }) {
         </Link>
         <h2>Grave Details</h2>
         <div className="ml-auto">
-          {data.session.user.email === grave.user_email && (
+          {data.session?.user?.email === grave.user_email && (
             <>
               <DeleteButton id={grave.grave_id} />
               <UpdateModalForm graveInfo={grave}/>
