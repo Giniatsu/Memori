@@ -122,6 +122,33 @@ export default function Search() {
               Age Range
             </Label>
           </div>
+          <div className="relative z-20 w-full mb-6 group">
+            <TextInput type="number" name="age" id="age" title="Age (Exact)" />
+            <Label
+              htmlFor="age"
+              className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            >
+              Age
+            </Label>
+          </div>
+          <div className="relative z-20 w-full mb-6 group">
+            <TextInput type="number" name="age_min" id="age_min" title="Age Min (Range)" />
+            <Label
+              htmlFor="age_min"
+              className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            >
+              Age Min
+            </Label>
+          </div>
+          <div className="relative z-20 w-full mb-6 group">
+            <TextInput type="number" name="age_max" id="age_max" title="Age Max (Range)" />
+            <Label
+              htmlFor="age_max"
+              className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            >
+              Age Max
+            </Label>
+          </div>
           <div className="col-span-2">
             <div className="relative z-30 w-full mb-6 group">
               <TextInput type="date" name="birth" id="birthpicker" title="Birth" />
@@ -141,24 +168,7 @@ export default function Search() {
                 Death
               </Label>
             </div>
-            <div className="relative z-20 w-full mb-6 group">
-              <TextInput type="number" name="age_min" id="age_min" title="Age Min" />
-              <Label
-                htmlFor="age_min"
-                className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >
-                Age Min
-              </Label>
-            </div>
-            <div className="relative z-20 w-full mb-6 group">
-              <TextInput type="number" name="age_max" id="age_max" title="Age Max" />
-              <Label
-                htmlFor="age_max"
-                className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >
-                Age Max
-              </Label>
-            </div>
+            
             {/*<div className="relative z-10 w-full mb-2 group">
               <Datepicker name="internment" id="internmentpicker" title="Internment" />
               <Label
