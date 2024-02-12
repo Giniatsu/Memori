@@ -20,27 +20,27 @@ async function getGraves(query) {
   // ani siya kay para optional tanan fields, so if naay value ang field, i-add siya sa query
   // better for me if optional tanan fields kay para dili kaayo strict ang search
   if (query.cemetery) {
-    supabase_query = supabase_query.eq("cemetery", query.cemetery.replace(/\s/g, ''))
+    supabase_query = supabase_query.eq("cemetery", query.cemetery.trim())
   }
 
   if (query.firstName) {
-    supabase_query = supabase_query.ilike("firstname", `%${query.firstName.replace(/\s/g, '')}%`)
+    supabase_query = supabase_query.ilike("firstname", `%${query.firstName.trim()}%`)
   }
 
   if (query.lastName) {
-    supabase_query = supabase_query.ilike("lastname", `%${query.lastName.replace(/\s/g, '')}%`)
+    supabase_query = supabase_query.ilike("lastname", `%${query.lastName.trim()}%`)
   }
 
   if (query.aliases) {
-    supabase_query = supabase_query.ilike("aliases", `%${query.aliases.replace(/\s/g, '')}%`)
+    supabase_query = supabase_query.ilike("aliases", `%${query.aliases.trim()}%`)
   }
 
   if (query.birth) {
-    supabase_query = supabase_query.eq("birth", `${query.birth.replace(/\s/g, '')}`)
+    supabase_query = supabase_query.eq("birth", `${query.birth.trim()}`)
   }
 
   if (query.death) {
-    supabase_query = supabase_query.eq("death", `${query.death.replace(/\s/g, '')}`)
+    supabase_query = supabase_query.eq("death", `${query.death.trim()}`)
   }
 
   const { data, error } = await supabase_query;
