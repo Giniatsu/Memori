@@ -43,6 +43,14 @@ async function getGraves(query) {
     supabase_query = supabase_query.eq("death", `${query.death.trim()}`)
   }
 
+  if (query.ageMin) {
+    supabase_query = supabase_query.gte("age", parseInt(query.ageMin.trim()))
+  }
+
+  if (query.ageMax) {
+    supabase_query = supabase_query.lte("age", parseInt(query.ageMax.trim()))
+  }
+
   const { data, error } = await supabase_query;
 
   if (error) {
@@ -63,6 +71,8 @@ export default async function GravesList() {
   const aliases = searchParams.get('aliases')
   const birth = searchParams.get('birth')
   const death = searchParams.get('death')
+  const ageMin = searchParams.get('age_min')
+  const ageMax = searchParams.get('age_max')
 
   const [graves, setGraves] = useState([]);
 
@@ -75,6 +85,8 @@ export default async function GravesList() {
       aliases,
       birth,
       death,
+      ageMin,
+      ageMax,
     }).then((data) => {
       setGraves(data)
     })
