@@ -51,6 +51,10 @@ async function getGraves(query) {
     supabase_query = supabase_query.lte("age", parseInt(query.ageMax.trim()))
   }
 
+  if (query.age) {
+    supabase_query = supabase_query.eq("age", parseInt(query.age.trim()))
+  }
+
   const { data, error } = await supabase_query;
 
   if (error) {
@@ -71,6 +75,7 @@ export default async function GravesList() {
   const aliases = searchParams.get('aliases')
   const birth = searchParams.get('birth')
   const death = searchParams.get('death')
+  const age = searchParams.get('age')
   const ageMin = searchParams.get('age_min')
   const ageMax = searchParams.get('age_max')
 
