@@ -109,7 +109,7 @@ export default async function GravesList() {
       {graves.map((grave) => (
         <Link
           key={grave.id}
-          href={`/graves/${grave.id}`}
+          href={`/graves/${grave.id}/search_result`}
           className="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
         >
           <SearchImage grave_id={grave.id} />
