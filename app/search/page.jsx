@@ -1,7 +1,15 @@
-"use client"
+"use client";
 
 import { useState, useEffect } from "react";
-import { Button, Card, Datepicker, Label, Select, TextInput } from "flowbite-react";
+import {
+  Button,
+  Card,
+  Datepicker,
+  Label,
+  Select,
+  TextInput,
+  Radio,
+} from "flowbite-react";
 import { FaSearchLocation } from "react-icons/fa";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { search } from "./actions";
@@ -21,19 +29,19 @@ function SearchButton() {
 }
 
 export default function Search() {
-
   const [loading, setLoading] = useState(true);
   const [cemeteries, setCemeteries] = useState([]);
+  const [ageMode, setAgeMode] = useState("range");
 
   useEffect(() => {
     setLoading(true);
     const load = async () => {
       const supabase = createClientComponentClient();
-  
+
       let { data: cemeteries, error } = await supabase
-        .from('cemetery')
-        .select('*')
-      
+        .from("cemetery")
+        .select("*");
+
       if (error) {
         console.log(error.message);
       }
@@ -41,7 +49,7 @@ export default function Search() {
       setCemeteries(cemeteries);
       console.log(cemeteries);
       setLoading(false);
-    }
+    };
     load();
   }, []);
 
@@ -55,11 +63,12 @@ export default function Search() {
             </div>
             <Select id="cemeteries" name="cemetery">
               <option value="">Select your cemetery</option>
-              { !loading && (
-                cemeteries.map(cemetery => (
-                  <option key={cemetery.id} value={cemetery.id}>{cemetery.name}</option>
-                ))
-              ) }
+              {!loading &&
+                cemeteries.map((cemetery) => (
+                  <option key={cemetery.id} value={cemetery.id}>
+                    {cemetery.name}
+                  </option>
+                ))}
             </Select>
           </div>
           <div className="relative z-0 w-full group block">
@@ -107,42 +116,87 @@ export default function Search() {
               Aliases
             </Label>
           </div>
-          <div className="relative z-0 w-full group col-span-2">
-            <TextInput
-              type="number"
-              name="age"
-              id="age"
-              className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
-            />
-            <Label
-              htmlFor="age"
-              className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >
-              Age (Fixed)
-            </Label>
-          </div>
-          <div className="relative z-20 w-full mb-6 group">
-            <TextInput type="number" name="age_min" id="age_min" title="Age Min (Range)" />
-            <Label
-              htmlFor="age_min"
-              className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >
-              Age Min
-            </Label>
-          </div>
-          <div className="relative z-20 w-full mb-6 group">
-            <TextInput type="number" name="age_max" id="age_max" title="Age Max (Range)" />
-            <Label
-              htmlFor="age_max"
-              className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >
-              Age Max
-            </Label>
+          <div className="col-span-2">
+            <fieldset className="flex flex-row gap-4 mb-6">
+              <legend>Age Mode</legend>
+              <div className="flex items-center gap-2">
+                <Radio
+                  id="rangeradio"
+                  name="ageradio"
+                  defaultChecked
+                  checked={ageMode === "range"}
+                  onChange={() => setAgeMode("range")}
+                />
+                <Label htmlFor="rangeradio">Range</Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <Radio
+                  id="fixedradio"
+                  name="ageradio"
+                  checked={ageMode === "fixed"}
+                  onChange={() => setAgeMode("fixed")}
+                />
+                <Label htmlFor="fixedradio">Fixed</Label>
+              </div>
+            </fieldset>
+            {ageMode === "range" && (
+              <div className="flex flex-row gap-4 mb-2">
+                <div className="relative z-20 w-full group col-span-2">
+                  <TextInput
+                    type="number"
+                    name="age_min"
+                    id="age_min"
+                    title="Age Min (Range)"
+                  />
+                  <Label
+                    htmlFor="age_min"
+                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  >
+                    Age Min
+                  </Label>
+                </div>
+                <div className="relative z-20 w-full group col-span-2">
+                  <TextInput
+                    type="number"
+                    name="age_max"
+                    id="age_max"
+                    title="Age Max (Range)"
+                  />
+                  <Label
+                    htmlFor="age_max"
+                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  >
+                    Age Max
+                  </Label>
+                </div>
+              </div>
+            )}
+            {ageMode === "fixed" && (
+              <div className="relative z-0 w-full group col-span-2">
+                <TextInput
+                  type="number"
+                  name="age"
+                  id="age"
+                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  placeholder=" "
+                />
+                <Label
+                  htmlFor="age"
+                  className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >
+                  Age (Fixed)
+                </Label>
+              </div>
+            )}
           </div>
           <div className="col-span-2">
             <div className="relative z-30 w-full mb-6 group">
-              <TextInput type="date" name="birth" id="birthpicker" title="Birth" />
+              <TextInput
+                type="date"
+                name="birth"
+                id="birthpicker"
+                title="Birth"
+              />
               <Label
                 htmlFor="birthpicker"
                 className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
@@ -151,7 +205,12 @@ export default function Search() {
               </Label>
             </div>
             <div className="relative z-20 w-full mb-6 group">
-              <TextInput type="date" name="death" id="deathpicker" title="Death" />
+              <TextInput
+                type="date"
+                name="death"
+                id="deathpicker"
+                title="Death"
+              />
               <Label
                 htmlFor="deathpicker"
                 className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
@@ -159,16 +218,6 @@ export default function Search() {
                 Death
               </Label>
             </div>
-            
-            {/*<div className="relative z-10 w-full mb-2 group">
-              <Datepicker name="internment" id="internmentpicker" title="Internment" />
-              <Label
-                htmlfor="internmentpicker"
-                className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >
-                Internment
-              </Label>
-            </div>*/}
           </div>
           <div className="z-0">
             <SearchButton />
