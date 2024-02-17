@@ -138,6 +138,15 @@ export default function Search() {
                 />
                 <Label htmlFor="fixedradio">Fixed</Label>
               </div>
+              <div className="flex items-center gap-2">
+                <Radio
+                  id="bdradio"
+                  name="ageradio"
+                  checked={ageMode === "birthdeath"}
+                  onChange={() => setAgeMode("birthdeath")}
+                />
+                <Label htmlFor="bdradio">Birth&Death Date</Label>
+              </div>
             </fieldset>
             {ageMode === "range" && (
               <div className="flex flex-row gap-4 mb-2">
@@ -189,36 +198,38 @@ export default function Search() {
               </div>
             )}
           </div>
-          <div className="col-span-2">
-            <div className="relative z-30 w-full mb-6 group">
-              <TextInput
-                type="date"
-                name="birth"
-                id="birthpicker"
-                title="Birth"
-              />
-              <Label
-                htmlFor="birthpicker"
-                className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >
-                Birth
-              </Label>
+          {ageMode === "birthdeath" && (
+            <div className="col-span-2">
+              <div className="relative z-30 w-full mb-6 group">
+                <TextInput
+                  type="date"
+                  name="birth"
+                  id="birthpicker"
+                  title="Birth"
+                />
+                <Label
+                  htmlFor="birthpicker"
+                  className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >
+                  Birth
+                </Label>
+              </div>
+              <div className="relative z-20 w-full mb-6 group">
+                <TextInput
+                  type="date"
+                  name="death"
+                  id="deathpicker"
+                  title="Death"
+                />
+                <Label
+                  htmlFor="deathpicker"
+                  className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >
+                  Death
+                </Label>
+              </div>
             </div>
-            <div className="relative z-20 w-full mb-6 group">
-              <TextInput
-                type="date"
-                name="death"
-                id="deathpicker"
-                title="Death"
-              />
-              <Label
-                htmlFor="deathpicker"
-                className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >
-                Death
-              </Label>
-            </div>
-          </div>
+          )}
           <div className="z-0">
             <SearchButton />
           </div>
