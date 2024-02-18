@@ -58,7 +58,8 @@ export async function addGrave(formData) {
 
   console.log(formData.getAll("grave_images"))
 
-  formData.getAll("grave_images").forEach(async (file) => {
+
+  await Promise.all(formData.getAll("grave_images").map(async (file) => {
     const fileExt = file.name.split(".").pop();
     const filePath = `${uuidv4()}.${fileExt}`;
 
@@ -87,7 +88,7 @@ export async function addGrave(formData) {
       console.log(imageDbError);
       throw new Error("Could not add image to database");
     }
-  })
+  }))
   //*/
 
   revalidatePath("/graves/contributions");
@@ -168,7 +169,7 @@ export async function updateGrave(id, formData) {
   }
 
   console.log(formData.getAll("grave_images"))
-  formData.getAll("grave_images").forEach(async (file) => {
+  await Promise.all(formData.getAll("grave_images").map(async (file) => {
     const fileExt = file.name.split(".").pop();
     const filePath = `${uuidv4()}.${fileExt}`;
 
@@ -197,7 +198,7 @@ export async function updateGrave(id, formData) {
       console.log(imageDbError);
       throw new Error("Could not add image to database");
     }
-  })
+  }))
 
   revalidatePath("/graves/contributions");
   redirect("/graves/contributions");
