@@ -10,7 +10,7 @@ export default function ImageUploadField({ id, name, existingImages }) {
   // Set existing images initially
   useEffect(() => {
     if (existingImages && existingImages.length > 0) {
-      setExistingImagesState(existingImages);
+      setExistingImagesState(existingImages.map(img => ({ markedForDeletion: false, url: img })));
     }
   }, [existingImages]);
 
@@ -99,9 +99,11 @@ export default function ImageUploadField({ id, name, existingImages }) {
   };
 
   const toggleRemoveUndo = (index) => {
-    const updatedExistingImages = [...existingImagesState];
-    updatedExistingImages[index] = null; // Marking for removal
-    setExistingImagesState(updatedExistingImages);
+    setExistingImagesState(prev => {
+      const newArray = [...prev]
+      newArray[index].markedForDeletion = !newArray[index].markedForDeletion
+      return newArray
+    })   
   };
 
   return (
@@ -119,26 +121,29 @@ export default function ImageUploadField({ id, name, existingImages }) {
         accept="image/*"
         capture="environment"
       />
+      {existingImagesState.map(image => (
+        <input type="checkbox" className="hidden" name="imagesForDeletion[]" value={image.url} checked={image.markedForDeletion} />
+      ))}
       {(selectedImages.length > 0 || existingImagesState.filter(Boolean).length > 0) && (
         <div className="mt-2">
           <h4>Selected Images:</h4>
           <ul>
             {existingImagesState.map((image, index) => (
               image && (
-                <li key={index}>
+                <li key={`existing_${index}`}>
                   <img
-                    src={image}
+                    src={image.url}
                     alt={`Existing Image ${index + 1}`}
                     style={{ maxWidth: "100px", maxHeight: "100px", marginRight: "10px" }}
                   />
                   <Button onClick={() => toggleRemoveUndo(index)}>
-                    {typeof image === "string" ? "Undo" : "Remove"}
+                    {image.markedForDeletion ? "Undo" : "Remove"}
                   </Button>
                 </li>
               )
             ))}
             {selectedImages.map((file, index) => (
-              <li key={index}>
+              <li key={`selected_${index}`}>
                 <img
                   src={URL.createObjectURL(file)}
                   alt={`Selected Image ${index + 1}`}
