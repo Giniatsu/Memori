@@ -1,6 +1,5 @@
 "use client";
 import SubmitButton from "@/app/components/SubmitButton";
-import { addGrave } from "../actions";
 import {
   Button,
   Card,
@@ -19,6 +18,8 @@ import ImageUploadField from "./ImageUploadField";
 
 export default function Form({
   data,
+  action,
+  isModal,
 }) {
 
   const {
@@ -88,9 +89,9 @@ export default function Form({
   }, [deviceCoords])
 
   return (
-    <div className="flex items-center justify-center my-4">
-      <Card className="w-4/5 max-w-sm mb-16">
-        <form action={addGrave} className="grid grid-cols-2 gap-4">
+    <div className={isModal ? "" : "flex items-center justify-center my-4"}>
+      <Card className={isModal ? "border-none shadow-none" : "w-4/5 max-w-sm mb-16"}>
+        <form action={action} className="grid grid-cols-2 gap-4">
           <input
             type="hidden"
             value={supabasePointGeoCemetery}
