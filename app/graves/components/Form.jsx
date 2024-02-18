@@ -4,21 +4,23 @@ import { addGrave } from "../actions";
 import {
   Button,
   Card,
-  Datepicker,
   Label,
-  Select,
   TextInput,
-  FileInput,
   Textarea
 } from "flowbite-react";
 import { useEffect, useState, useMemo } from "react";
 import { usePlacesWidget } from "react-google-autocomplete";
 import { IoMdLocate } from "react-icons/io";
+import { format } from "date-fns";
 import CemeteryField from "./CemeteryField";
 
 import { useGeolocated } from "react-geolocated";
+import ImageUploadField from "./ImageUploadField";
 
-export default function CreateForm() {
+export default function Form({
+  data,
+}) {
+
   const {
     coords: deviceCoords,
     isGeolocationAvailable,
@@ -31,16 +33,16 @@ export default function CreateForm() {
     userDecisionTimeout: 5000
   });
   
-  const [birth, setBirth] = useState(new Date());
-  const [death, setDeath] = useState(new Date());
+  const [birth, setBirth] = useState(data?.birth ?? "");
+  const [death, setDeath] = useState(data?.death ?? "");
   const [age, setAge] = useState(0);
 
   const [location, setLocation] = useState("");
   const [hasLocation, setHasLocation] = useState(false);
   const [cemetery, setCemetery] = useState("");
 
-  const [locationCoordinates, setLocationCoordinates] = useState([0, 0]);
-  const [cemeteryLocationCoordinates, setCemeteryLocationCoordinates] = useState([0, 0]);
+  const [locationCoordinates, setLocationCoordinates] = useState(data?.locationCoordinates ?? [0, 0]);
+  const [cemeteryLocationCoordinates, setCemeteryLocationCoordinates] = useState(data?.cemeteryLocationCoordinates ?? [0, 0]);
   const supabasePointGeo = useMemo(() => {
     return `POINT(${locationCoordinates[0]} ${locationCoordinates[1]})`;
   }, [locationCoordinates]);
@@ -50,7 +52,16 @@ export default function CreateForm() {
   }, [cemeteryLocationCoordinates]);
 
   useEffect(() => {
-    const diff = Math.abs(new Date(death) - new Date(birth));
+    let deathTmp = new Date()
+    let birthTmp = new Date()
+    if (death) {
+      deathTmp = new Date(death)
+    }
+    if (birth) {
+      birthTmp = new Date(birth)
+    }
+
+    const diff = Math.abs(deathTmp - birthTmp) 
     const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
     setAge(years);
   }, [birth, death]);
@@ -62,7 +73,7 @@ export default function CreateForm() {
       setCemeteryLocationCoordinates(coords);
       setLocation(place?.formatted_address ?? '');
       setHasLocation(true);
-    }
+    },
   });
 
   const updateLocation = (e) => {
@@ -86,15 +97,10 @@ export default function CreateForm() {
             name="cemeterycoordinates"
           />
           <div className="max-w-md" id="fileUpload">
-            <div className="block mb-2">
-              <Label htmlFor="file" value="Upload file" />
-            </div>
-            <FileInput
-              helperText="Add helpful images to identify gravesite"
+            <ImageUploadField
               id="file"
               name="grave_images"
-              multiple
-            />
+            />   
           </div>
           <div className="relative z-0 w-full col-span-2 group">
             <TextInput
@@ -104,6 +110,7 @@ export default function CreateForm() {
               id="cemetery_location"
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               placeholder="Search for a cemetery location (City, State, Country)"
+              defaultValue={data?.cemeteryLocationName ?? ""}
               onChange={(e) => {
                 setHasLocation(false);
               }}
@@ -116,13 +123,14 @@ export default function CreateForm() {
               Cemetery Location
             </Label>
           </div>
-          {hasLocation && (
+          {(hasLocation || data?.cemeteryLocationName) && (
             <div className="relative z-0 w-full col-span-2 group">
               <CemeteryField
                 hasLocation={hasLocation}
                 location={location}
                 cemetery={cemetery}
                 setCemetery={setCemetery}
+                defaultValue={data?.cemeteryName ?? ""}
               />
             </div>
           )}
@@ -133,6 +141,7 @@ export default function CreateForm() {
               id="first_name"
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               placeholder=" "
+              defaultValue={data?.firstName ?? ""}
               required
             />
             <Label
@@ -149,6 +158,7 @@ export default function CreateForm() {
               id="last_name"
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               placeholder=" "
+              defaultValue={data?.lastName ?? ""}
               required
             />
             <Label
@@ -164,6 +174,7 @@ export default function CreateForm() {
               name="aliases"
               id="aliases"
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              defaultValue={data?.aliases ?? ""}
               placeholder=" "
             />
             <Label
@@ -199,18 +210,11 @@ export default function CreateForm() {
                 title="Birth"
                 className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                 placeholder=""
+                defaultValue={data?.birth ? format(new Date(data?.birth), "yyyy-MM-dd") : ""}
                 onChange={(e) => {
                   setBirth(e.target.value);
                 }}
               />
-              {/*
-              <Datepicker
-                name="birth"
-                id="birthpicker"
-                title="Birth"
-                onSelectedDateChanged={date => { console.log(date) }}
-              />
-              */}
               <Label
                 htmlFor="birthpicker"
                 className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
@@ -226,15 +230,11 @@ export default function CreateForm() {
                 title="Death"
                 className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                 placeholder=""
+                defaultValue={data?.death ? format(new Date(data?.death), "yyyy-MM-dd") : ""}
                 onChange={(e) => {
                   setDeath(e.target.value);
                 }}
               />
-              {/*<Datepicker
-                name="death"
-                id="deathpicker"
-                title="Death"
-              />*/}
               <Label
                 htmlFor="deathpicker"
                 className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
@@ -254,6 +254,7 @@ export default function CreateForm() {
                 placeholder="Leave a note..."
                 rows={4}
                 name="notes"
+                defaultValue={data?.notes ?? ""}
                 className="block w-full text-sm"
               />
             </div>

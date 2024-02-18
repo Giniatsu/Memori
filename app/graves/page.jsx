@@ -1,4 +1,4 @@
-import CreateForm from "./create/CreateForm";
+import CreateForm from "./components/Form";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
