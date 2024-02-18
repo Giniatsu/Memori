@@ -1,4 +1,4 @@
-import CreateForm from "./components/Form";
+import Form from "./components/Form";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -20,7 +20,7 @@ export default async function CreateGrave() {
   return (
     <main>
       <h2 className="text-primary text-center">Add a new Grave</h2>
-      <CreateForm
+      <Form
         action={addGrave}
       />
     </main>

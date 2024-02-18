@@ -38,10 +38,11 @@ export default function Form({
   const [death, setDeath] = useState(data?.death ?? "");
   const [age, setAge] = useState(0);
 
-  const [location, setLocation] = useState("");
+  const [location, setLocation] = useState(data?.cemeteryLocationName ?? "");
   const [hasLocation, setHasLocation] = useState(false);
   const [cemetery, setCemetery] = useState("");
 
+  const [gettingLocation, setGettingLocation] = useState(false);
   const [locationCoordinates, setLocationCoordinates] = useState(data?.locationCoordinates ?? [0, 0]);
   const [cemeteryLocationCoordinates, setCemeteryLocationCoordinates] = useState(data?.cemeteryLocationCoordinates ?? [0, 0]);
   const supabasePointGeo = useMemo(() => {
@@ -79,12 +80,14 @@ export default function Form({
 
   const updateLocation = (e) => {
     console.log('Triggering getPosition()')
+    setGettingLocation(true)
     getPosition()
   }
 
   useEffect(() => {
-    if (deviceCoords) {
+    if (deviceCoords && gettingLocation) {
       setLocationCoordinates([deviceCoords?.longitude, deviceCoords?.latitude])
+      setGettingLocation(false)
     }
   }, [deviceCoords])
 
@@ -271,7 +274,7 @@ export default function Form({
                   readOnly
                   required
                 />
-                <Button color="light" className="m-2" onClick={updateLocation} disabled={!isGeolocationAvailable || !isGeolocationEnabled}>
+                <Button color="light" className="m-2" onClick={updateLocation} disabled={!isGeolocationAvailable || !isGeolocationEnabled || gettingLocation}>
                   <IoMdLocate className="w-6 h-6" />
                 </Button>
               </div>
