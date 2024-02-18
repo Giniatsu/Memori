@@ -104,6 +104,7 @@ export default function Form({
             <ImageUploadField
               id="file"
               name="grave_images"
+              existingImages={data?.existingImages ?? []}
             />   
           </div>
           <div className="relative z-0 w-full col-span-2 group">

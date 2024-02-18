@@ -28,6 +28,7 @@ export default function UpdateModalForm({graveInfo}) {
             action={updateGravewithID}
             data={
               {
+                existingImages: graveInfo.existingImages,
                 birth: graveInfo.birth,
                 death: graveInfo.death,
                 locationCoordinates: [graveInfo.longitude, graveInfo.latitude],

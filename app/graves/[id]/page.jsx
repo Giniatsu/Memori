@@ -74,8 +74,35 @@ async function getGrave(id) {
   return data;
 }
 
+const BASE_URL = 'https://plmqhcualnnsirfqjcsj.supabase.co/storage/v1/object/public/grave_images/';
+
+async function getImages(grave_id) {
+  const supabase = createServerComponentClient({ cookies });
+
+  const { data: dbData, error: dbError } = await supabase
+    .from("images")
+    .select(`
+      *
+    `)
+    .eq("grave", grave_id);
+
+  if (dbError) {
+    console.log(dbError.message);
+  }
+
+  if (!dbData || dbData.length === 0) {
+    return null;
+  }
+
+  return dbData.map((data) => (
+    BASE_URL + data.file_name
+  ))
+}
+
+
 export default async function GraveDetails({ params }) {
   const grave = await getGrave(params.id);
+  const images = await getImages(params.id);
   const supabase = createServerComponentClient({ cookies });
   const { data } = await supabase.auth.getSession();
 
@@ -91,7 +118,7 @@ export default async function GraveDetails({ params }) {
           {data.session?.user?.email === grave.user_email && (
             <>
               <DeleteButton id={grave.grave_id} />
-              <UpdateModalForm graveInfo={grave}/>
+              <UpdateModalForm graveInfo={{...grave, existingImages: images}}/>
             </>
           )}
         </div>

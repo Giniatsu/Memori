@@ -100,9 +100,15 @@ export default function ImageUploadField({ id, name, existingImages }) {
 
   const toggleRemoveUndo = (index) => {
     setExistingImagesState(prev => {
-      const newArray = [...prev]
-      newArray[index].markedForDeletion = !newArray[index].markedForDeletion
-      return newArray
+      return prev.map((item, i) => {
+        if (i === index) {
+          return {
+            ...item,
+            markedForDeletion: !item.markedForDeletion
+          };
+        }
+        return item;
+      });
     })   
   };
 
@@ -121,12 +127,12 @@ export default function ImageUploadField({ id, name, existingImages }) {
         accept="image/*"
         capture="environment"
       />
-      {existingImagesState.map(image => (
-        <input type="checkbox" className="hidden" name="imagesForDeletion[]" value={image.url} checked={image.markedForDeletion} />
+      {existingImagesState.map(image => image.markedForDeletion && (
+        <input type="checkbox" className="hidden" name="imagesForDeletion" value={image.url} checked />
       ))}
       {(selectedImages.length > 0 || existingImagesState.filter(Boolean).length > 0) && (
         <div className="mt-2">
-          <h4>Selected Images:</h4>
+          <h4>Images:</h4>
           <ul>
             {existingImagesState.map((image, index) => (
               image && (
