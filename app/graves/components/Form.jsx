@@ -1,6 +1,5 @@
 "use client";
 import SubmitButton from "@/app/components/SubmitButton";
-import { addGrave } from "../actions";
 import {
   Button,
   Card,
@@ -19,8 +18,9 @@ import ImageUploadField from "./ImageUploadField";
 
 export default function Form({
   data,
+  action,
+  isModal,
 }) {
-
   const {
     coords: deviceCoords,
     isGeolocationAvailable,
@@ -37,10 +37,11 @@ export default function Form({
   const [death, setDeath] = useState(data?.death ?? "");
   const [age, setAge] = useState(0);
 
-  const [location, setLocation] = useState("");
+  const [location, setLocation] = useState(data?.cemeteryLocationName ?? "");
   const [hasLocation, setHasLocation] = useState(false);
-  const [cemetery, setCemetery] = useState("");
+  const [cemetery, setCemetery] = useState(data?.cemeteryName ?? "");
 
+  const [gettingLocation, setGettingLocation] = useState(false);
   const [locationCoordinates, setLocationCoordinates] = useState(data?.locationCoordinates ?? [0, 0]);
   const [cemeteryLocationCoordinates, setCemeteryLocationCoordinates] = useState(data?.cemeteryLocationCoordinates ?? [0, 0]);
   const supabasePointGeo = useMemo(() => {
@@ -78,19 +79,21 @@ export default function Form({
 
   const updateLocation = (e) => {
     console.log('Triggering getPosition()')
+    setGettingLocation(true)
     getPosition()
   }
 
   useEffect(() => {
-    if (deviceCoords) {
+    if (deviceCoords && gettingLocation) {
       setLocationCoordinates([deviceCoords?.longitude, deviceCoords?.latitude])
+      setGettingLocation(false)
     }
   }, [deviceCoords])
 
   return (
-    <div className="flex items-center justify-center my-4">
-      <Card className="w-4/5 max-w-sm mb-16">
-        <form action={addGrave} className="grid grid-cols-2 gap-4">
+    <div className={isModal ? "" : "flex items-center justify-center my-4"}>
+      <Card className={isModal ? "border-none shadow-none" : "w-4/5 max-w-sm mb-16"}>
+        <form action={action} className="grid grid-cols-2 gap-4">
           <input
             type="hidden"
             value={supabasePointGeoCemetery}
@@ -100,6 +103,7 @@ export default function Form({
             <ImageUploadField
               id="file"
               name="grave_images"
+              existingImages={data?.existingImages ?? []}
             />   
           </div>
           <div className="relative z-0 w-full col-span-2 group">
@@ -130,7 +134,6 @@ export default function Form({
                 location={location}
                 cemetery={cemetery}
                 setCemetery={setCemetery}
-                defaultValue={data?.cemeteryName ?? ""}
               />
             </div>
           )}
@@ -270,7 +273,7 @@ export default function Form({
                   readOnly
                   required
                 />
-                <Button color="light" className="m-2" onClick={updateLocation} disabled={!isGeolocationAvailable || !isGeolocationEnabled}>
+                <Button color="light" className="m-2" onClick={updateLocation} disabled={!isGeolocationAvailable || !isGeolocationEnabled || gettingLocation}>
                   <IoMdLocate className="w-6 h-6" />
                 </Button>
               </div>

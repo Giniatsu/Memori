@@ -10,7 +10,7 @@ export default function ImageUploadField({ id, name, existingImages }) {
   // Set existing images initially
   useEffect(() => {
     if (existingImages && existingImages.length > 0) {
-      setExistingImagesState(existingImages);
+      setExistingImagesState(existingImages.map(img => ({ markedForDeletion: false, url: img })));
     }
   }, [existingImages]);
 
@@ -19,15 +19,22 @@ export default function ImageUploadField({ id, name, existingImages }) {
     if (!fileInputRef) {
       return;
     }
-    const dataTransfer = new DataTransfer();
-    selectedImages.forEach(file => dataTransfer.items.add(file));
     const fileInput = fileInputRef.current;
-    fileInput.files = dataTransfer.files;
+    fileInput.files = null;
+
+    if (selectedImages.length !== 0) {
+      const dataTransfer = new DataTransfer();
+      selectedImages.forEach(file => dataTransfer.items.add(file));
+      fileInput.files = dataTransfer.files;
+    }
   }, [selectedImages]);
 
   const handleFileChange = async (event) => {
     const files = event.target.files;
 
+    if (!files || files.length === 0) {
+      return; // No files to process
+    }
     // Compress image until file size is less than or equal maxSizeKB
     const compressedImages = await Promise.all(
       Array.from(files).map(async (file) => {
@@ -99,9 +106,17 @@ export default function ImageUploadField({ id, name, existingImages }) {
   };
 
   const toggleRemoveUndo = (index) => {
-    const updatedExistingImages = [...existingImagesState];
-    updatedExistingImages[index] = null; // Marking for removal
-    setExistingImagesState(updatedExistingImages);
+    setExistingImagesState(prev => {
+      return prev.map((item, i) => {
+        if (i === index) {
+          return {
+            ...item,
+            markedForDeletion: !item.markedForDeletion
+          };
+        }
+        return item;
+      });
+    })   
   };
 
   return (
@@ -119,26 +134,29 @@ export default function ImageUploadField({ id, name, existingImages }) {
         accept="image/*"
         capture="environment"
       />
+      {existingImagesState.map(image => image.markedForDeletion && (
+        <input key={image.url} type="checkbox" className="hidden" name="imagesForDeletion" value={image.url} checked />
+      ))}
       {(selectedImages.length > 0 || existingImagesState.filter(Boolean).length > 0) && (
         <div className="mt-2">
-          <h4>Selected Images:</h4>
+          <h4>Images:</h4>
           <ul>
             {existingImagesState.map((image, index) => (
               image && (
-                <li key={index}>
+                <li key={`existing_${index}`}>
                   <img
-                    src={image}
+                    src={image.url}
                     alt={`Existing Image ${index + 1}`}
                     style={{ maxWidth: "100px", maxHeight: "100px", marginRight: "10px" }}
                   />
                   <Button onClick={() => toggleRemoveUndo(index)}>
-                    {typeof image === "string" ? "Undo" : "Remove"}
+                    {image.markedForDeletion ? "Undo" : "Remove"}
                   </Button>
                 </li>
               )
             ))}
             {selectedImages.map((file, index) => (
-              <li key={index}>
+              <li key={`selected_${index}`}>
                 <img
                   src={URL.createObjectURL(file)}
                   alt={`Selected Image ${index + 1}`}

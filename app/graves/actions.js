@@ -41,6 +41,8 @@ export async function addGrave(formData) {
   delete filteredGrave.cemetery;
   delete filteredGrave.cemeterylocation;
   delete filteredGrave.cemeterycoordinates;
+  delete filteredGrave.grave_images; 
+  delete filteredGrave.imagesForDeletion;
 
   // insert the grave data
   const { data: graveData, error: graveError } = await supabase.from("graves").insert({
@@ -59,6 +61,8 @@ export async function addGrave(formData) {
   for await (const file of formData.getAll("grave_images")) {
     const fileExt = file.name.split(".").pop();
     const filePath = `${uuidv4()}.${fileExt}`;
+
+    if (file.size === 0) continue;
 
     // upload image to storage
     let { error: uploadError } = await supabase.storage
@@ -90,29 +94,109 @@ export async function addGrave(formData) {
   redirect("/graves/contributions");
 }
 
-export async function updateGrave(id,formData) {
+export async function updateGrave(id, formData) {
   const grave = Object.fromEntries(formData);
   const filteredGrave = Object.fromEntries(
     Object.entries(grave).filter(([_, value]) => value != "")
   );
+  
   console.log(filteredGrave);
+
   const supabase = createServerActionClient({ cookies });
 
   const {
     data: { session },
   } = await supabase.auth.getSession();
 
-  // update the data
-  const { error } = await supabase
-    .from("graves")
-    .update({
-      ...filteredGrave,
-      user_email: session.user.email,
+  // insert the cemetery data
+  const { data: cemeteryData, error: cemeteryError } = await supabase
+    .from("cemetery")
+    .upsert({
+      location_name: filteredGrave.cemeterylocation,
+      location: filteredGrave.cemeterycoordinates,
+      name: filteredGrave.cemetery,
+    }, {
+      onConflict: "name",
     })
-    .eq("id", id);
+    .select();
 
-  if (error) {
-    throw new Error("Could not update the grave");
+  if (cemeteryError) {
+    console.log(cemeteryError);
+    throw new Error("Could not add cemetery");
+  }
+
+  // remove cemetery data from grave
+  delete filteredGrave.cemetery;
+  delete filteredGrave.cemeterylocation;
+  delete filteredGrave.cemeterycoordinates;
+  delete filteredGrave.grave_images; 
+  delete filteredGrave.imagesForDeletion;
+
+  // insert the grave data
+  const { data: graveData, error: graveError } = await supabase.from("graves").update({
+    ...filteredGrave,
+    cemetery: cemeteryData[0].id,
+    user_email: session.user.email,
+  }).eq("id", id).select();
+
+  if (graveError) {
+    console.log(graveError);
+    throw new Error("Could not add the new grave");
+  }
+
+  // image deletion
+  console.log(formData.getAll("imagesForDeletion"))
+  for await (const img of formData.getAll("imagesForDeletion")) {
+    const fileName = img.split("/").pop();
+    const { error: imageError } = await supabase
+      .from("images")
+      .delete()
+      .eq("file_name", fileName);
+    if (imageError) {
+      console.log(imageError);
+    }
+  }
+  const { error: storageError } = await supabase.storage
+    .from("grave_images")
+    .remove(formData.getAll("imagesForDeletion").map((img) => {
+      const fileName = img.split("/").pop();
+      console.log(fileName)
+      return fileName;
+    }));
+  if (storageError) {
+    console.log(storageError);
+  }
+
+  console.log(formData.getAll("grave_images"))
+  for await (const file of formData.getAll("grave_images")) {
+    const fileExt = file.name.split(".").pop();
+    const filePath = `${uuidv4()}.${fileExt}`;
+
+    if (file.size === 0) continue;
+
+    // upload image to storage
+    let { error: uploadError } = await supabase.storage
+      .from("grave_images")
+      .upload(filePath, file);
+
+    if (uploadError) {
+      console.log(uploadError);
+      throw new Error("Could not upload image");
+    }
+
+    // add image to database
+    const { error: imageDbError } = await supabase
+      .from("images")
+      .insert({
+        file_name: filePath,
+        owner: session.user.id,
+        grave: graveData[0].id,
+      });
+    
+    if (imageDbError) {
+      console.log(imageDbError);
+      throw new Error("Could not add image to database");
+    }
   }
 
   revalidatePath("/graves/contributions");
