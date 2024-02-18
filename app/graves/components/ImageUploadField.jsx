@@ -14,6 +14,17 @@ export default function ImageUploadField({ id, name, existingImages }) {
     }
   }, [existingImages]);
 
+  useEffect(() => {
+    // Sync selectedImages state to the HTML state
+    if (!fileInputRef) {
+      return;
+    }
+    const dataTransfer = new DataTransfer();
+    selectedImages.forEach(file => dataTransfer.items.add(file));
+    const fileInput = fileInputRef.current;
+    fileInput.files = dataTransfer.files;
+  }, [selectedImages]);
+
   const handleFileChange = (event) => {
     const files = event.target.files;
     const selectedFiles = Array.from(files);
@@ -24,14 +35,6 @@ export default function ImageUploadField({ id, name, existingImages }) {
     const newImages = [...selectedImages];
     newImages.splice(index, 1);
     setSelectedImages(newImages);
-    
-    if (!fileInputRef) {
-      return;
-    }
-    const dataTransfer = new DataTransfer();
-    newImages.forEach(file => dataTransfer.items.add(file));
-    const fileInput = fileInputRef.current;
-    fileInput.files = dataTransfer.files;
   };
 
   const toggleRemoveUndo = (index) => {
@@ -53,6 +56,7 @@ export default function ImageUploadField({ id, name, existingImages }) {
         multiple
         onChange={handleFileChange}
         accept="image/*"
+        capture="environment"
       />
       {(selectedImages.length > 0 || existingImagesState.filter(Boolean).length > 0) && (
         <div className="mt-2">
