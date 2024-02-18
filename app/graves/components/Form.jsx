@@ -6,7 +6,6 @@ import {
   Card,
   Label,
   TextInput,
-  FileInput,
   Textarea
 } from "flowbite-react";
 import { useEffect, useState, useMemo } from "react";
@@ -16,6 +15,7 @@ import { format } from "date-fns";
 import CemeteryField from "./CemeteryField";
 
 import { useGeolocated } from "react-geolocated";
+import ImageUploadField from "./ImageUploadField";
 
 export default function Form({
   data,
@@ -97,15 +97,10 @@ export default function Form({
             name="cemeterycoordinates"
           />
           <div className="max-w-md" id="fileUpload">
-            <div className="block mb-2">
-              <Label htmlFor="file" value="Upload file" />
-            </div>
-            <FileInput
-              helperText="Add helpful images to identify gravesite"
+            <ImageUploadField
               id="file"
               name="grave_images"
-              multiple
-            />
+            />   
           </div>
           <div className="relative z-0 w-full col-span-2 group">
             <TextInput
