@@ -41,6 +41,8 @@ export async function addGrave(formData) {
   delete filteredGrave.cemetery;
   delete filteredGrave.cemeterylocation;
   delete filteredGrave.cemeterycoordinates;
+  delete filteredGrave.grave_images; 
+  delete filteredGrave.imagesForDeletion;
 
   // insert the grave data
   const { data: graveData, error: graveError } = await supabase.from("graves").insert({
@@ -91,21 +93,6 @@ export async function addGrave(formData) {
 }
 
 export async function updateGrave(id,formData) {
-  // update the data
-  const { error } = await supabase
-    .from("graves")
-    .update({
-      ...filteredGrave,
-      user_email: session.user.email,
-    })
-    .eq("id", id);
-
-  if (error) {
-    throw new Error("Could not update the grave");
-  }
-
-  ///////////////////////////////////////////////////
-  
   const grave = Object.fromEntries(formData);
   const filteredGrave = Object.fromEntries(
     Object.entries(grave).filter(([_, value]) => value != "")
@@ -122,10 +109,12 @@ export async function updateGrave(id,formData) {
   // insert the cemetery data
   const { data: cemeteryData, error: cemeteryError } = await supabase
     .from("cemetery")
-    .update(filteredGrave.cemeteryid, {
+    .upsert({
       location_name: filteredGrave.cemeterylocation,
       location: filteredGrave.cemeterycoordinates,
       name: filteredGrave.cemetery,
+    }, {
+      onConflict: "name",
     })
     .select();
 
@@ -138,21 +127,36 @@ export async function updateGrave(id,formData) {
   delete filteredGrave.cemetery;
   delete filteredGrave.cemeterylocation;
   delete filteredGrave.cemeterycoordinates;
+  delete filteredGrave.grave_images; 
+  delete filteredGrave.imagesForDeletion;
 
   // insert the grave data
-  const { data: graveData, error: graveError } = await supabase.from("graves").insert({
+  const { data: graveData, error: graveError } = await supabase.from("graves").update({
     ...filteredGrave,
     cemetery: cemeteryData[0].id,
     user_email: session.user.email,
-  }).select();
+  }).eq("id", id).select();
 
   if (graveError) {
     console.log(graveError);
     throw new Error("Could not add the new grave");
   }
 
-  console.log(formData.getAll("grave_images"))
+  // image processing
+  console.log(formData.getAll("imagesForDeletion"))
+  for await (const img of formData.getAll("imagesForDeletion")) {
+    const fileName = img.split("/").pop()
+    
+    const { error: storageError } = await supabase.storage
+      .from("grave_images")
+      .remove([fileName]);
 
+    if (storageError) {
+      console.log(storageError);
+    }
+  }
+
+  console.log(formData.getAll("grave_images"))
   for await (const file of formData.getAll("grave_images")) {
     const fileExt = file.name.split(".").pop();
     const filePath = `${uuidv4()}.${fileExt}`;
@@ -181,7 +185,6 @@ export async function updateGrave(id,formData) {
       throw new Error("Could not add image to database");
     }
   }
-
 
   revalidatePath("/graves/contributions");
   redirect("/graves/contributions");

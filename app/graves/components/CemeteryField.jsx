@@ -12,7 +12,6 @@ const CemeteryField = ({
   location,
   cemetery,
   setCemetery,
-  defaultValue,
   ...props
 }) => {
   const [createMode, setCreateMode] = useState(false);
@@ -39,7 +38,7 @@ const CemeteryField = ({
       }
 
       setCemeteries(cemeteries);
-      console.log(cemeteries);
+      //console.log(cemeteries);
       setLoading(false);
     }
     load();
@@ -65,7 +64,7 @@ const CemeteryField = ({
           required
         >
           {cemeteries.map(cemetery => (
-            <option key={cemetery.id} selected={defaultValue === cemetery.name}>{cemetery.name}</option>
+            <option key={cemetery.id}>{cemetery.name}</option>
           ))}
         </Select>
       ) }

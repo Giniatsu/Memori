@@ -1,3 +1,5 @@
+"use server";
+
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
@@ -7,8 +9,6 @@ import DeleteButton from "./DeleteButton";
 import UpdateModalForm from "./UpdateModalForm";
 import Link from "next/link";
 import GraveImage from "../contributions/GraveImage";
-
-export const dynamicParams = true; // default val = true
 
 export async function generateMetadata({ params }) {
   const supabase = createServerComponentClient({ cookies });

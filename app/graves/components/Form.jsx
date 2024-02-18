@@ -21,7 +21,6 @@ export default function Form({
   action,
   isModal,
 }) {
-
   const {
     coords: deviceCoords,
     isGeolocationAvailable,
@@ -40,7 +39,7 @@ export default function Form({
 
   const [location, setLocation] = useState(data?.cemeteryLocationName ?? "");
   const [hasLocation, setHasLocation] = useState(false);
-  const [cemetery, setCemetery] = useState("");
+  const [cemetery, setCemetery] = useState(data?.cemeteryName ?? "");
 
   const [gettingLocation, setGettingLocation] = useState(false);
   const [locationCoordinates, setLocationCoordinates] = useState(data?.locationCoordinates ?? [0, 0]);
@@ -138,7 +137,6 @@ export default function Form({
                 location={location}
                 cemetery={cemetery}
                 setCemetery={setCemetery}
-                defaultValue={data?.cemeteryName ?? ""}
               />
             </div>
           )}
