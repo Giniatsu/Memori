@@ -94,7 +94,7 @@ export async function addGrave(formData) {
   redirect("/graves/contributions");
 }
 
-export async function updateGrave(id,formData) {
+export async function updateGrave(id, formData) {
   const grave = Object.fromEntries(formData);
   const filteredGrave = Object.fromEntries(
     Object.entries(grave).filter(([_, value]) => value != "")

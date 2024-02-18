@@ -10,6 +10,8 @@ import UpdateModalForm from "./UpdateModalForm";
 import Link from "next/link";
 import GraveImage from "../contributions/GraveImage";
 
+import { updateGrave } from '../actions';
+
 export async function generateMetadata({ params }) {
   const supabase = createServerComponentClient({ cookies });
   const { data: grave } = await supabase
@@ -105,6 +107,7 @@ export default async function GraveDetails({ params }) {
   const images = await getImages(params.id);
   const supabase = createServerComponentClient({ cookies });
   const { data } = await supabase.auth.getSession();
+  const updateGravewithID = updateGrave.bind(null, params.id);
 
   return (
     <main>
@@ -118,7 +121,7 @@ export default async function GraveDetails({ params }) {
           {data.session?.user?.email === grave.user_email && (
             <>
               <DeleteButton id={grave.grave_id} />
-              <UpdateModalForm graveInfo={{...grave, id: params.id, existingImages: images}}/>
+              <UpdateModalForm action={updateGravewithID} graveInfo={{...grave, id: params.id, existingImages: images}}/>
             </>
           )}
         </div>

@@ -2,13 +2,11 @@
 
 import { Button, Checkbox, Label, Modal, TextInput } from 'flowbite-react';
 import { useState } from 'react';
-import { updateGrave } from '../actions';
 import Form from '../components/Form';
 
-export default function UpdateModalForm({graveInfo}) {
+export default function UpdateModalForm({action, graveInfo}) {
   const [openModal, setOpenModal] = useState("");
   const props = { openModal, setOpenModal };
-  const updateGravewithID = updateGrave.bind(null, graveInfo.id);
   
   return (
     <>
@@ -25,7 +23,7 @@ export default function UpdateModalForm({graveInfo}) {
         <Modal.Body className='p-0'>
           <Form
             isModal
-            action={updateGravewithID}
+            action={action}
             data={
               {
                 existingImages: graveInfo.existingImages,
