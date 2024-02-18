@@ -19,15 +19,22 @@ export default function ImageUploadField({ id, name, existingImages }) {
     if (!fileInputRef) {
       return;
     }
-    const dataTransfer = new DataTransfer();
-    selectedImages.forEach(file => dataTransfer.items.add(file));
     const fileInput = fileInputRef.current;
-    fileInput.files = dataTransfer.files;
+    fileInput.files = null;
+
+    if (selectedImages.length !== 0) {
+      const dataTransfer = new DataTransfer();
+      selectedImages.forEach(file => dataTransfer.items.add(file));
+      fileInput.files = dataTransfer.files;
+    }
   }, [selectedImages]);
 
   const handleFileChange = async (event) => {
     const files = event.target.files;
 
+    if (!files || files.length === 0) {
+      return; // No files to process
+    }
     // Compress image until file size is less than or equal maxSizeKB
     const compressedImages = await Promise.all(
       Array.from(files).map(async (file) => {

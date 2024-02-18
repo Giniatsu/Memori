@@ -62,6 +62,8 @@ export async function addGrave(formData) {
     const fileExt = file.name.split(".").pop();
     const filePath = `${uuidv4()}.${fileExt}`;
 
+    if (file.size === 0) continue;
+
     // upload image to storage
     let { error: uploadError } = await supabase.storage
       .from("grave_images")
@@ -142,24 +144,35 @@ export async function updateGrave(id,formData) {
     throw new Error("Could not add the new grave");
   }
 
-  // image processing
+  // image deletion
   console.log(formData.getAll("imagesForDeletion"))
   for await (const img of formData.getAll("imagesForDeletion")) {
-    const fileName = img.split("/").pop()
-    
-    const { error: storageError } = await supabase.storage
-      .from("grave_images")
-      .remove([fileName]);
-
-    if (storageError) {
-      console.log(storageError);
+    const fileName = img.split("/").pop();
+    const { error: imageError } = await supabase
+      .from("images")
+      .delete()
+      .eq("file_name", fileName);
+    if (imageError) {
+      console.log(imageError);
     }
+  }
+  const { error: storageError } = await supabase.storage
+    .from("grave_images")
+    .remove(formData.getAll("imagesForDeletion").map((img) => {
+      const fileName = img.split("/").pop();
+      console.log(fileName)
+      return fileName;
+    }));
+  if (storageError) {
+    console.log(storageError);
   }
 
   console.log(formData.getAll("grave_images"))
   for await (const file of formData.getAll("grave_images")) {
     const fileExt = file.name.split(".").pop();
     const filePath = `${uuidv4()}.${fileExt}`;
+
+    if (file.size === 0) continue;
 
     // upload image to storage
     let { error: uploadError } = await supabase.storage
