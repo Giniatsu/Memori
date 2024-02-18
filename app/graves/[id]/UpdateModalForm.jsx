@@ -32,6 +32,7 @@ export default function UpdateModalForm({graveInfo}) {
                 birth: graveInfo.birth,
                 death: graveInfo.death,
                 locationCoordinates: [graveInfo.longitude, graveInfo.latitude],
+                cemeteryId: graveInfo.cemetery_id,
                 cemeteryLocationCoordinates: [graveInfo.cemetery_location_longitude, graveInfo.cemetery_location_latitude],
                 cemeteryLocationName: graveInfo.cemetery_location_name,
                 cemeteryName: graveInfo.cemetery_name,
