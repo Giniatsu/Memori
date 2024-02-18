@@ -58,11 +58,11 @@ export async function addGrave(formData) {
 
   console.log(formData.getAll("grave_images"))
 
-  for await (const file of formData.getAll("grave_images")) {
+  formData.getAll("grave_images").forEach(async (file) => {
     const fileExt = file.name.split(".").pop();
     const filePath = `${uuidv4()}.${fileExt}`;
 
-    if (file.size === 0) continue;
+    if (file.size === 0) return;
 
     // upload image to storage
     let { error: uploadError } = await supabase.storage
@@ -87,7 +87,7 @@ export async function addGrave(formData) {
       console.log(imageDbError);
       throw new Error("Could not add image to database");
     }
-  }
+  })
   //*/
 
   revalidatePath("/graves/contributions");
@@ -168,11 +168,11 @@ export async function updateGrave(id, formData) {
   }
 
   console.log(formData.getAll("grave_images"))
-  for await (const file of formData.getAll("grave_images")) {
+  formData.getAll("grave_images").forEach(async (file) => {
     const fileExt = file.name.split(".").pop();
     const filePath = `${uuidv4()}.${fileExt}`;
 
-    if (file.size === 0) continue;
+    if (file.size === 0) return;
 
     // upload image to storage
     let { error: uploadError } = await supabase.storage
@@ -197,7 +197,7 @@ export async function updateGrave(id, formData) {
       console.log(imageDbError);
       throw new Error("Could not add image to database");
     }
-  }
+  })
 
   revalidatePath("/graves/contributions");
   redirect("/graves/contributions");
