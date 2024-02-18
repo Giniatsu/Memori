@@ -90,6 +90,7 @@ export default async function GravesList() {
       aliases,
       birth,
       death,
+      age,
       ageMin,
       ageMax,
     }).then((data) => {
