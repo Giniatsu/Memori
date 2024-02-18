@@ -27,6 +27,7 @@
     "nextjs-toploader": "^1.5.3",
     "postcss": "8.4.29",
     "react": "^18.2.0",
+    "react-device-detect": "^2.2.3",
     "react-dom": "^18.2.0",
     "react-geolocated": "^4.1.2",
     "react-google-autocomplete": "^2.7.3",
