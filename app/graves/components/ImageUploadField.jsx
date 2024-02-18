@@ -128,7 +128,7 @@ export default function ImageUploadField({ id, name, existingImages }) {
         capture="environment"
       />
       {existingImagesState.map(image => image.markedForDeletion && (
-        <input type="checkbox" className="hidden" name="imagesForDeletion" value={image.url} checked />
+        <input key={image.url} type="checkbox" className="hidden" name="imagesForDeletion" value={image.url} checked />
       ))}
       {(selectedImages.length > 0 || existingImagesState.filter(Boolean).length > 0) && (
         <div className="mt-2">
