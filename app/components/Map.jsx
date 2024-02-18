@@ -69,6 +69,7 @@ const Map = ({ graveId }) => {
     <>
       <GoogleMap
         mapId={'bf51a910020fa25a'}
+        mapTypeId='satellite'
         zoom={3}
         center={{
           lat: dst?.lat ?? 0,
