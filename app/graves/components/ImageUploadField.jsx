@@ -1,8 +1,9 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Label, FileInput, Button } from "flowbite-react";
 
 export default function ImageUploadField({ id, name, existingImages }) {
+  const fileInputRef = useRef();
   const [selectedImages, setSelectedImages] = useState([]);
   const [existingImagesState, setExistingImagesState] = useState([]);
 
@@ -23,6 +24,14 @@ export default function ImageUploadField({ id, name, existingImages }) {
     const newImages = [...selectedImages];
     newImages.splice(index, 1);
     setSelectedImages(newImages);
+    
+    if (!fileInputRef) {
+      return;
+    }
+    const dataTransfer = new DataTransfer();
+    newImages.forEach(file => dataTransfer.items.add(file));
+    const fileInput = fileInputRef.current;
+    fileInput.files = dataTransfer.files;
   };
 
   const toggleRemoveUndo = (index) => {
@@ -37,6 +46,7 @@ export default function ImageUploadField({ id, name, existingImages }) {
         <Label htmlFor="file" value="Upload file" />
       </div>
       <FileInput
+        ref={fileInputRef}
         helperText="Add helpful images to identify gravesite"
         id={id}
         name={name}
