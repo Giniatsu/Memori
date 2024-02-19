@@ -200,8 +200,8 @@ export async function updateGrave(id, formData) {
     }
   }))
 
-  revalidatePath("/graves/contributions");
-  redirect("/graves/contributions");
+  revalidatePath(`/graves/${id}`);
+  redirect(`/graves/${id}`);
 }
 
 export async function deleteGrave(id) {
@@ -244,3 +244,37 @@ export async function deleteGrave(id) {
   revalidatePath("/graves/contributions");
   redirect("/graves/contributions");
 }
+
+export async function addGraveRating(id, formData) {
+  const rating = Object.fromEntries(formData);
+  const filteredRating = Object.fromEntries(
+    Object.entries(rating).filter(([_, value]) => value != "")
+  );
+  
+  console.log(filteredRating);
+
+  const supabase = createServerActionClient({ cookies });
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  // insert the rating data
+  const { error } = await supabase
+    .from("ratings")
+    .insert({
+      grave_id: id,
+      rating: filteredRating.rating,
+      comment: filteredRating.comment,
+      user_email: session.user.email,
+    }).select();
+
+  if (error) {
+    console.log(error);
+    throw new Error("Could not add rating");
+  }
+
+  revalidatePath(`/graves/${id}`);
+  redirect(`/graves/${id}`);
+}
+

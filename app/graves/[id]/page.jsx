@@ -1,5 +1,5 @@
 "use server";
-
+import React from 'react';
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
@@ -76,6 +76,18 @@ async function getGrave(id) {
   return data;
 }
 
+async function getRatings(graveId) {
+  const supabase = createServerComponentClient({ cookies });
+  const { data, error } = await supabase
+    .from("ratings")
+    .select('*')
+    .eq("grave_id", graveId);
+
+  console.log(error)
+
+  return data;
+}
+
 const BASE_URL = 'https://plmqhcualnnsirfqjcsj.supabase.co/storage/v1/object/public/grave_images/';
 
 async function getImages(grave_id) {
@@ -105,9 +117,14 @@ async function getImages(grave_id) {
 export default async function GraveDetails({ params }) {
   const grave = await getGrave(params.id);
   const images = await getImages(params.id);
+  const ratings = await getRatings(params.id);
   const supabase = createServerComponentClient({ cookies });
   const { data } = await supabase.auth.getSession();
   const updateGravewithID = updateGrave.bind(null, params.id);
+
+  const averageRatings = (ratings?.length ?? 0 > 0) ? (ratings.reduce(function (sum, value) {
+    return sum + parseInt(value.rating)
+  }, 0) / ratings.length) : 0
 
   return (
     <main>
@@ -137,6 +154,16 @@ export default async function GraveDetails({ params }) {
         <h5>Death:{grave.death}</h5>
         <span>Location: {grave.longitude}, {grave.latitude}</span>
         <div>Cemetery: {grave.cemetery_name}</div>
+      </div>
+      <div className="card">
+        <h3>
+          Ratings (Average: {averageRatings} stars):
+        </h3>
+        {ratings.map((rating) => rating.comment ? (
+          <div key={rating.id} className="mb-2">
+            - ({rating.rating} stars) {rating.comment} 
+          </div>
+        ) : <></>)}
       </div>
     </main>
   );

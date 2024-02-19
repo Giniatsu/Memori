@@ -2,15 +2,14 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { Map as GoogleMap } from '@vis.gl/react-google-maps';
-import { Button } from 'flowbite-react';
 import { useGeolocated } from 'react-geolocated';
-import Sheet from 'react-modal-sheet';
 
 import { GraveMarker } from './map/grave-marker';
 import { UserMarker } from './map/user-marker';
-import SheetDetails from './map/sheet-details';
+import Distance from './map/distance';
 import DirectionPolyline from './map/direction-polyline';
 import { createClient } from '@supabase/supabase-js';
+import RateButton from './map/rate-button';
 
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
 
@@ -47,8 +46,6 @@ const Map = ({ graveId }) => {
     watchLocationPermissionChange: true,
   });
 
-  const [isOpen, setOpen] = useState(true);
-
   if (!isGeolocationAvailable) {
     return <div>Your browser does not support Geolocation</div>;
   }
@@ -83,38 +80,10 @@ const Map = ({ graveId }) => {
         <DirectionPolyline dst={dst} />
       </GoogleMap>
 
-      <Button
-        style={{
-          position: 'absolute',
-          bottom: '2rem',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          zIndex: '9999',
-          width: '100%',
-          maxWidth: '40rem',
-        }}
-        onClick={() => setOpen(true)}
-      >
-        View Distance
-      </Button>
-
-      <Sheet
-        isOpen={isOpen}
-        snapPoints={[0.4, 0.2]}
-        initialSnap={1}
-        onClose={() => setOpen(false)}
-      >
-        <Sheet.Container>
-          <Sheet.Header />
-          <Sheet.Content
-            style={{
-              paddingX: '2rem',
-            }}
-          >
-            <SheetDetails dst={dst} />
-          </Sheet.Content>
-        </Sheet.Container>
-      </Sheet>
+      <div class="fixed bottom-2 right-2 ml-2 max-w-xs flex flex-col items-end space-y-2">
+        <RateButton dst={dst} graveId={graveId} />
+        <Distance dst={dst} />
+      </div>
     </>
   );
 };
