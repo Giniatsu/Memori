@@ -42,8 +42,6 @@ const ImagesSheet = ({ graveId }) => {
 
   return (
     <div
-        width="100%"
-        height="100%"
         style={{
             display: "flex",
             flexDirection: "column",
@@ -51,14 +49,15 @@ const ImagesSheet = ({ graveId }) => {
         }}
     >
       { images.map((imageUrl) => (
-        <Image
-          key={imageUrl}
-          src={imageUrl ?? ""}
-          alt=""
-          height={800}
-          width={800}
-          className="object-cover w-full"
-        />
+        <div key={imageUrl} className="w-full h-screen relative my-2">
+          <Image
+            fill
+            src={imageUrl ?? ""}
+            alt={imageUrl}
+            sizes="100vw"
+            objectFit="contain"
+          />
+        </div>
       )) }
     </div>
   );

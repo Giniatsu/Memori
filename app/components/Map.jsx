@@ -101,7 +101,9 @@ const Map = ({ graveId }) => {
               paddingX: '2rem',
             }}
           >
-            <ImagesSheet graveId={graveId} />
+            <Sheet.Scroller draggableAt="both">
+              <ImagesSheet graveId={graveId} />
+            </Sheet.Scroller>
           </Sheet.Content>
         </Sheet.Container>
       </Sheet>
