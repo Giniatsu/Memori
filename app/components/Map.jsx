@@ -3,18 +3,22 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Map as GoogleMap } from '@vis.gl/react-google-maps';
 import { useGeolocated } from 'react-geolocated';
+import Sheet from 'react-modal-sheet';
 
 import { GraveMarker } from './map/grave-marker';
 import { UserMarker } from './map/user-marker';
+import ImagesSheet from './map/images-sheet';
 import Distance from './map/distance';
 import DirectionPolyline from './map/direction-polyline';
 import { createClient } from '@supabase/supabase-js';
 import RateButton from './map/rate-button';
+import { Button } from 'flowbite-react';
 
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
 
 const Map = ({ graveId }) => {
   const [graveTarget, setGraveTarget] = useState(null)
+  const [isImagesOpen, setImagesOpen] = useState(false);
 
   const getGrave = async () => {
     const { data } = await supabase.rpc("get_graves")
@@ -82,8 +86,25 @@ const Map = ({ graveId }) => {
 
       <div class="fixed bottom-2 right-2 ml-2 max-w-xs flex flex-col items-end space-y-2">
         <RateButton dst={dst} graveId={graveId} />
+        <Button color="dark" onClick={() => setImagesOpen(true)}>View Images</Button>
         <Distance dst={dst} />
       </div>
+
+      <Sheet
+        isOpen={isImagesOpen}
+        onClose={() => setImagesOpen(false)}
+      >
+        <Sheet.Container className="px-4">
+          <Sheet.Header />
+          <Sheet.Content
+            style={{
+              paddingX: '2rem',
+            }}
+          >
+            <ImagesSheet graveId={graveId} />
+          </Sheet.Content>
+        </Sheet.Container>
+      </Sheet>
     </>
   );
 };
