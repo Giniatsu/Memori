@@ -47,7 +47,7 @@ const RateButton = ({ dst, graveId }) => {
 
   const session = supabase.auth.getSession();
 
-  if (distanceInMeters < THRESHOLD_DISTANCE_METERS) {
+  if (distanceInMeters > THRESHOLD_DISTANCE_METERS) {
     return <></>
   }
 
