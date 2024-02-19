@@ -2,16 +2,21 @@
 
 import React, { useState } from 'react';
 
+import { useRouter } from 'next/navigation';
+
 import { useGeolocated } from "react-geolocated";
 
 import * as turf from "@turf/turf";
 import { THRESHOLD_DISTANCE_METERS } from './variables';
-import { Button, Checkbox, Label, Modal, Textarea} from 'flowbite-react';
+import { Button, Label, Modal, Textarea} from 'flowbite-react';
 import StarRating from './star-rating';
 import SubmitButton from '../SubmitButton';
 import { addGraveRating } from '@/app/graves/actions';
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 const RateButton = ({ dst, graveId }) => {
+  const supabase = createClientComponentClient();
+  const router = useRouter()
   const [openModal, setOpenModal] = useState("");
   const props = { openModal, setOpenModal };
 
@@ -40,8 +45,18 @@ const RateButton = ({ dst, graveId }) => {
     ).toFixed(2)
   }, [coords, dst])
 
+  const session = supabase.auth.getSession();
+
   if (distanceInMeters < THRESHOLD_DISTANCE_METERS) {
     return <></>
+  }
+
+  if (!session) {
+    return (
+      <Button color="dark" onClick={() => router.push(`/graves/${graveId}`)}>
+        End Tracking
+      </Button>
+    )
   }
 
   return (
