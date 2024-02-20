@@ -17,8 +17,8 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 const RateButton = ({ dst, graveId }) => {
   const supabase = createClientComponentClient();
   const router = useRouter()
-  const [openModal, setOpenModal] = useState("");
-  const props = { openModal, setOpenModal };
+  const [openRatingModal, setOpenRatingModal] = useState("");
+  const [openEndModal, setOpenEndModal] = useState("");
 
   const [rating, setRating] = useState(0);
   const onRating = (r) => {
@@ -51,24 +51,37 @@ const RateButton = ({ dst, graveId }) => {
     return <></>
   }
 
-  if (!session) {
-    return (
-      <Button color="dark" onClick={() => router.push(`/graves/${graveId}`)}>
-        End Tracking
-      </Button>
-    )
-  }
-
   return (
     <>
-      <Button color="dark" onClick={() => props.setOpenModal("form-elements")}> 
+      <Button color="dark" onClick={() => setOpenEndModal("form-elements")}> 
         End Tracking
       </Button>
+      
       <Modal
-        show={props.openModal === "form-elements"}
+        show={openEndModal === "form-elements"}
         size="md"
         popup
-        onClose={() => props.setOpenModal(undefined)}
+        onClose={() => setOpenEndModal(undefined)}
+      >
+        <Modal.Header />
+        <Modal.Body>
+          <h3>You have found the grave!</h3>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button color="dark" onClick={() => router.push(`/graves/${graveId}`)}>
+            Back to Grave page
+          </Button>
+          <Button color="dark" onClick={() => { setOpenEndModal(undefined); setOpenRatingModal("form-elements"); }}>
+            Rate & Comment
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal
+        show={openRatingModal === "form-elements"}
+        size="md"
+        popup
+        onClose={() => { setOpenRatingModal(undefined); setOpenEndModal("form-elements"); }}
       >
         <Modal.Header />
         <Modal.Body>
@@ -80,7 +93,9 @@ const RateButton = ({ dst, graveId }) => {
             <div className="mb-2 mt-2 block">
               <Label htmlFor="comment" value="Comments" />
             </div>
-            <Textarea id="comment" name="comment" placeholder="Leave a comment..." rows={4} />
+            { session && (
+              <Textarea id="comment" name="comment" placeholder="Leave a comment..." rows={4} />
+            ) }
             <SubmitButton />
           </form>
         </Modal.Body>
