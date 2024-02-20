@@ -35,9 +35,7 @@ export default function ImageUploadField({ id, name, existingImages, onValid }) 
 
   const isNumOfImagesAllowed = useMemo(() => {
     const notMarkedForDeletion = existingImagesState.filter((image) => !image.markedForDeletion)
-    console.log(selectedImages.length + notMarkedForDeletion.length)
     if (selectedImages.length + notMarkedForDeletion.length <= MAX_NUM_OF_IMAGES) {
-      console.log(typeof onValid)
       if (onValid && typeof onValid === 'function') onValid(true);
       return true
     }

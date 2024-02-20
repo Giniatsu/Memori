@@ -20,6 +20,7 @@ export default function Form({
   data,
   action,
   isModal,
+  onFinish,
 }) {
   const {
     coords: deviceCoords,
@@ -290,7 +291,7 @@ export default function Form({
           </div>
           {imagesValid && (
             <div className="z-0">
-              <SubmitButton />
+              <SubmitButton onFinish={onFinish} />
             </div>
           )}
         </form>

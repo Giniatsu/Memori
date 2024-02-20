@@ -122,8 +122,6 @@ export default async function GraveDetails({ params }) {
   const images = await getImages(params.id);
   const ratings = await getRatings(params.id);
 
-  console.log(ratings);
-
   const supabase = createServerComponentClient({ cookies });
   const { data } = await supabase.auth.getSession();
   const updateGravewithID = updateGrave.bind(null, params.id);
