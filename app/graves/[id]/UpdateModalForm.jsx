@@ -24,6 +24,7 @@ export default function UpdateModalForm({action, graveInfo}) {
           <Form
             isModal
             action={action}
+            onFinish={() => props.setOpenModal(undefined)}
             data={
               {
                 existingImages: graveInfo.existingImages,

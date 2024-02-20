@@ -20,6 +20,7 @@ export default function Form({
   data,
   action,
   isModal,
+  onFinish,
 }) {
   const {
     coords: deviceCoords,
@@ -40,6 +41,8 @@ export default function Form({
   const [location, setLocation] = useState(data?.cemeteryLocationName ?? "");
   const [hasLocation, setHasLocation] = useState(false);
   const [cemetery, setCemetery] = useState(data?.cemeteryName ?? "");
+
+  const [imagesValid, setImagesValid] = useState(true);
 
   const [gettingLocation, setGettingLocation] = useState(false);
   const [locationCoordinates, setLocationCoordinates] = useState(data?.locationCoordinates ?? [0, 0]);
@@ -104,7 +107,8 @@ export default function Form({
               id="file"
               name="grave_images"
               existingImages={data?.existingImages ?? []}
-            />   
+              onValid={setImagesValid}
+            /> 
           </div>
           <div className="relative z-0 w-full col-span-2 group">
             <TextInput
@@ -285,9 +289,11 @@ export default function Form({
               </Label>
             </div>
           </div>
-          <div className="z-0">
-            <SubmitButton />
-          </div>
+          {imagesValid && (
+            <div className="z-0">
+              <SubmitButton onFinish={onFinish} />
+            </div>
+          )}
         </form>
       </Card>
     </div>

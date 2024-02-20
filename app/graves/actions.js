@@ -6,6 +6,8 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { v4 as uuidv4 } from 'uuid';
 
+const MAX_NUM_OF_IMAGES = 5;
+
 export async function addGrave(formData) {
   const grave = Object.fromEntries(formData);
   const filteredGrave = Object.fromEntries(
@@ -58,6 +60,10 @@ export async function addGrave(formData) {
 
   console.log(formData.getAll("grave_images"))
 
+  if (formData.getAll("grave_images").length > MAX_NUM_OF_IMAGES) {
+    console.log("Exceeded maximum number of images");
+    throw new Error("Exceeded maximum number of images");
+  }
 
   await Promise.all(formData.getAll("grave_images").map(async (file) => {
     const fileExt = file.name.split(".").pop();
@@ -168,6 +174,19 @@ export async function updateGrave(id, formData) {
     console.log(storageError);
   }
 
+  const { count: imagesCount, error: imagesError } = await supabase.from("images")
+    .select("*", { count: "exact", head: true })
+    .eq("grave", id)
+  if (imagesError) {
+    console.log(imagesError);
+    throw new Error("Could not count images");
+  }
+
+  if (imagesCount + formData.getAll("grave_images").filter((image) => image.size > 0).length > MAX_NUM_OF_IMAGES) {
+    console.log("Exceeded maximum number of images");
+    throw new Error("Exceeded maximum number of images");
+  }
+
   console.log(formData.getAll("grave_images"))
   await Promise.all(formData.getAll("grave_images").map(async (file) => {
     const fileExt = file.name.split(".").pop();
@@ -201,7 +220,7 @@ export async function updateGrave(id, formData) {
   }))
 
   revalidatePath(`/graves/${id}`);
-  redirect(`/graves/${id}`);
+  redirect(`/graves/contributions`);
 }
 
 export async function deleteGrave(id) {

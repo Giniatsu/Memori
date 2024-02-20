@@ -1,8 +1,10 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
-import { Label, FileInput, Button } from "flowbite-react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import { Label, FileInput, Button, Alert } from "flowbite-react";
 
-export default function ImageUploadField({ id, name, existingImages }) {
+const MAX_NUM_OF_IMAGES = 5;
+
+export default function ImageUploadField({ id, name, existingImages, onValid }) {
   const fileInputRef = useRef();
   const [selectedImages, setSelectedImages] = useState([]);
   const [existingImagesState, setExistingImagesState] = useState([]);
@@ -24,10 +26,22 @@ export default function ImageUploadField({ id, name, existingImages }) {
 
     if (selectedImages.length !== 0) {
       const dataTransfer = new DataTransfer();
-      selectedImages.forEach(file => dataTransfer.items.add(file));
+      selectedImages.forEach(file => {
+        dataTransfer.items.add(file)
+      });
       fileInput.files = dataTransfer.files;
     }
-  }, [selectedImages]);
+  }, [selectedImages, existingImagesState]);
+
+  const isNumOfImagesAllowed = useMemo(() => {
+    const notMarkedForDeletion = existingImagesState.filter((image) => !image.markedForDeletion)
+    if (selectedImages.length + notMarkedForDeletion.length <= MAX_NUM_OF_IMAGES) {
+      if (onValid && typeof onValid === 'function') onValid(true);
+      return true
+    }
+    if (onValid && typeof onValid === 'function') onValid(false);
+    return false 
+  }, [existingImagesState, selectedImages])
 
   const handleFileChange = async (event) => {
     const files = event.target.files;
@@ -126,7 +140,7 @@ export default function ImageUploadField({ id, name, existingImages }) {
       </div>
       <FileInput
         ref={fileInputRef}
-        helperText="Add helpful images to identify gravesite"
+        helperText={`Add helpful images to identify gravesite. Maximum of ${MAX_NUM_OF_IMAGES} images only.`}
         id={id}
         name={name}
         multiple
@@ -139,6 +153,11 @@ export default function ImageUploadField({ id, name, existingImages }) {
       ))}
       {(selectedImages.length > 0 || existingImagesState.filter(Boolean).length > 0) && (
         <div className="mt-2">
+          {!isNumOfImagesAllowed && (
+            <Alert color="failure">
+              <span className="font-medium">Maximum upload exceeded!</span> Please limit your uploads to 5 images only.
+            </Alert>
+          )}
           <h4>Images:</h4>
           <ul>
             {existingImagesState.map((image, index) => (
