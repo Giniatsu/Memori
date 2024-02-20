@@ -266,7 +266,8 @@ export async function addGraveRating(id, formData) {
       grave_id: id,
       rating: filteredRating.rating,
       comment: filteredRating.comment,
-      user_email: session.user.email,
+      user_email: session?.user?.email ?? "",
+      user_id: session?.user?.id ?? null,
     }).select();
 
   if (error) {
