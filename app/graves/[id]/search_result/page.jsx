@@ -3,8 +3,6 @@ import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
 // component
-import DeleteButton from "../DeleteButton";
-import UpdateModalForm from "../UpdateModalForm";
 import Link from "next/link";
 import GraveImage from "../../contributions/GraveImage";
 
@@ -24,39 +22,6 @@ export async function generateMetadata({ params }) {
 }
 
 async function getGrave(id) {
-  /*
-    Postgres query to build the get_graves() function:
-    
-    ```
-      drop function get_graves();
-
-      create
-      or replace function get_graves () returns table (
-        grave_id integer,
-        cemetery_id bigint,
-        cemetery_name text,
-        grave_images text,
-        firstname text,
-        lastname text,
-        aliases text,
-        age integer,
-        birth date,
-        death date,
-        grave_location geography,
-        latitude double precision,
-        longitude double precision,
-        user_email text,
-        notes text
-      ) as $$
-      BEGIN
-        RETURN QUERY
-        SELECT g.id AS grave_id, c.id AS cemetery_id, c.name AS cemetery_name, g.grave_images, g.firstname, g.lastname, g.aliases, g.age, g.birth, g.death, g.location AS grave_location, ST_Y(g.location::geometry) AS latitude, ST_X(g.location::geometry) AS longitude, g.user_email, g.notes
-        FROM graves g
-        JOIN cemetery c ON g.cemetery = c.id;
-      END;
-      $$ language plpgsql;
-    ```
-  */
   const supabase = createServerComponentClient({ cookies });
   const { data, error } = await supabase
     .rpc("get_graves")
@@ -71,10 +36,28 @@ async function getGrave(id) {
   return data;
 }
 
+async function getRatings(graveId) {
+  const supabase = createServerComponentClient({ cookies });
+  const { data, error } = await supabase
+    .from("ratings")
+    .select(`
+      *,
+      user_id ( id, username, full_name )
+    `)
+    .eq("grave_id", graveId);
+
+  console.log(error)
+
+  return data;
+}
+
 export default async function GraveDetails({ params }) {
   const grave = await getGrave(params.id);
-  const supabase = createServerComponentClient({ cookies });
-  const { data } = await supabase.auth.getSession();
+  const ratings = await getRatings(params.id);
+
+  const averageRatings = (ratings?.length ?? 0 > 0) ? (ratings.reduce(function (sum, value) {
+    return sum + parseInt(value.rating)
+  }, 0) / ratings.length) : 0
 
   return (
     <main>
@@ -94,9 +77,18 @@ export default async function GraveDetails({ params }) {
         <small>Added by: {grave.user_email}</small>
         <h5>Birth:{grave.birth}</h5>
         <h5>Death:{grave.death}</h5>
-        <h5>Internment:{grave.internment}</h5>
         <span>Location: {grave.longitude}, {grave.latitude}</span>
         <div>Cemetery: {grave.cemetery_name}</div>
+      </div>
+      <div className="card">
+        <h3>
+          Ratings (Average: {averageRatings} stars):
+        </h3>
+        {ratings.map((rating) => (
+          <div key={rating.id} className="mb-2">
+          {rating.user_id?.id ? rating.user_id?.username : "Anonymous"} - ({rating.rating} stars) {rating.comment}
+          </div>
+        ))}
       </div>
     </main>
   );
