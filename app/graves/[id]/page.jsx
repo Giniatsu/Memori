@@ -121,6 +121,9 @@ export default async function GraveDetails({ params }) {
   const grave = await getGrave(params.id);
   const images = await getImages(params.id);
   const ratings = await getRatings(params.id);
+
+  console.log(ratings);
+
   const supabase = createServerComponentClient({ cookies });
   const { data } = await supabase.auth.getSession();
   const updateGravewithID = updateGrave.bind(null, params.id);
@@ -164,7 +167,7 @@ export default async function GraveDetails({ params }) {
         </h3>
         {ratings.map((rating) => (
           <div key={rating.id} className="mb-2">
-          {rating.user_id.id ? rating.user_id.username : "Anonymous"} - ({rating.rating} stars) {rating.comment}
+          {rating.user_id?.id ? rating.user_id?.username : "Anonymous"} - ({rating.rating} stars) {rating.comment}
           </div>
         ))}
       </div>
