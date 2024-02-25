@@ -5,9 +5,11 @@ import { HiMail } from "react-icons/hi";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { useState, useEffect } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useRouter } from "next/navigation";
 
 export default function ForgotPassword(props) {
   const supabase = createClientComponentClient();
+  const router = useRouter();
 
   const [email, setEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -19,8 +21,7 @@ export default function ForgotPassword(props) {
 
   useEffect(() => {
     supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event == "PASSWORD_RECOVERY" || session) {
-        console.log(session)
+      if (event == "PASSWORD_RECOVERY") {
         setIsVerified(true)
       }
     })
@@ -32,7 +33,7 @@ export default function ForgotPassword(props) {
     setSubmitting(true)
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${location.origin}/forgot-password` 
+        redirectTo: `${location.origin}/api/auth/forgot-password`,
       });
       if (error) {
         throw error;
@@ -59,6 +60,8 @@ export default function ForgotPassword(props) {
         throw error;
       }
       setSuccessMessage("Password updated successfully!");
+
+      router.push("/");
     } catch (error) {
       console.error("Error updating password:", error.message);
       setErrorMessage("Error updating password. Please try again later.");

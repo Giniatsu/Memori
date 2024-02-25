@@ -52,7 +52,7 @@ export default function AuthForm(props) {
               <Label htmlFor="remember">Remember me</Label>
             </div>
             <Link
-              href="#"
+              href="/forgot-password"
               className="ml-auto text-sm text-blue-700 hover:underline dark:text-blue-500"
             >
               Lost Password?
