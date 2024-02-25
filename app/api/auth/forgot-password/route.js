@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server'
 
-export const dynamic = 'force-dynamic'
-
 async function RedirectToPage(request) {
   const url = new URL(request.url)
   const searchParams = request.nextUrl.searchParams;
@@ -19,5 +17,6 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
+  console.log('post')
   return RedirectToPage(request)
 }

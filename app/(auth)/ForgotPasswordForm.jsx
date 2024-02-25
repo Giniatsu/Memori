@@ -21,7 +21,7 @@ export default function ForgotPassword(props) {
 
   useEffect(() => {
     supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event == "PASSWORD_RECOVERY") {
+      if (event == "PASSWORD_RECOVERY" || session) {
         setIsVerified(true)
       }
     })
