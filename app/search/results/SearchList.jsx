@@ -2,10 +2,10 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Link from "next/link";
 import SearchImage from "./SearchImage";
 
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from "react";
 
-async function getGraves(query) {
+async function getGraves(query, page = 1, pageSize = 5) {
   const supabase = createClientComponentClient();
 
   // base query
@@ -14,49 +14,47 @@ async function getGraves(query) {
     .select(`
       *,
       cemetery ( * )
-    `);
+    `)
+    .range((page - 1) * pageSize, page * pageSize - 1); // Calculate offset based on page and pageSize
 
-  // add more params here if needed, follow lang sa format/pattern
-  // ani siya kay para optional tanan fields, so if naay value ang field, i-add siya sa query
-  // better for me if optional tanan fields kay para dili kaayo strict ang search
+  // Add conditions based on the query object
   if (query.cemetery) {
-    supabase_query = supabase_query.eq("cemetery", query.cemetery.trim())
+    supabase_query = supabase_query.eq("cemetery", query.cemetery.trim());
   }
 
   if (query.firstName) {
-    supabase_query = supabase_query.ilike("firstname", `%${query.firstName.trim()}%`)
+    supabase_query = supabase_query.ilike("firstname", `%${query.firstName.trim()}%`);
   }
 
   if (query.lastName) {
-    supabase_query = supabase_query.ilike("lastname", `%${query.lastName.trim()}%`)
+    supabase_query = supabase_query.ilike("lastname", `%${query.lastName.trim()}%`);
   }
 
   if (query.aliases) {
-    supabase_query = supabase_query.ilike("aliases", `%${query.aliases.trim()}%`)
+    supabase_query = supabase_query.ilike("aliases", `%${query.aliases.trim()}%`);
   }
 
   if (query.birth) {
-    supabase_query = supabase_query.eq("birth", `${query.birth.trim()}`)
+    supabase_query = supabase_query.eq("birth", `${query.birth.trim()}`);
   }
 
   if (query.death) {
-    supabase_query = supabase_query.eq("death", `${query.death.trim()}`)
+    supabase_query = supabase_query.eq("death", `${query.death.trim()}`);
   }
 
   if (query.ageMin) {
-    supabase_query = supabase_query.gte("age", parseInt(query.ageMin.trim()))
+    supabase_query = supabase_query.gte("age", parseInt(query.ageMin.trim()));
   }
 
   if (query.ageMax) {
-    supabase_query = supabase_query.lte("age", parseInt(query.ageMax.trim()))
+    supabase_query = supabase_query.lte("age", parseInt(query.ageMax.trim()));
   }
 
   if (query.age) {
-    supabase_query = supabase_query.eq("age", parseInt(query.age.trim()))
+    supabase_query = supabase_query.eq("age", parseInt(query.age.trim()));
   }
 
   const { data, error } = await supabase_query;
-
   if (error) {
     console.log(error.message);
   }
@@ -64,8 +62,68 @@ async function getGraves(query) {
   return data;
 }
 
-export default async function GravesList() {
+async function getGravesTotalCount(query) {
+  const supabase = createClientComponentClient();
+
+  // Build the count query
+  let countQuery = supabase
+    .from("graves")
+    .select("id", { count: "exact", head: true });
+
+  // Add conditions based on the query object
+  if (query.cemetery) {
+    countQuery = countQuery.eq("cemetery", query.cemetery.trim());
+  }
+
+  if (query.firstName) {
+    countQuery = countQuery.ilike("firstname", `%${query.firstName.trim()}%`);
+  }
+
+  if (query.lastName) {
+    countQuery = countQuery.ilike("lastname", `%${query.lastName.trim()}%`);
+  }
+
+  if (query.aliases) {
+    countQuery = countQuery.ilike("aliases", `%${query.aliases.trim()}%`);
+  }
+
+  if (query.birth) {
+    countQuery = countQuery.eq("birth", `${query.birth.trim()}`);
+  }
+
+  if (query.death) {
+    countQuery = countQuery.eq("death", `${query.death.trim()}`);
+  }
+
+  if (query.ageMin) {
+    countQuery = countQuery.gte("age", parseInt(query.ageMin.trim()));
+  }
+
+  if (query.ageMax) {
+    countQuery = countQuery.lte("age", parseInt(query.ageMax.trim()));
+  }
+
+  if (query.age) {
+    countQuery = countQuery.eq("age", parseInt(query.age.trim()));
+  }
+
+  const { count, error } = await countQuery;
+  if (error) {
+    console.log(error.message);
+  }
+
+  return count;
+}
+
+export default function GravesList() {
   const searchParams = useSearchParams()
+  const [graves, setGraves] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [totalCount, setTotalCount] = useState(0); // State to hold the total count
+  const pageSize = 5; // You can adjust the page size as needed
+
+  const pathname = usePathname();
+  const { push } = useRouter();
 
   // get params from url (basically gamita lang tong name na element sa fields)
   // add more params here if needed, follow lang sa format/pattern
@@ -78,10 +136,10 @@ export default async function GravesList() {
   const age = searchParams.get('age')
   const ageMin = searchParams.get('age_min')
   const ageMax = searchParams.get('age_max')
-
-  const [graves, setGraves] = useState([]);
+  const currentPage = searchParams.get('page') || 1
 
   useEffect(() => {
+    setLoading(true)
     // add more params here if needed, follow lang sa format/pattern
     getGraves({
       cemetery,
@@ -93,8 +151,9 @@ export default async function GravesList() {
       age,
       ageMin,
       ageMax,
-    }).then((data) => {
-      setGraves(data)
+    }, currentPage, pageSize).then((data) => {
+      setGraves(data);
+      setLoading(false);
     })
   }, [
     cemetery,
@@ -103,11 +162,66 @@ export default async function GravesList() {
     aliases,
     birth,
     death,
+    age,
+    ageMin,
+    ageMax,
+    currentPage,
+    pageSize,
   ])
+
+  useEffect(() => {
+    getGravesTotalCount({
+      cemetery,
+      firstName,
+      lastName,
+      aliases,
+      birth,
+      death,
+      age,
+      ageMin,
+      ageMax,
+    }).then((count) => {
+      setTotalCount(count)
+    })
+  }, [
+    cemetery,
+    firstName,
+    lastName,
+    aliases,
+    birth,
+    death,
+    age,
+    ageMin,
+    ageMax,
+  ])
+
+  function setCurrentPage(page) {
+    const params = new URLSearchParams(searchParams);
+    params.set('page', page);
+    push(`${pathname}?${params.toString()}`);
+  }
 
   return (
     <>
-      {graves.map((grave) => (
+      <div className="flex justify-center my-4">
+        { parseInt(currentPage) !== 1 && (
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => setCurrentPage(parseInt(currentPage) - 1)}
+          >
+            Previous Page
+          </button>
+        ) }
+        { !(graves.length < pageSize || parseInt(currentPage) * pageSize >= totalCount) && (
+          <button
+            className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => setCurrentPage(parseInt(currentPage) + 1)}
+          >
+            Next Page
+          </button>
+        ) }
+      </div>
+      {!loading ? graves.map((grave) => (
         <Link
           key={grave.id}
           href={`/graves/${grave.id}/search_result`}
@@ -123,8 +237,28 @@ export default async function GravesList() {
             </p>
           </div>
         </Link>
-      ))}
+      )) : (
+        <p className="text-center">Loading...</p>
+      )}
       {graves.length === 0 && <p className="text-center">No Graves</p>}
+      <div className="flex justify-center my-4">
+        { parseInt(currentPage) !== 1 && (
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => setCurrentPage(parseInt(currentPage) - 1)}
+          >
+            Previous Page
+          </button>
+        ) }
+        { !(graves.length < pageSize || parseInt(currentPage) * pageSize >= totalCount) && (
+          <button
+            className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => setCurrentPage(parseInt(currentPage) + 1)}
+          >
+            Next Page
+          </button>
+        ) }
+      </div>
     </>
   );
 }

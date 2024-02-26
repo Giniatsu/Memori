@@ -22,7 +22,7 @@ export default async function GravesLayout({ children }) {
   }
 
   return (
-    <div>
+    <div className="pb-16">
       {data.session && (
         <>
           <Navigationbar user={data.session.user} profile={profile} />

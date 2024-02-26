@@ -1,22 +1,23 @@
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
+import { useState, useEffect } from "react";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Link from "next/link";
-import Image from "next/image";
 import GraveImage from "./GraveImage";
 
-async function getGraves() {
-  const supabase = createServerComponentClient({ cookies });
+async function getGraves(page = 1, pageSize = 5) {
+  const supabase = createClientComponentClient()
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // Fetching data and total count in parallel
   const { data, error } = await supabase
     .from("graves")
     .select(`
       *,
       cemetery ( * )
     `)
-    .eq("user_email", user.email);
+    .eq("user_email", user.email)
+    .range((page - 1) * pageSize, page * pageSize - 1)
 
   if (error) {
     console.log(error.message);
@@ -25,12 +26,67 @@ async function getGraves() {
   return data;
 }
 
-export default async function GravesList() {
-  const graves = await getGraves();
+async function getGravesTotalCount() {
+  const supabase = createClientComponentClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // Fetching data and total count in parallel
+  const { count, error } = await supabase
+    .from("graves")
+    .select("id", { count: "exact", head: true })
+    .eq("user_email", user.email)
+
+  if (error) {
+    console.log(error.message);
+  }
+
+  return count;
+}
+
+export default function GravesList() {
+  const [graves, setGraves] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0); // State to hold the total count
+  const [loading, setLoading] = useState(false)
+  const pageSize = 5; // You can adjust the page size as needed
+
+  useEffect(() => {
+    setLoading(true)
+    getGraves(currentPage, pageSize).then((data) => {
+      setGraves(data);
+      setLoading(false)
+    });
+  }, [currentPage, pageSize]);
+
+  useEffect(() => {
+    getGravesTotalCount().then((count) => {
+      setTotalCount(count);
+    });
+  }, []);
 
   return (
     <>
-      {graves.map((grave) => (
+      <div className="flex justify-center my-4">
+        { currentPage !== 1 && (
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => setCurrentPage((prevPage) => prevPage - 1)}
+          >
+            Previous Page
+          </button>
+        ) }
+        { !(graves.length < pageSize || currentPage * pageSize >= totalCount) && (
+          <button
+            className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
+          >
+            Next Page
+          </button>
+        ) }
+      </div>
+      {!loading ? graves.map((grave) => (
         <Link
           key={grave.id}
           href={`/graves/${grave.id}`}
@@ -46,8 +102,28 @@ export default async function GravesList() {
             </p>
           </div>
         </Link>
-      ))}
+      )) : (
+        <p className="text-center">Loading...</p>
+      )}
       {graves.length === 0 && <p className="text-center">No Graves</p>}
+      <div className="flex justify-center my-4">
+        { currentPage !== 1 && (
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => setCurrentPage((prevPage) => prevPage - 1)}
+          >
+            Previous Page
+          </button>
+        ) }
+        { !(graves.length < pageSize || currentPage * pageSize >= totalCount) && (
+          <button
+            className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
+          >
+            Next Page
+          </button>
+        ) }
+      </div>
     </>
   );
 }

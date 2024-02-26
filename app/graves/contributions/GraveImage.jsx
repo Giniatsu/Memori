@@ -1,13 +1,12 @@
-
-
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
+'use client'
+import { useState, useEffect } from "react";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Image from "next/image";
 
 const BASE_URL = 'https://plmqhcualnnsirfqjcsj.supabase.co/storage/v1/object/public/grave_images/';
 
 async function getImage(grave_id) {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = createClientComponentClient();
 
   const { data: dbData, error: dbError } = await supabase
     .from("images")
@@ -27,35 +26,21 @@ async function getImage(grave_id) {
   return dbData.map((data) => (
     BASE_URL + data.file_name
   ))
-
-  /*
-  try {
-    const { data, error } = await supabase.storage
-      .from("grave_images")
-      .download(file_name);
-    if (error) {
-      throw error;
-    }
-
-    const url = URL.createObjectURL(data);
-
-    return url;
-  } catch (error) {
-    console.log("Error downloading image: ", error);
-    return null;
-  }
-  */
 }
 
-export default async function GraveImage({ grave_id, multiple }) {
-  const imageUrls = await getImage(grave_id);
-  
-  if (!imageUrls) {
-    return <></>
-  }
+export default function GraveImage({ grave_id, multiple }) {
+  const [loading, setLoading] = useState(false);
+  const [imageUrls, setImageUrls] = useState([]);
+  useEffect(() => {
+    setLoading(true)
+    getImage(grave_id).then((urls) => {
+      setImageUrls(urls)
+      setLoading(false)
+    })
+  }, [grave_id])
  
   if (multiple) {
-    return (
+    return !loading && (
       <>
         { imageUrls.map((imageUrl) => (
           <Image
@@ -72,10 +57,10 @@ export default async function GraveImage({ grave_id, multiple }) {
     )
   }
 
-  return (
+  return !loading && (
     <>
       <Image
-        src={imageUrls[0] ?? ""}
+        src={imageUrls ? (imageUrls[0] ?? "") : ""}
         alt=""
         height={384}
         width={384}

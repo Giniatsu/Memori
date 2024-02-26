@@ -51,12 +51,13 @@ const unauthenticatedPathRegexes = UNAUTHENTICATED_ONLY.map(wildcardToRegexPatte
 export async function middleware(req) {
   const res = NextResponse.next();
   const supabase = createMiddlewareClient({ req, res });
-  const session = await supabase.auth.getSession();
+  const session = await supabase.auth.getUser();
   console.log(req.nextUrl.pathname);
 
+  console.log(session)
   for (const pathRegex of authenticatedPathRegexes) {
     if (pathRegex.test(req.nextUrl.pathname)) {
-      if (!session?.data?.session) {
+      if (!session?.data?.user) {
         return NextResponse.redirect(new URL("/login", req.url));
       }
     }
@@ -64,7 +65,7 @@ export async function middleware(req) {
 
   for (const pathRegex of unauthenticatedPathRegexes) {
     if (pathRegex.test(req.nextUrl.pathname)) {
-      if (session?.data?.session) {
+      if (session?.data?.user) {
         return NextResponse.redirect(new URL("/", req.url));
       }
     }

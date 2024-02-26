@@ -25,7 +25,7 @@ export default async function DashboardLayout({ children }) {
   
 
   return (
-    <div>
+    <div className="pb-16">
       {data.session && (
         <>
           <Navigationbar user={data.session.user} profile={profile} />
