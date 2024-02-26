@@ -70,7 +70,7 @@ export default async function GravesList() {
   const searchParams = useSearchParams()
   const [graves, setGraves] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10; // You can adjust the page size as needed
+  const pageSize = 5; // You can adjust the page size as needed
 
   useEffect(() => {
     // get params from url (basically gamita lang tong name na element sa fields)
@@ -126,20 +126,22 @@ export default async function GravesList() {
       ))}
       {graves.length === 0 && <p className="text-center">No Graves</p>}
       <div className="flex justify-center mt-4">
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={() => setCurrentPage((prevPage) => prevPage - 1)}
-          disabled={currentPage === 1}
-        >
-          Previous Page
-        </button>
-        <button
-          className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
-          disabled={graves.length < pageSize}
-        >
-          Next Page
-        </button>
+        { currentPage !== 1 && (
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => setCurrentPage((prevPage) => prevPage - 1)}
+          >
+            Previous Page
+          </button>
+        ) }
+        { graves.length >= pageSize && (
+          <button
+            className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
+          >
+            Next Page
+          </button>
+        ) }
       </div>
     </>
   );
