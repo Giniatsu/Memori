@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import GraveImage from "./GraveImage";
 
-async function getGraves() {
+async function getGraves(page = 1, pageSize = 10) {
   const supabase = createServerComponentClient({ cookies });
   const {
     data: { user },
@@ -16,7 +16,8 @@ async function getGraves() {
       *,
       cemetery ( * )
     `)
-    .eq("user_email", user.email);
+    .eq("user_email", user.email)
+    .range((page - 1) * pageSize, page * pageSize - 1); // Calculate offset based on page and pageSize
 
   if (error) {
     console.log(error.message);
@@ -26,7 +27,15 @@ async function getGraves() {
 }
 
 export default async function GravesList() {
-  const graves = await getGraves();
+  const [graves, setGraves] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10; // You can adjust the page size as needed
+
+  useEffect(() => {
+    getGraves(currentPage, pageSize).then((data) => {
+      setGraves(data);
+    });
+  }, [currentPage, pageSize]);
 
   return (
     <>
@@ -48,6 +57,22 @@ export default async function GravesList() {
         </Link>
       ))}
       {graves.length === 0 && <p className="text-center">No Graves</p>}
+      <div className="flex justify-center mt-4">
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={() => setCurrentPage((prevPage) => prevPage - 1)}
+          disabled={currentPage === 1}
+        >
+          Previous Page
+        </button>
+        <button
+          className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
+          disabled={graves.length < pageSize}
+        >
+          Next Page
+        </button>
+      </div>
     </>
   );
 }
