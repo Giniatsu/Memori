@@ -5,7 +5,7 @@ import SearchImage from "./SearchImage";
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from "react";
 
-async function getGraves(query) {
+async function getGraves(query, page = 1, pageSize = 10) {
   const supabase = createClientComponentClient();
 
   // base query
@@ -14,7 +14,9 @@ async function getGraves(query) {
     .select(`
       *,
       cemetery ( * )
-    `);
+    `)
+    .range((page - 1) * pageSize, page * pageSize - 1); // Calculate offset based on page and pageSize
+
 
   // add more params here if needed, follow lang sa format/pattern
   // ani siya kay para optional tanan fields, so if naay value ang field, i-add siya sa query
@@ -66,22 +68,23 @@ async function getGraves(query) {
 
 export default async function GravesList() {
   const searchParams = useSearchParams()
-
-  // get params from url (basically gamita lang tong name na element sa fields)
-  // add more params here if needed, follow lang sa format/pattern
-  const cemetery = searchParams.get('cemetery')
-  const firstName = searchParams.get('first_name')
-  const lastName = searchParams.get('last_name')
-  const aliases = searchParams.get('aliases')
-  const birth = searchParams.get('birth')
-  const death = searchParams.get('death')
-  const age = searchParams.get('age')
-  const ageMin = searchParams.get('age_min')
-  const ageMax = searchParams.get('age_max')
-
   const [graves, setGraves] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10; // You can adjust the page size as needed
 
   useEffect(() => {
+    // get params from url (basically gamita lang tong name na element sa fields)
+    // add more params here if needed, follow lang sa format/pattern
+    const cemetery = searchParams.get('cemetery')
+    const firstName = searchParams.get('first_name')
+    const lastName = searchParams.get('last_name')
+    const aliases = searchParams.get('aliases')
+    const birth = searchParams.get('birth')
+    const death = searchParams.get('death')
+    const age = searchParams.get('age')
+    const ageMin = searchParams.get('age_min')
+    const ageMax = searchParams.get('age_max')
+
     // add more params here if needed, follow lang sa format/pattern
     getGraves({
       cemetery,
@@ -97,12 +100,9 @@ export default async function GravesList() {
       setGraves(data)
     })
   }, [
-    cemetery,
-    firstName,
-    lastName,
-    aliases,
-    birth,
-    death,
+    searchParams,
+    currentPage,
+    pageSize,
   ])
 
   return (
@@ -125,6 +125,22 @@ export default async function GravesList() {
         </Link>
       ))}
       {graves.length === 0 && <p className="text-center">No Graves</p>}
+      <div className="flex justify-center mt-4">
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={() => setCurrentPage((prevPage) => prevPage - 1)}
+          disabled={currentPage === 1}
+        >
+          Previous Page
+        </button>
+        <button
+          className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
+          disabled={graves.length < pageSize}
+        >
+          Next Page
+        </button>
+      </div>
     </>
   );
 }
