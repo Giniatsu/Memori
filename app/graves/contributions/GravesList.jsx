@@ -4,36 +4,47 @@ import Link from "next/link";
 import Image from "next/image";
 import GraveImage from "./GraveImage";
 
-async function getGraves(page = 1, pageSize = 10) {
+async function getGraves(page = 1, pageSize = 5) {
   const supabase = createServerComponentClient({ cookies });
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data, error } = await supabase
-    .from("graves")
-    .select(`
-      *,
-      cemetery ( * )
-    `)
-    .eq("user_email", user.email)
-    .range((page - 1) * pageSize, page * pageSize - 1); // Calculate offset based on page and pageSize
+  // Fetching data and total count in parallel
+  const [data, totalCountQuery] = await Promise.all([
+    supabase
+      .from("graves")
+      .select(`
+        *,
+        cemetery ( * )
+      `)
+      .eq("user_email", user.email)
+      .range((page - 1) * pageSize, page * pageSize - 1),
+    supabase
+      .from("graves")
+      .select("id", { count: "exact", head: true })
+      .eq("user_email", user.email),
+  ]);
+
+  const totalCount = totalCountQuery.count;
 
   if (error) {
     console.log(error.message);
   }
 
-  return data;
+  return { data, totalCount };
 }
 
 export default async function GravesList() {
   const [graves, setGraves] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0); // State to hold the total count
   const pageSize = 5; // You can adjust the page size as needed
 
   useEffect(() => {
-    getGraves(currentPage, pageSize).then((data) => {
+    getGraves(currentPage, pageSize).then(({data, totalCount}) => {
       setGraves(data);
+      setTotalCount(totalCount);
     });
   }, [currentPage, pageSize]);
 
@@ -66,7 +77,7 @@ export default async function GravesList() {
             Previous Page
           </button>
         ) }
-        { graves.length >= pageSize && (
+        { !(graves.length < pageSize || currentPage * pageSize >= totalCount) && (
           <button
             className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
