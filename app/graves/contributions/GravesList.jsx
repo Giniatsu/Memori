@@ -11,7 +11,7 @@ async function getGraves(page = 1, pageSize = 5) {
   } = await supabase.auth.getUser();
 
   // Fetching data and total count in parallel
-  const [data, totalCountQuery] = await Promise.all([
+  const [{ data }, { count }] = await Promise.all([
     supabase
       .from("graves")
       .select(`
@@ -26,13 +26,11 @@ async function getGraves(page = 1, pageSize = 5) {
       .eq("user_email", user.email),
   ]);
 
-  const totalCount = totalCountQuery.count;
-
   if (error) {
     console.log(error.message);
   }
 
-  return { data, totalCount };
+  return { data, totalCount: count };
 }
 
 export default async function GravesList() {
