@@ -69,10 +69,14 @@ async function getGraves(query, page = 1, pageSize = 5) {
   }
 
   // Fetch both the paginated data and the total count in parallel
-  const [{ data }, { count }] = await Promise.all([
+  const [{ data, error }, { count }] = await Promise.all([
     supabase_query,
     countQuery
   ]);
+
+  if (error) {
+    console.log(error.message);
+  }
 
   return { data, totalCount: count };
 }
