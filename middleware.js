@@ -29,18 +29,19 @@ function wildcardToRegexPattern(path) {
   // Escape special regex characters
   const escapedPath = path.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-  // Convert * wildcards to regex equivalents
-  const regexPattern = escapedPath.replace(/\\\*/g, '[^/]*');
-
   // Convert ** wildcards to regex equivalents
   const doubleStarRegex = /\\\*\*/g;
-  let finalRegexPattern = regexPattern;
-  while (doubleStarRegex.test(finalRegexPattern)) {
-    finalRegexPattern = finalRegexPattern.replace(doubleStarRegex, '.*');
+  let regexPattern = escapedPath;
+  while (doubleStarRegex.test(regexPattern)) {
+    regexPattern = regexPattern.replace(doubleStarRegex, '(.+?)');
   }
 
+  // Convert * wildcards to regex equivalents
+  const singleStarRegex = /\\\*/g;
+  regexPattern = regexPattern.replace(singleStarRegex, '([^/]+)');
+
   // Ensure the pattern matches the entire string
-  return new RegExp(`^${finalRegexPattern}$`);
+  return new RegExp(`^${regexPattern}$`);
 }
 
 // Convert wildcard paths to regex patterns
