@@ -2,6 +2,7 @@
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 const BASE_URL = 'https://plmqhcualnnsirfqjcsj.supabase.co/storage/v1/object/public/grave_images/';
 
@@ -11,7 +12,7 @@ async function getImage(grave_id) {
   const { data: dbData, error: dbError } = await supabase
     .from("images")
     .select(`
-      *
+      file_name
     `)
     .eq("grave", grave_id);
 
@@ -28,10 +29,18 @@ async function getImage(grave_id) {
   return BASE_URL + file_name;
 }
 
-export default async function GraveImage({ grave_id }) {
-  const imageUrl = await getImage(grave_id);
+export default function GraveImage({ grave_id }) {
+  const [loading, setLoading] = useState(false);
+  const [imageUrl, setImageUrl] = useState("");
+  useEffect(() => {
+    setLoading(true)
+    getImage(grave_id).then((url) => {
+      setImageUrl(url)
+      setLoading(false)
+    })
+  }, [grave_id])
 
-  return (
+  return !loading && (
     <>
       <Image
         src={imageUrl ?? ""}

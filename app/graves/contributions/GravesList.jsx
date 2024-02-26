@@ -1,11 +1,10 @@
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
+import { useState, useEffect } from "react";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Link from "next/link";
-import Image from "next/image";
 import GraveImage from "./GraveImage";
 
 async function getGraves(page = 1, pageSize = 5) {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = createClientComponentClient()
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -33,7 +32,7 @@ async function getGraves(page = 1, pageSize = 5) {
   return { data, totalCount: count };
 }
 
-export default async function GravesList() {
+export default function GravesList() {
   const [graves, setGraves] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0); // State to hold the total count

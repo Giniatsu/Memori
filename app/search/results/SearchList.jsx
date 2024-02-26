@@ -17,6 +17,54 @@ async function getGraves(query, page = 1, pageSize = 5) {
     `)
     .range((page - 1) * pageSize, page * pageSize - 1); // Calculate offset based on page and pageSize
 
+  // Add conditions based on the query object
+  if (query.cemetery) {
+    supabase_query = supabase_query.eq("cemetery", query.cemetery.trim());
+  }
+
+  if (query.firstName) {
+    supabase_query = supabase_query.ilike("firstname", `%${query.firstName.trim()}%`);
+  }
+
+  if (query.lastName) {
+    supabase_query = supabase_query.ilike("lastname", `%${query.lastName.trim()}%`);
+  }
+
+  if (query.aliases) {
+    supabase_query = supabase_query.ilike("aliases", `%${query.aliases.trim()}%`);
+  }
+
+  if (query.birth) {
+    supabase_query = supabase_query.eq("birth", `${query.birth.trim()}`);
+  }
+
+  if (query.death) {
+    supabase_query = supabase_query.eq("death", `${query.death.trim()}`);
+  }
+
+  if (query.ageMin) {
+    supabase_query = supabase_query.gte("age", parseInt(query.ageMin.trim()));
+  }
+
+  if (query.ageMax) {
+    supabase_query = supabase_query.lte("age", parseInt(query.ageMax.trim()));
+  }
+
+  if (query.age) {
+    supabase_query = supabase_query.eq("age", parseInt(query.age.trim()));
+  }
+
+  const { data, error } = await supabase_query;
+  if (error) {
+    console.log(error.message);
+  }
+
+  return data;
+}
+
+async function getGravesTotalCount(query) {
+  const supabase = createClientComponentClient();
+
   // Build the count query
   let countQuery = supabase
     .from("graves")
@@ -24,64 +72,50 @@ async function getGraves(query, page = 1, pageSize = 5) {
 
   // Add conditions based on the query object
   if (query.cemetery) {
-    supabase_query = supabase_query.eq("cemetery", query.cemetery.trim());
     countQuery = countQuery.eq("cemetery", query.cemetery.trim());
   }
 
   if (query.firstName) {
-    supabase_query = supabase_query.ilike("firstname", `%${query.firstName.trim()}%`);
     countQuery = countQuery.ilike("firstname", `%${query.firstName.trim()}%`);
   }
 
   if (query.lastName) {
-    supabase_query = supabase_query.ilike("lastname", `%${query.lastName.trim()}%`);
     countQuery = countQuery.ilike("lastname", `%${query.lastName.trim()}%`);
   }
 
   if (query.aliases) {
-    supabase_query = supabase_query.ilike("aliases", `%${query.aliases.trim()}%`);
     countQuery = countQuery.ilike("aliases", `%${query.aliases.trim()}%`);
   }
 
   if (query.birth) {
-    supabase_query = supabase_query.eq("birth", `${query.birth.trim()}`);
     countQuery = countQuery.eq("birth", `${query.birth.trim()}`);
   }
 
   if (query.death) {
-    supabase_query = supabase_query.eq("death", `${query.death.trim()}`);
     countQuery = countQuery.eq("death", `${query.death.trim()}`);
   }
 
   if (query.ageMin) {
-    supabase_query = supabase_query.gte("age", parseInt(query.ageMin.trim()));
     countQuery = countQuery.gte("age", parseInt(query.ageMin.trim()));
   }
 
   if (query.ageMax) {
-    supabase_query = supabase_query.lte("age", parseInt(query.ageMax.trim()));
     countQuery = countQuery.lte("age", parseInt(query.ageMax.trim()));
   }
 
   if (query.age) {
-    supabase_query = supabase_query.eq("age", parseInt(query.age.trim()));
     countQuery = countQuery.eq("age", parseInt(query.age.trim()));
   }
 
-  // Fetch both the paginated data and the total count in parallel
-  const [{ data, error }, { count }] = await Promise.all([
-    supabase_query,
-    countQuery
-  ]);
-
+  const { count, error } = await countQuery;
   if (error) {
     console.log(error.message);
   }
 
-  return { data, totalCount: count };
+  return count;
 }
 
-export default async function GravesList() {
+export default function GravesList() {
   const searchParams = useSearchParams()
   const [graves, setGraves] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -89,7 +123,7 @@ export default async function GravesList() {
   const pageSize = 5; // You can adjust the page size as needed
 
   const pathname = usePathname();
-  const { replace } = useRouter();
+  const { push } = useRouter();
 
   // get params from url (basically gamita lang tong name na element sa fields)
   // add more params here if needed, follow lang sa format/pattern
@@ -117,9 +151,8 @@ export default async function GravesList() {
       age,
       ageMin,
       ageMax,
-    }).then(({data, totalCount}) => {
+    }, currentPage, pageSize).then((data) => {
       setGraves(data);
-      setTotalCount(totalCount);
       setLoading(false);
     })
   }, [
@@ -136,14 +169,58 @@ export default async function GravesList() {
     pageSize,
   ])
 
+  useEffect(() => {
+    getGravesTotalCount({
+      cemetery,
+      firstName,
+      lastName,
+      aliases,
+      birth,
+      death,
+      age,
+      ageMin,
+      ageMax,
+    }).then((count) => {
+      setTotalCount(count)
+    })
+  }, [
+    cemetery,
+    firstName,
+    lastName,
+    aliases,
+    birth,
+    death,
+    age,
+    ageMin,
+    ageMax,
+  ])
+
   function setCurrentPage(page) {
     const params = new URLSearchParams(searchParams);
     params.set('page', page);
-    replace(`${pathname}?${params.toString()}`);
+    push(`${pathname}?${params.toString()}`);
   }
 
   return (
     <>
+      <div className="flex justify-center my-4">
+        { parseInt(currentPage) !== 1 && (
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => setCurrentPage(parseInt(currentPage) - 1)}
+          >
+            Previous Page
+          </button>
+        ) }
+        { !(graves.length < pageSize || parseInt(currentPage) * pageSize >= totalCount) && (
+          <button
+            className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => setCurrentPage(parseInt(currentPage) + 1)}
+          >
+            Next Page
+          </button>
+        ) }
+      </div>
       {!loading ? graves.map((grave) => (
         <Link
           key={grave.id}
@@ -164,19 +241,19 @@ export default async function GravesList() {
         <p className="text-center">Loading...</p>
       )}
       {graves.length === 0 && <p className="text-center">No Graves</p>}
-      <div className="flex justify-center mt-4">
-        { currentPage !== 1 && (
+      <div className="flex justify-center my-4">
+        { parseInt(currentPage) !== 1 && (
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={() => setCurrentPage((prevPage) => prevPage - 1)}
+            onClick={() => setCurrentPage(parseInt(currentPage) - 1)}
           >
             Previous Page
           </button>
         ) }
-        { !(graves.length < pageSize || currentPage * pageSize >= totalCount) && (
+        { !(graves.length < pageSize || parseInt(currentPage) * pageSize >= totalCount) && (
           <button
             className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
+            onClick={() => setCurrentPage(parseInt(currentPage) + 1)}
           >
             Next Page
           </button>
