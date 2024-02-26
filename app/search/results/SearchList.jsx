@@ -2,7 +2,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Link from "next/link";
 import SearchImage from "./SearchImage";
 
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from "react";
 
 async function getGraves(query, page = 1, pageSize = 5) {
@@ -84,23 +84,28 @@ async function getGraves(query, page = 1, pageSize = 5) {
 export default async function GravesList() {
   const searchParams = useSearchParams()
   const [graves, setGraves] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(false);
   const [totalCount, setTotalCount] = useState(0); // State to hold the total count
   const pageSize = 5; // You can adjust the page size as needed
 
-  useEffect(() => {
-    // get params from url (basically gamita lang tong name na element sa fields)
-    // add more params here if needed, follow lang sa format/pattern
-    const cemetery = searchParams.get('cemetery')
-    const firstName = searchParams.get('first_name')
-    const lastName = searchParams.get('last_name')
-    const aliases = searchParams.get('aliases')
-    const birth = searchParams.get('birth')
-    const death = searchParams.get('death')
-    const age = searchParams.get('age')
-    const ageMin = searchParams.get('age_min')
-    const ageMax = searchParams.get('age_max')
+  const pathname = usePathname();
+  const { replace } = useRouter();
 
+  // get params from url (basically gamita lang tong name na element sa fields)
+  // add more params here if needed, follow lang sa format/pattern
+  const cemetery = searchParams.get('cemetery')
+  const firstName = searchParams.get('first_name')
+  const lastName = searchParams.get('last_name')
+  const aliases = searchParams.get('aliases')
+  const birth = searchParams.get('birth')
+  const death = searchParams.get('death')
+  const age = searchParams.get('age')
+  const ageMin = searchParams.get('age_min')
+  const ageMax = searchParams.get('age_max')
+  const currentPage = searchParams.get('page') || 1
+
+  useEffect(() => {
+    setLoading(true)
     // add more params here if needed, follow lang sa format/pattern
     getGraves({
       cemetery,
@@ -115,16 +120,31 @@ export default async function GravesList() {
     }).then(({data, totalCount}) => {
       setGraves(data);
       setTotalCount(totalCount);
+      setLoading(false);
     })
   }, [
-    searchParams,
+    cemetery,
+    firstName,
+    lastName,
+    aliases,
+    birth,
+    death,
+    age,
+    ageMin,
+    ageMax,
     currentPage,
     pageSize,
   ])
 
+  function setCurrentPage(page) {
+    const params = new URLSearchParams(searchParams);
+    params.set('page', page);
+    replace(`${pathname}?${params.toString()}`);
+  }
+
   return (
     <>
-      {graves.map((grave) => (
+      {!loading ? graves.map((grave) => (
         <Link
           key={grave.id}
           href={`/graves/${grave.id}/search_result`}
@@ -140,7 +160,9 @@ export default async function GravesList() {
             </p>
           </div>
         </Link>
-      ))}
+      )) : (
+        <div>Loading...</div>
+      )}
       {graves.length === 0 && <p className="text-center">No Graves</p>}
       <div className="flex justify-center mt-4">
         { currentPage !== 1 && (

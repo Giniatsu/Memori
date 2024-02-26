@@ -37,18 +37,21 @@ export default async function GravesList() {
   const [graves, setGraves] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0); // State to hold the total count
+  const [loading, setLoading] = useState(false)
   const pageSize = 5; // You can adjust the page size as needed
 
   useEffect(() => {
+    setLoading(true)
     getGraves(currentPage, pageSize).then(({data, totalCount}) => {
       setGraves(data);
       setTotalCount(totalCount);
+      setLoading(false)
     });
   }, [currentPage, pageSize]);
 
   return (
     <>
-      {graves.map((grave) => (
+      {!loading ? graves.map((grave) => (
         <Link
           key={grave.id}
           href={`/graves/${grave.id}`}
@@ -64,7 +67,9 @@ export default async function GravesList() {
             </p>
           </div>
         </Link>
-      ))}
+      )) : (
+        <div>Loading...</div>
+      )}
       {graves.length === 0 && <p className="text-center">No Graves</p>}
       <div className="flex justify-center mt-4">
         { currentPage !== 1 && (
