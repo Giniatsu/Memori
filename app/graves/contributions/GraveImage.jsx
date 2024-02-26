@@ -60,7 +60,7 @@ export default function GraveImage({ grave_id, multiple }) {
   return !loading && (
     <>
       <Image
-        src={imageUrls[0] ?? ""}
+        src={imageUrls ? (imageUrls[0] ?? "") : ""}
         alt=""
         height={384}
         width={384}

@@ -10,26 +10,39 @@ async function getGraves(page = 1, pageSize = 5) {
   } = await supabase.auth.getUser();
 
   // Fetching data and total count in parallel
-  const [{ data, error }, { count }] = await Promise.all([
-    supabase
-      .from("graves")
-      .select(`
-        *,
-        cemetery ( * )
-      `)
-      .eq("user_email", user.email)
-      .range((page - 1) * pageSize, page * pageSize - 1),
-    supabase
-      .from("graves")
-      .select("id", { count: "exact", head: true })
-      .eq("user_email", user.email),
-  ]);
+  const { data, error } = await supabase
+    .from("graves")
+    .select(`
+      *,
+      cemetery ( * )
+    `)
+    .eq("user_email", user.email)
+    .range((page - 1) * pageSize, page * pageSize - 1)
 
   if (error) {
     console.log(error.message);
   }
 
-  return { data, totalCount: count };
+  return data;
+}
+
+async function getGravesTotalCount() {
+  const supabase = createClientComponentClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // Fetching data and total count in parallel
+  const { count, error } = await supabase
+    .from("graves")
+    .select("id", { count: "exact", head: true })
+    .eq("user_email", user.email)
+
+  if (error) {
+    console.log(error.message);
+  }
+
+  return count;
 }
 
 export default function GravesList() {
@@ -41,15 +54,38 @@ export default function GravesList() {
 
   useEffect(() => {
     setLoading(true)
-    getGraves(currentPage, pageSize).then(({data, totalCount}) => {
+    getGraves(currentPage, pageSize).then((data) => {
       setGraves(data);
-      setTotalCount(totalCount);
       setLoading(false)
     });
   }, [currentPage, pageSize]);
 
+  useEffect(() => {
+    getGravesTotalCount().then((count) => {
+      setTotalCount(count);
+    });
+  }, []);
+
   return (
     <>
+      <div className="flex justify-center my-4">
+        { currentPage !== 1 && (
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => setCurrentPage((prevPage) => prevPage - 1)}
+          >
+            Previous Page
+          </button>
+        ) }
+        { !(graves.length < pageSize || currentPage * pageSize >= totalCount) && (
+          <button
+            className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
+          >
+            Next Page
+          </button>
+        ) }
+      </div>
       {!loading ? graves.map((grave) => (
         <Link
           key={grave.id}
@@ -70,7 +106,7 @@ export default function GravesList() {
         <p className="text-center">Loading...</p>
       )}
       {graves.length === 0 && <p className="text-center">No Graves</p>}
-      <div className="flex justify-center mt-4">
+      <div className="flex justify-center my-4">
         { currentPage !== 1 && (
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
