@@ -46,6 +46,16 @@ export async function addGrave(formData) {
   delete filteredGrave.grave_images; 
   delete filteredGrave.imagesForDeletion;
 
+  if (filteredGrave.birth.trim() === "") {
+    filteredGrave.birth = null
+    filteredGrave.age = null
+  }
+
+  if (filteredGrave.death.trim() === "") {
+    filteredGrave.death = null
+    filteredGrave.age = null
+  }
+
   // insert the grave data
   const { data: graveData, error: graveError } = await supabase.from("graves").insert({
     ...filteredGrave,
@@ -138,6 +148,16 @@ export async function updateGrave(id, formData) {
   delete filteredGrave.cemeterycoordinates;
   delete filteredGrave.grave_images; 
   delete filteredGrave.imagesForDeletion;
+
+  if (filteredGrave.birth.trim() === "") {
+    filteredGrave.birth = null
+    filteredGrave.age = null
+  }
+
+  if (filteredGrave.death.trim() === "") {
+    filteredGrave.death = null
+    filteredGrave.age = null
+  }
 
   // insert the grave data
   const { data: graveData, error: graveError } = await supabase.from("graves").update({
