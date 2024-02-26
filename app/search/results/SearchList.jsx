@@ -161,7 +161,7 @@ export default async function GravesList() {
           </div>
         </Link>
       )) : (
-        <div>Loading...</div>
+        <p className="text-center">Loading...</p>
       )}
       {graves.length === 0 && <p className="text-center">No Graves</p>}
       <div className="flex justify-center mt-4">
