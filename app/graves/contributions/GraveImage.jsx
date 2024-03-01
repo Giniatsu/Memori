@@ -34,7 +34,7 @@ export default function GraveImage({ grave_id, multiple }) {
   useEffect(() => {
     setLoading(true)
     getImage(grave_id).then((urls) => {
-      setImageUrls(urls)
+      setImageUrls(urls ?? [])
       setLoading(false)
     })
   }, [grave_id])
@@ -42,7 +42,7 @@ export default function GraveImage({ grave_id, multiple }) {
   if (multiple) {
     return !loading && (
       <>
-        { imageUrls.map((imageUrl) => (
+        { imageUrls?.map((imageUrl) => (
           <Image
             key={imageUrl}
             src={imageUrl ?? ""}
@@ -57,7 +57,7 @@ export default function GraveImage({ grave_id, multiple }) {
     )
   }
 
-  return !loading && (
+  return !loading && (imageUrls && imageUrls.length > 0) && (
     <>
       <Image
         src={imageUrls ? (imageUrls[0] ?? "") : ""}

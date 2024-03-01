@@ -40,7 +40,7 @@ export default function GraveImage({ grave_id }) {
     })
   }, [grave_id])
 
-  return !loading && (
+  return !loading && !!imageUrl && (
     <>
       <Image
         src={imageUrl ?? ""}
