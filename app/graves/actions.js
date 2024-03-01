@@ -46,12 +46,12 @@ export async function addGrave(formData) {
   delete filteredGrave.grave_images; 
   delete filteredGrave.imagesForDeletion;
 
-  if (filteredGrave.birth.trim() === "") {
+  if (!filteredGrave.birth || filteredGrave.birth.trim() === "") {
     filteredGrave.birth = null
     filteredGrave.age = null
   }
 
-  if (filteredGrave.death.trim() === "") {
+  if (!filteredGrave.death || filteredGrave.death.trim() === "") {
     filteredGrave.death = null
     filteredGrave.age = null
   }
