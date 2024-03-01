@@ -19,6 +19,7 @@ const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.
 const Map = ({ graveId }) => {
   const [graveTarget, setGraveTarget] = useState(null)
   const [isImagesOpen, setImagesOpen] = useState(false);
+  const [autoZoomDisabled, setAutoZoomDisabled] = useState(false);
 
   const getGrave = async () => {
     const { data } = await supabase.rpc("get_graves")
@@ -79,12 +80,13 @@ const Map = ({ graveId }) => {
         gestureHandling={'greedy'}
         disableDefaultUI={true}
       >
-        <UserMarker dst={dst} />
+        <UserMarker dst={dst} autoZoomDisabled={autoZoomDisabled} />
         <GraveMarker grave={graveTarget} coords={dst} />
         <DirectionPolyline dst={dst} />
       </GoogleMap>
 
       <div class="fixed bottom-2 right-2 ml-2 max-w-xs flex flex-col items-end space-y-2">
+        <Button color="dark" onClick={() => { setAutoZoomDisabled((prev) => !prev) }}>{autoZoomDisabled ? "Turn on auto-center" : "Turn off auto-center"}</Button>
         <RateButton dst={dst} graveId={graveId} />
         <Button color="dark" onClick={() => setImagesOpen(true)}>View Images</Button>
         <Distance dst={dst} />

@@ -1,10 +1,10 @@
 'use client'
 
-import React, {useCallback, useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import { useMapsLibrary, Marker, useMap } from "@vis.gl/react-google-maps";
 import { useGeolocated } from "react-geolocated";
 
-export const UserMarker = ({ dst }) => {
+export const UserMarker = ({ dst, autoZoomDisabled }) => {
   const {
     coords,
   } = useGeolocated({
@@ -47,7 +47,7 @@ export const UserMarker = ({ dst }) => {
   }, [coords])
 
   useEffect(() => {
-    if (coreLib && map && coords) {
+    if (coreLib && map && coords && !autoZoomDisabled) {
       const bounds = new coreLib.LatLngBounds()
 
       bounds.extend({ lat: coords?.latitude, lng: coords?.longitude })
@@ -56,7 +56,7 @@ export const UserMarker = ({ dst }) => {
       map.fitBounds(bounds)
       map.setZoom(map.getZoom() - 1)
     }
-  }, [coreLib, map, coords, dst])
+  }, [coreLib, map, coords, dst, autoZoomDisabled])
 
   // Handle the case when coords are not available yet
   if (!coords || !geometryLib || !coreLib) {

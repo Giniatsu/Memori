@@ -4,7 +4,6 @@ import { Avatar, Dropdown, Navbar } from "flowbite-react";
 
 import Link from "next/link";
 import LogoutButton from "./LogoutButton";
-import Image from "next/image";
 
 export default function Navigationbar({ user, profile }) {
   if (user) {
