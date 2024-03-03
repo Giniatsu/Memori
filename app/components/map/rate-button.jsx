@@ -47,16 +47,16 @@ const RateButton = ({ dst, graveId }) => {
 
   const [user, setUser] = React.useState(null)
 
-  if (distanceInMeters > THRESHOLD_DISTANCE_METERS) {
-    return <></>
-  }
-
   const session = supabase.auth.getUser()
   React.useEffect(() => {
     session.then((val) => {
       setUser(val.data?.user ?? null)
     })
   }, [session])
+
+  if (distanceInMeters > THRESHOLD_DISTANCE_METERS) {
+    return <></>
+  }
 
   return (
     <>
