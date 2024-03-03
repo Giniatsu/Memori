@@ -32,7 +32,7 @@ export default async function SearchLayout({ children }) {
       )}
       {!data.session && <Navigationbar />}
       {children}
-      <BottomNavbar />
+      {data.session && (<BottomNavbar />)}
     </div>
   );
 }
