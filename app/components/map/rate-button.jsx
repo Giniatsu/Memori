@@ -45,11 +45,18 @@ const RateButton = ({ dst, graveId }) => {
     ).toFixed(2)
   }, [coords, dst])
 
-  const session = supabase.auth.getSession();
+  const [user, setUser] = React.useState(null)
 
   if (distanceInMeters > THRESHOLD_DISTANCE_METERS) {
     return <></>
   }
+
+  const session = supabase.auth.getUser()
+  React.useEffect(() => {
+    session.then((val) => {
+      setUser(val.data?.user ?? null)
+    })
+  }, [session])
 
   return (
     <>
@@ -71,9 +78,15 @@ const RateButton = ({ dst, graveId }) => {
           <Button color="dark" onClick={() => router.push(`/graves/${graveId}`)}>
             Back to Grave page
           </Button>
-          <Button color="dark" onClick={() => { setOpenEndModal(undefined); setOpenRatingModal("form-elements"); }}>
-            Rate & Comment
-          </Button>
+          { user ? (
+            <Button color="dark" onClick={() => { setOpenEndModal(undefined); setOpenRatingModal("form-elements"); }}>
+              Rate & Comment
+            </Button>
+          ) : (
+            <Button color="dark" onClick={() => { setOpenEndModal(undefined); setOpenRatingModal("form-elements"); }}>
+              Rate
+            </Button>
+          ) }
         </Modal.Footer>
       </Modal>
 
@@ -90,11 +103,13 @@ const RateButton = ({ dst, graveId }) => {
               <Label value="Accuracy rating" />
             </div>
             <StarRating name="rating" id="star" value={rating} onChange={onRating} maxStars={5} />
-            <div className="mb-2 mt-2 block">
-              <Label htmlFor="comment" value="Comments" />
-            </div>
-            { session && (
-              <Textarea id="comment" name="comment" placeholder="Leave a comment..." rows={4} />
+            { user && (
+              <>
+                <div className="mb-2 mt-2 block">
+                  <Label htmlFor="comment" value="Comments" />
+                </div>
+                <Textarea id="comment" name="comment" placeholder="Leave a comment..." rows={4} />
+              </>
             ) }
             <SubmitButton />
           </form>
