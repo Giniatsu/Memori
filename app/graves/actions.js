@@ -314,7 +314,7 @@ export async function addGraveRating(id, formData) {
     throw new Error("Could not add rating");
   }
 
-  revalidatePath(`/graves/${id}`);
-  redirect(`/graves/${id}`);
+  revalidatePath(`/graves/${id}/search_result`);
+  redirect(`/graves/${id}/search_result`);
 }
 

@@ -54,7 +54,7 @@ const RateButton = ({ dst, graveId }) => {
     })
   }, [session])
 
-  if (distanceInMeters > THRESHOLD_DISTANCE_METERS) {
+  if (distanceInMeters < THRESHOLD_DISTANCE_METERS) {
     return <></>
   }
 
