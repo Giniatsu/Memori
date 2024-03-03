@@ -84,9 +84,9 @@ export default async function GraveDetails({ params }) {
         <h3>
           Ratings (Average: {averageRatings} stars):
         </h3>
-        {ratings?.map((rating) => (
+        {ratings?.map((rating) => rating.user_id?.id ?? (
           <div key={rating.id} className="mb-2">
-          {rating.user_id?.id ? rating.user_id?.username : "Anonymous"} - ({rating.rating} stars) {rating.comment}
+          {rating.user_id?.username} - ({rating.rating} stars) {rating.comment}
           </div>
         ))}
       </div>
