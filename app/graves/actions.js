@@ -149,14 +149,14 @@ export async function updateGrave(id, formData) {
   delete filteredGrave.grave_images; 
   delete filteredGrave.imagesForDeletion;
 
-  if (filteredGrave.birth.trim() === "") {
-    filteredGrave.birth = null
-    filteredGrave.age = null
+  if (!filteredGrave.birth || filteredGrave.birth.trim() === "") {
+    filteredGrave.birth = null;
+    filteredGrave.age = null;
   }
 
-  if (filteredGrave.death.trim() === "") {
-    filteredGrave.death = null
-    filteredGrave.age = null
+  if (!filteredGrave.death || filteredGrave.death.trim() === "") {
+    filteredGrave.death = null;
+    filteredGrave.age = null;
   }
 
   // insert the grave data
