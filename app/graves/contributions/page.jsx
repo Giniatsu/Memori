@@ -7,8 +7,8 @@ export default function Graves() {
   return (
     <main>
       <nav>
-        <div>
-          <h2>Your Contributed Graves</h2>
+        <div className="text-center">
+          <h1 className="font-bold text-2xl">Your Contributed Graves</h1>
           <p>
             <small>Available graves to locate.</small>
           </p>

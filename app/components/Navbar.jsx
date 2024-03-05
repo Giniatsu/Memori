@@ -55,7 +55,7 @@ export default function Navigationbar({ user, profile }) {
             Home
           </Navbar.Link>
           <Navbar.Link href="/search">Search</Navbar.Link>
-          <Navbar.Link href="/activity">Activity</Navbar.Link>
+          {/* <Navbar.Link href="/activity">Activity</Navbar.Link> */}
         </Navbar.Collapse>
       </Navbar>
     );

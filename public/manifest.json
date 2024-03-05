@@ -4,8 +4,8 @@
     "display": "standalone",
     "scope": "/",
     "start_url": "/",
-    "name": "GraveFinder",
-    "short_name": "GF",
+    "name": "Memento Mori - Grave Finding App",
+    "short_name": "Memori",
     "description": "Application to locate graves for public cemeteries",
     "icons": [
         {
