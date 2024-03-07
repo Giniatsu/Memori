@@ -1,5 +1,4 @@
-"use server";
-import React from 'react';
+import React from "react";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
@@ -10,7 +9,11 @@ import UpdateModalForm from "./UpdateModalForm";
 import Link from "next/link";
 import GraveImage from "../contributions/GraveImage";
 
-import { updateGrave } from '../actions';
+import { updateGrave } from "../actions";
+import Card from "../components/GraveCard";
+import Avatar from "../components/UserAvatar";
+import Button from '../components/LocateButton';
+import { GiHastyGrave } from "react-icons/gi";
 
 export async function generateMetadata({ params }) {
   const supabase = createServerComponentClient({ cookies });
@@ -21,7 +24,9 @@ export async function generateMetadata({ params }) {
     .single();
 
   return {
-    title: `GraveFinder | ${grave.firstname + " " + grave.lastname || "Ticket not found"}`,
+    title: `GraveFinder | ${
+      grave.firstname + " " + grave.lastname || "Ticket not found"
+    }`,
   };
 }
 
@@ -68,7 +73,7 @@ async function getGrave(id) {
     .eq("grave_id", id)
     .single();
 
-  console.log(error)
+  console.log(error);
   if (!data) {
     notFound();
   }
@@ -80,27 +85,33 @@ async function getRatings(graveId) {
   const supabase = createServerComponentClient({ cookies });
   const { data, error } = await supabase
     .from("ratings")
-    .select(`
+    .select(
+      `
       *,
-      user_id ( id, username, full_name )
-    `)
+      user_id ( id, username, full_name, avatar_url )
+    `
+    )
     .eq("grave_id", graveId);
 
-  console.log(error)
+  console.log(error);
 
   return data;
 }
-
-const BASE_URL = 'https://plmqhcualnnsirfqjcsj.supabase.co/storage/v1/object/public/grave_images/';
+const AVATAR_URL =
+  "https://plmqhcualnnsirfqjcsj.supabase.co/storage/v1/object/public/avatars/";
+const BASE_URL =
+  "https://plmqhcualnnsirfqjcsj.supabase.co/storage/v1/object/public/grave_images/";
 
 async function getImages(grave_id) {
   const supabase = createServerComponentClient({ cookies });
 
   const { data: dbData, error: dbError } = await supabase
     .from("images")
-    .select(`
+    .select(
+      `
       *
-    `)
+    `
+    )
     .eq("grave", grave_id);
 
   if (dbError) {
@@ -111,11 +122,8 @@ async function getImages(grave_id) {
     return null;
   }
 
-  return dbData.map((data) => (
-    BASE_URL + data.file_name
-  ))
+  return dbData.map((data) => BASE_URL + data.file_name);
 }
-
 
 export default async function GraveDetails({ params }) {
   const grave = await getGrave(params.id);
@@ -126,55 +134,77 @@ export default async function GraveDetails({ params }) {
   const { data } = await supabase.auth.getSession();
   const updateGravewithID = updateGrave.bind(null, params.id);
 
-  const averageRatings = (ratings?.length ?? 0 > 0) ? (ratings.reduce(function (sum, value) {
-    return sum + parseInt(value.rating)
-  }, 0) / ratings.length) : 0
+  const averageRatings =
+    ratings?.length ?? 0 > 0
+      ? ratings.reduce(function (sum, value) {
+          return sum + parseInt(value.rating);
+        }, 0) / ratings.length
+      : 0;
 
   return (
     <main>
-      <nav>
-        <GraveImage grave_id={params.id} multiple />
-        <Link href={`/map?grave_id=${params.id}`}>LOCATE GRAVE HERE (MAP)</Link>
-        <h2>Grave Details</h2>
-        <div className="ml-auto">
-          {data.session?.user?.email === grave.user_email && (
-            <>
-              <DeleteButton id={grave.grave_id} />
-              <UpdateModalForm
-                action={updateGravewithID}
-                graveInfo={{ ...grave, id: params.id, existingImages: images }}
-              />
-            </>
-          )}
+      <div className="grid grid-cols-2">
+        <div className="h-56 sm:h-64 xl:h-80 2xl:h-96">
+          <GraveImage grave_id={params.id} multiple />
         </div>
-      </nav>
-      <div className="card">
-        {grave.grave_image}
-        <h3>
-          {grave.firstname} {grave.lastname}
-        </h3>
-        <h4>Alias: {grave.aliases}</h4>
-        <small>Added by: {grave.user_email}</small>
-        <h5>Birth:{grave.birth}</h5>
-        <h5>Death:{grave.death}</h5>
-        <span>
-          Location: {grave.longitude}, {grave.latitude}
-        </span>
-        <div>Cemetery: {grave.cemetery_name}</div>
-      </div>
-      <div className="card">
-        <h3>Ratings (Average: {averageRatings} stars):</h3>
-        {ratings?.map((rating) =>
-          rating.user_id?.id ? (
-            <div key={rating.id} className="mb-2">
-              {rating.user_id?.username} - ({rating.rating} stars){" "}
-              {rating.comment}
-            </div>
-          ) : (
-            <></>
-          )
+        <div>
+          <div className="inline-flex" role="group">
+            <Button color="gray">
+              <GiHastyGrave className="mr-3 h-4 w-4" />
+              <Link href={`/map?grave_id=${params.id}`}>
+                LOCATE GRAVE HERE (MAP)
+              </Link>
+            </Button>
+            <DeleteButton id={grave.grave_id} />
+          </div>
+        </div>
+        {/* <Link href={`/map?grave_id=${params.id}`}>LOCATE GRAVE HERE (MAP)</Link>
+        {data.session?.user?.email === grave.user_email && (
+          <>
+            <DeleteButton id={grave.grave_id} />
+            <UpdateModalForm
+              action={updateGravewithID}
+              graveInfo={{ ...grave, id: params.id, existingImages: images }}
+            />
+          </>
         )}
+        <div className="card">
+          <h2>Grave Details</h2>
+          <h3>
+            {grave.firstname} {grave.lastname}
+          </h3>
+          <h4>Alias: {grave.aliases}</h4>
+          <small>Added by: {grave.user_email}</small>
+          <h5>Birth:{grave.birth}</h5>
+          <h5>Death:{grave.death}</h5>
+          <h5>
+            Location: {grave.longitude}, {grave.latitude}
+          </h5>
+          <h5>Cemetery: {grave.cemetery_name}</h5>
+          <h3>Ratings (Average: {averageRatings} stars):</h3>
+          {ratings?.map((rating) =>
+            rating.user_id?.id ? (
+              <div key={rating.id} className="mb-2">
+                <Avatar
+                  img={AVATAR_URL + `${rating.user_id?.avatar_url}`}
+                />{" "}
+                {rating.user_id?.username} - ({rating.rating} stars){" "}
+                {rating.comment}
+              </div>
+            ) : (
+              <></>
+            )
+          )}
+        </div> */}
       </div>
+      {/* <Card className="max-w-sm" horizontal>
+        <GraveImage grave_id={params.id} multiple />
+        <div>
+          <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+            Noteworthy technology acquisitions 2021
+          </h5>
+        </div>
+      </Card> */}
     </main>
   );
 }

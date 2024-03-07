@@ -11,7 +11,7 @@ export default function UpdateModalForm({action, graveInfo}) {
   return (
     <>
       <Button onClick={() => props.setOpenModal("form-elements")}>
-        Toggle modal
+        Update Grave
       </Button>
       <Modal
         show={props.openModal === "form-elements"}
