@@ -134,15 +134,16 @@ export default async function GraveDetails({ params }) {
     <main>
       <nav>
         <GraveImage grave_id={params.id} multiple />
-        <Link href={`/map?grave_id=${params.id}`}>
-          LOCATE GRAVE HERE (MAP)
-        </Link>
+        <Link href={`/map?grave_id=${params.id}`}>LOCATE GRAVE HERE (MAP)</Link>
         <h2>Grave Details</h2>
         <div className="ml-auto">
           {data.session?.user?.email === grave.user_email && (
             <>
               <DeleteButton id={grave.grave_id} />
-              <UpdateModalForm action={updateGravewithID} graveInfo={{...grave, id: params.id, existingImages: images}}/>
+              <UpdateModalForm
+                action={updateGravewithID}
+                graveInfo={{ ...grave, id: params.id, existingImages: images }}
+              />
             </>
           )}
         </div>
@@ -156,18 +157,23 @@ export default async function GraveDetails({ params }) {
         <small>Added by: {grave.user_email}</small>
         <h5>Birth:{grave.birth}</h5>
         <h5>Death:{grave.death}</h5>
-        <span>Location: {grave.longitude}, {grave.latitude}</span>
+        <span>
+          Location: {grave.longitude}, {grave.latitude}
+        </span>
         <div>Cemetery: {grave.cemetery_name}</div>
       </div>
       <div className="card">
-        <h3>
-          Ratings (Average: {averageRatings} stars):
-        </h3>
-        {ratings.map((rating) => rating.user_id?.id ?? (
-          <div key={rating.id} className="mb-2">
-          {rating.user_id?.username} - ({rating.rating} stars) {rating.comment}
-          </div>
-        ))}
+        <h3>Ratings (Average: {averageRatings} stars):</h3>
+        {ratings?.map((rating) =>
+          rating.user_id?.id ? (
+            <div key={rating.id} className="mb-2">
+              {rating.user_id?.username} - ({rating.rating} stars){" "}
+              {rating.comment}
+            </div>
+          ) : (
+            <></>
+          )
+        )}
       </div>
     </main>
   );

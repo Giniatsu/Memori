@@ -17,7 +17,9 @@ export async function generateMetadata({ params }) {
     .single();
 
   return {
-    title: `GraveFinder | ${grave.firstname + " " + grave.lastname || "Ticket not found"}`,
+    title: `GraveFinder | ${
+      grave.firstname + " " + grave.lastname || "Ticket not found"
+    }`,
   };
 }
 
@@ -28,7 +30,7 @@ async function getGrave(id) {
     .eq("grave_id", id)
     .single();
 
-  console.log(error)
+  console.log(error);
   if (!data) {
     notFound();
   }
@@ -40,13 +42,15 @@ async function getRatings(graveId) {
   const supabase = createServerComponentClient({ cookies });
   const { data, error } = await supabase
     .from("ratings")
-    .select(`
+    .select(
+      `
       *,
       user_id ( id, username, full_name )
-    `)
+    `
+    )
     .eq("grave_id", graveId);
 
-  console.log(error)
+  console.log(error);
 
   return data;
 }
@@ -55,17 +59,18 @@ export default async function GraveDetails({ params }) {
   const grave = await getGrave(params.id);
   const ratings = await getRatings(params.id);
 
-  const averageRatings = (ratings?.length ?? 0 > 0) ? (ratings.reduce(function (sum, value) {
-    return sum + parseInt(value.rating)
-  }, 0) / ratings.length) : 0
+  const averageRatings =
+    ratings?.length ?? 0 > 0
+      ? ratings.reduce(function (sum, value) {
+          return sum + parseInt(value.rating);
+        }, 0) / ratings.length
+      : 0;
 
   return (
     <main>
       <nav>
         <GraveImage grave_id={params.id} multiple />
-        <Link href={`/map?grave_id=${params.id}`}>
-          LOCATE GRAVE HERE (MAP)
-        </Link>
+        <Link href={`/map?grave_id=${params.id}`}>LOCATE GRAVE HERE (MAP)</Link>
         <h2>Grave Details</h2>
       </nav>
       <div className="card">
@@ -77,18 +82,23 @@ export default async function GraveDetails({ params }) {
         <small>Added by: {grave.user_email}</small>
         <h5>Birth:{grave.birth}</h5>
         <h5>Death:{grave.death}</h5>
-        <span>Location: {grave.longitude}, {grave.latitude}</span>
+        <span>
+          Location: {grave.longitude}, {grave.latitude}
+        </span>
         <div>Cemetery: {grave.cemetery_name}</div>
       </div>
       <div className="card">
-        <h3>
-          Ratings (Average: {averageRatings} stars):
-        </h3>
-        {ratings?.map((rating) => rating.user_id?.id ?? (
-          <div key={rating.id} className="mb-2">
-          {rating.user_id?.username} - ({rating.rating} stars) {rating.comment}
-          </div>
-        ))}
+        <h3>Ratings (Average: {averageRatings} stars):</h3>
+        {ratings?.map((rating) =>
+          rating.user_id?.id ? (
+            <div key={rating.id} className="mb-2">
+              {rating.user_id?.username} - ({rating.rating} stars){" "}
+              {rating.comment}
+            </div>
+          ) : (
+            <></>
+          )
+        )}
       </div>
     </main>
   );
