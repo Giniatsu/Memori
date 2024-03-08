@@ -8,6 +8,7 @@ import {
   Select,
   TextInput,
   Radio,
+  Spinner,
 } from "flowbite-react";
 import { FaSearchLocation } from "react-icons/fa";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
@@ -21,9 +22,18 @@ function SearchButton() {
 
   return (
     <Button type="submit" disabled={pending}>
-      <FaSearchLocation className="mr-2 h-4 w-4" />
-      {pending && <span>Searching...</span>}
-      {!pending && <span>Search</span>}
+      {pending && (
+        <>
+          <Spinner aria-label="Spinner button example" size="sm" />
+          <span className="pl-2">Searching...</span>
+        </>
+      )}
+      {!pending && (
+        <>
+          <FaSearchLocation className="mr-2 h-4 w-4" />
+          <span>Search</span>
+        </>
+      )}
     </Button>
   );
 }
@@ -39,7 +49,7 @@ export default function Search() {
   const { ref } = usePlacesWidget({
     apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY,
     onPlaceSelected: (place) => {
-      setLocation(place?.formatted_address ?? '');
+      setLocation(place?.formatted_address ?? "");
       setHasLocation(true);
     },
   });

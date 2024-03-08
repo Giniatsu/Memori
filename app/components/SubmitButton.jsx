@@ -9,16 +9,16 @@ export default function SubmitButton() {
   const { pending } = useFormStatus();
 
   return (
-    <Button disabled={pending}>
+    <Button type="submit" disabled={pending} className="whitespace-nowrap">
       {pending && (
         <>
-          <Spinner aria-label="Spinner button example" size="sm" />
-          <span className="pl-3">Adding Grave</span>
+          <Spinner aria-label="addgrave spinner" size="sm" />
+          <span className="pl-2">Adding Grave...</span>
         </>
       )}
       {!pending && (
         <>
-          <TbGrave className="mr-3 h-4 w-4" />
+          <TbGrave className="mr-2 h-4 w-4" />
           <span>Add Grave</span>
         </>
       )}

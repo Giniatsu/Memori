@@ -149,7 +149,7 @@ export default async function GraveDetails({ params }) {
       <div className="flex flex-col justify-between">
         <div>
           <div className="flex items-center mb-4">
-            <Button color="gray" href={`/map?grave_id=${params.id}`}>
+            <Button color="gray" as={Link} href={`/map?grave_id=${params.id}`} className="whitespace-nowrap">
               <GiHastyGrave className="mr-3 h-4 w-4" />
               Locate Grave
             </Button>
