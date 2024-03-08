@@ -86,7 +86,13 @@ export default function GravesList() {
           showIcons
         />
       </div>
-      {!loading ? (
+      {loading ? (
+        <div className="text-center">
+          <Spinner aria-label="Center-aligned spinner example" size="xl" />
+        </div>
+      ) : graves.length === 0 ? (
+        <p className="text-center">No Graves</p>
+      ) : (
         graves.map((grave) => (
           <Link
             key={grave.id}
@@ -104,12 +110,8 @@ export default function GravesList() {
             </div>
           </Link>
         ))
-      ) : (
-        <div className="text-center">
-          <Spinner aria-label="Center-aligned spinner example" size='xl' />
-        </div>
       )}
-      {graves.length === 0 && <p className="text-center">No Graves</p>}
+
       <div className="flex justify-center my-4">
         <Pagination
           currentPage={currentPage}

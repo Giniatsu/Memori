@@ -288,7 +288,6 @@ export default function Form({
                     <IoMdLocate className="w-6 h-6" />
                   </Button>
                   <MapField
-                    color="light"
                     defaultValue={{
                       longitude: locationCoordinates[0],
                       latitude: locationCoordinates[1]
