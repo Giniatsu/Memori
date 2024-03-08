@@ -12,7 +12,7 @@ import GraveImage from "../contributions/GraveImage";
 import { updateGrave } from "../actions";
 import Card from "../components/GraveCard";
 import Avatar from "../components/UserAvatar";
-import Button from '../components/LocateButton';
+import Button from "../components/LocateButton";
 import { GiHastyGrave } from "react-icons/gi";
 
 export async function generateMetadata({ params }) {
@@ -142,52 +142,52 @@ export default async function GraveDetails({ params }) {
       : 0;
 
   return (
-    <main>
-      <div className="grid grid-cols-2">
-        <div className="h-56 sm:h-64 xl:h-80 2xl:h-96">
-          <GraveImage grave_id={params.id} multiple />
-        </div>
+    <main className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="min-h-full sm:h-64 xl:h-80 2xl:h-96">
+        <GraveImage grave_id={params.id} multiple />
+      </div>
+      <div className="flex flex-col justify-between">
         <div>
-          <div className="inline-flex" role="group">
-            <Button color="gray">
+          <div className="flex items-center mb-4">
+            <Button color="gray" href={`/map?grave_id=${params.id}`}>
               <GiHastyGrave className="mr-3 h-4 w-4" />
-              <Link href={`/map?grave_id=${params.id}`}>
-                LOCATE GRAVE HERE (MAP)
-              </Link>
+              Locate Grave
             </Button>
-            <DeleteButton id={grave.grave_id} />
+            {data.session?.user?.email === grave.user_email && (
+              <>
+                <DeleteButton id={grave.grave_id} />
+                <UpdateModalForm
+                  action={updateGravewithID}
+                  graveInfo={{
+                    ...grave,
+                    id: params.id,
+                    existingImages: images,
+                  }}
+                />
+              </>
+            )}
+          </div>
+          <div>
+            <h2>Grave Details</h2>
+            <h3>
+              {grave.firstname} {grave.lastname}
+            </h3>
+            <h4>Alias: {grave.aliases}</h4>
+            <small>Added by: {grave.user_email}</small>
+            <h5>Birth:{grave.birth}</h5>
+            <h5>Death:{grave.death}</h5>
+            <h5>
+              Location: {grave.longitude}, {grave.latitude}
+            </h5>
+            <h5>Cemetery: {grave.cemetery_name}</h5>
           </div>
         </div>
-        {/* <Link href={`/map?grave_id=${params.id}`}>LOCATE GRAVE HERE (MAP)</Link>
-        {data.session?.user?.email === grave.user_email && (
-          <>
-            <DeleteButton id={grave.grave_id} />
-            <UpdateModalForm
-              action={updateGravewithID}
-              graveInfo={{ ...grave, id: params.id, existingImages: images }}
-            />
-          </>
-        )}
-        <div className="card">
-          <h2>Grave Details</h2>
-          <h3>
-            {grave.firstname} {grave.lastname}
-          </h3>
-          <h4>Alias: {grave.aliases}</h4>
-          <small>Added by: {grave.user_email}</small>
-          <h5>Birth:{grave.birth}</h5>
-          <h5>Death:{grave.death}</h5>
-          <h5>
-            Location: {grave.longitude}, {grave.latitude}
-          </h5>
-          <h5>Cemetery: {grave.cemetery_name}</h5>
+        <div>
           <h3>Ratings (Average: {averageRatings} stars):</h3>
           {ratings?.map((rating) =>
             rating.user_id?.id ? (
               <div key={rating.id} className="mb-2">
-                <Avatar
-                  img={AVATAR_URL + `${rating.user_id?.avatar_url}`}
-                />{" "}
+                <Avatar img={AVATAR_URL + `${rating.user_id?.avatar_url}`} />{" "}
                 {rating.user_id?.username} - ({rating.rating} stars){" "}
                 {rating.comment}
               </div>
@@ -195,16 +195,8 @@ export default async function GraveDetails({ params }) {
               <></>
             )
           )}
-        </div> */}
-      </div>
-      {/* <Card className="max-w-sm" horizontal>
-        <GraveImage grave_id={params.id} multiple />
-        <div>
-          <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-            Noteworthy technology acquisitions 2021
-          </h5>
         </div>
-      </Card> */}
+      </div>
     </main>
   );
 }
