@@ -15,11 +15,9 @@ const serialize = (obj) => {
 export async function search(formData) {
   const query = Object.fromEntries(formData);
   const filteredQuery = Object.fromEntries(
-    Object.entries(query).filter(([_, value]) => value != "")
+    Object.entries(query).filter(([key, value]) => value != "" && key !== "ageradio")
   );
   
-  console.log(filteredQuery);
-
   const queryString = serialize(filteredQuery);
 
   revalidatePath(`/search/results?${queryString}`);
