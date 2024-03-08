@@ -64,10 +64,10 @@ const MapField = ({ onSelect, defaultValue, ...props }) => {
             style={{ height: "calc(100vh - 18rem)" }}
             mapId={'bf51a910020fa25b'}
             mapTypeId='satellite'
-            zoom={17}
+            zoom={16}
             center={{
-              lat: defaultValue?.latitude ?? coords?.latitude ?? 0,
-              lng: defaultValue?.longitude ?? coords?.longitude ?? 0,
+              lat: defaultValue?.latitude === 0 ? (coords?.latitude ?? 0) : (defaultValue?.latitude ?? 0),
+              lng: defaultValue?.longitude === 0 ? (coords?.longitude ?? 0) : (defaultValue?.longitude ?? 0),
             }}
             gestureHandling={'greedy'}
             disableDefaultUI={true}
