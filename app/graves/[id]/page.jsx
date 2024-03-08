@@ -184,16 +184,15 @@ export default async function GraveDetails({ params }) {
         </div>
         <div>
           <h3>Ratings (Average: {averageRatings} stars):</h3>
-          {ratings?.map((rating) =>
-            rating.user_id?.id ? (
-              <div key={rating.id} className="mb-2">
-                <Avatar img={AVATAR_URL + `${rating.user_id?.avatar_url}`} />{" "}
-                {rating.user_id?.username} - ({rating.rating} stars){" "}
-                {rating.comment}
-              </div>
-            ) : (
-              <></>
-            )
+          {ratings?.map(
+            (rating) =>
+              !!rating.user_id?.id && (
+                <div key={rating.id} className="mb-2">
+                  <Avatar img={AVATAR_URL + `${rating.user_id?.avatar_url}`} />
+                  {rating.user_id?.username} - ({rating.rating} stars){" "}
+                  {rating.comment}
+                </div>
+              )
           )}
         </div>
       </div>

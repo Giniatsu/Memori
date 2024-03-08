@@ -5,6 +5,7 @@ import { MdAddLocationAlt } from "react-icons/md";
 import { SiOpenstreetmap } from "react-icons/si";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
+import InstructionManual from "./InstructionManual";
 
 export default async function Home() {
   const supabase = createServerComponentClient({ cookies });
@@ -19,7 +20,7 @@ export default async function Home() {
             </Link>
           </div>
           <div className="w-40 flex flex-col items-center bg-slate-200 rounded">
-            <Link href='/login'>
+            <Link href="/login">
               <IconButton
                 icon={<MdAddLocationAlt size={50} />}
                 text={data.session ? "Add Location" : "Login to Add Location"}
@@ -34,8 +35,10 @@ export default async function Home() {
               />
             </Link>
           </div> */}
+          <InstructionManual />
         </div>
       )}
+      {data.session && <InstructionManual />}
     </main>
   );
 }
