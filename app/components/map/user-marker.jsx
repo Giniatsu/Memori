@@ -47,7 +47,7 @@ export const UserMarker = ({ dst, autoZoomDisabled }) => {
   }, [coords])
 
   useEffect(() => {
-    if (coreLib && map && coords && !autoZoomDisabled) {
+    if (coreLib && map && coords && !autoZoomDisabled && dst) {
       const bounds = new coreLib.LatLngBounds()
 
       bounds.extend({ lat: coords?.latitude, lng: coords?.longitude })
