@@ -18,6 +18,10 @@ async function getGraves(query, page = 1, pageSize = 5) {
     .range((page - 1) * pageSize, page * pageSize - 1); // Calculate offset based on page and pageSize
 
   // Add conditions based on the query object
+  if (query.cemeterylocation) {
+    supabase_query = supabase_query.eq("cemetery.location_name", query.cemeterylocation.trim());
+  }
+
   if (query.cemetery) {
     supabase_query = supabase_query.eq("cemetery", query.cemetery.trim());
   }
