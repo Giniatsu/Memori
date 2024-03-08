@@ -57,7 +57,7 @@ export default function BottomNavbar() {
             className="mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
           />
           <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">
-            Contributions
+            Entries
           </span>
         </Link>
         <Link
