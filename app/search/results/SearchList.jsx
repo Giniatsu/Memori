@@ -124,7 +124,7 @@ export default function GravesList() {
   const [graves, setGraves] = useState([]);
   const [loading, setLoading] = useState(false);
   const [totalCount, setTotalCount] = useState(0); // State to hold the total count
-  const pageSize = 5; // You can adjust the page size as needed
+  const pageSize = 10; // You can adjust the page size as needed
 
   const pathname = usePathname();
   const { push } = useRouter();

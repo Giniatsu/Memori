@@ -5,7 +5,7 @@ const GraveListSkeleton = () => {
   const skeletonData = Array.from({ length: numberOfSkeletons });
   return (
     <div className="container mx-auto">
-      <div className="grid grid-cols-1 gap-4 mx-4 md:grid-cols-2 justify-center">
+      <div className="grid grid-cols-1 gap-4 gap-x-12 mx-4 md:grid-cols-2 justify-center">
         {" "}
         {/* A container for layout */}
         {skeletonData.map((_, index) => (
@@ -14,7 +14,7 @@ const GraveListSkeleton = () => {
             role="status"
             class="pr-4 space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse flex items-center border border-gray-200 rounded shadow"
           >
-            <div class="flex items-center justify-center h-full w-40 bg-gray-300 md:h-48 md:w-3/5 dark:bg-gray-700">
+            <div class="mr-4 flex items-center justify-center h-40 w-48 bg-gray-300 md:h-48 md:w-3/5 dark:bg-gray-700">
               <svg
                 class="w-10 h-10 text-gray-200 dark:text-gray-600"
                 aria-hidden="true"

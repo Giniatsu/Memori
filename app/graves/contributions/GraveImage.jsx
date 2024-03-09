@@ -71,16 +71,18 @@ export default function GraveImage({ grave_id, multiple }) {
   }
 
   return (
-    !loading &&
-    imageUrls &&
-    imageUrls.length > 0 && (
+    !loading && (
       <>
         <Image
-          src={imageUrls ? imageUrls[0] ?? "" : ""}
+          src={
+            imageUrls && imageUrls.length > 0
+              ? imageUrls[0]
+              : "/noimageavailable.jpg"
+          }
           alt=""
           height={384}
           width={384}
-          className="h-full w-32 object-cover md:h-48 md:w-auto"
+          className="h-40 w-32 object-cover md:h-48 md:w-auto"
         />
       </>
     )
