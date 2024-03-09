@@ -1,7 +1,6 @@
 "use client";
-
 import { Avatar, Dropdown, Navbar } from "flowbite-react";
-
+import Image from 'next/image'
 import Link from "next/link";
 import LogoutButton from "./LogoutButton";
 import { useRouter, usePathname } from "next/navigation";
@@ -13,13 +12,13 @@ export default function Navigationbar({ user, profile }) {
     return (
       <Navbar fluid className="bg-vintage-army">
         <Navbar.Brand href="/">
-          {/* <Image
-          className="mr-3"
-          src={avatarUrl}
-          alt=""
-          width={50}
-          height={50}
-        /> */}
+          <Image
+            className="mr-1 rounded-full"
+            src='/Memori.jpg'
+            alt=""
+            width={50}
+            height={50}
+          />
           <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
             MeMori
           </span>

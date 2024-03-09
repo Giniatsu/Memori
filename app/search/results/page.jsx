@@ -8,11 +8,9 @@ export default function Results() {
   return (
     <main>
       <nav>
-        <div>
-          <h2>Search results</h2>
-          <p>
-            <small>Available graves to locate.</small>
-          </p>
+        <div className="text-center mt-5">
+          <h1 className="font-bold text-2xl">Search Results</h1>
+          <small>Available graves to locate.</small>
         </div>
       </nav>
 

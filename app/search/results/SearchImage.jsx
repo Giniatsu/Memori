@@ -1,6 +1,7 @@
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import noImage from "../../assets/noimageavailable.jpg";
 
 const BASE_URL =
   "https://plmqhcualnnsirfqjcsj.supabase.co/storage/v1/object/public/grave_images/";
@@ -42,15 +43,14 @@ export default function GraveImage({ grave_id }) {
   }, [grave_id]);
 
   return (
-    !loading &&
-    !!imageUrl && (
+    !loading && (
       <>
         <Image
-          src={imageUrl ?? ""}
+          src={imageUrl ?? "/noimageavailable.jpg"}
           alt=""
           height={384}
           width={384}
-          className="h-full w-32 object-cover md:h-48 md:w-auto"
+          className="h-40 w-32 object-cover md:h-48 md:w-auto"
         />
       </>
     )

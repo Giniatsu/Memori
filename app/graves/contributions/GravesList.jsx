@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Link from "next/link";
 import GraveImage from "./GraveImage";
-import { Spinner, Pagination } from "flowbite-react";
+import { Pagination } from "flowbite-react";
 import GraveListSkeleton from "../components/GraveListSkeleton";
 
 async function getGraves(page = 1, pageSize = 5) {
@@ -79,7 +79,9 @@ export default function GravesList() {
 
   return (
     <>
-      <div className="flex justify-center my-4">
+      <div
+        className={graves.length === 0 ? "hidden" : "flex justify-center my-4"}
+      >
         <Pagination
           currentPage={currentPage}
           totalPages={Math.ceil(totalCount / pageSize)} // Calculate total pages
@@ -90,7 +92,7 @@ export default function GravesList() {
       {loading ? (
         <GraveListSkeleton />
       ) : graves.length === 0 ? (
-        <p className="text-center">No Graves</p>
+        <p className="text-center font-semibold">No Graves</p>
       ) : (
         <div className="container mx-auto">
           <div className="grid grid-cols-1 gap-4 mx-4 md:grid-cols-2 justify-center">
@@ -120,7 +122,9 @@ export default function GravesList() {
         </div>
       )}
 
-      <div className="flex justify-center my-4">
+      <div
+        className={graves.length === 0 ? "hidden" : "flex justify-center my-4"}
+      >
         <Pagination
           currentPage={currentPage}
           totalPages={Math.ceil(totalCount / pageSize)} // Calculate total pages
