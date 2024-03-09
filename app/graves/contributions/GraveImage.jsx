@@ -80,7 +80,7 @@ export default function GraveImage({ grave_id, multiple }) {
           alt=""
           height={384}
           width={384}
-          className="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-l-lg"
+          className="h-full w-32 object-cover md:h-48 md:w-auto"
         />
       </>
     )

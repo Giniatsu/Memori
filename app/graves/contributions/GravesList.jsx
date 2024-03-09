@@ -54,7 +54,7 @@ export default function GravesList() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0); // State to hold the total count
   const [loading, setLoading] = useState(false);
-  const pageSize = 5; // You can adjust the page size as needed
+  const pageSize = 10; // You can adjust the page size as needed
 
   useEffect(() => {
     const fetchData = async () => {
@@ -92,23 +92,32 @@ export default function GravesList() {
       ) : graves.length === 0 ? (
         <p className="text-center">No Graves</p>
       ) : (
-        graves.map((grave) => (
-          <Link
-            key={grave.id}
-            href={`/graves/${grave.id}`}
-            className="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
-          >
-            <GraveImage grave_id={grave.id} />
-            <div className="flex flex-col justify-between p-4 leading-normal">
-              <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                {grave.firstname} {grave.lastname}
-              </h5>
-              <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                {grave.cemetery.name}
-              </p>
-            </div>
-          </Link>
-        ))
+        <div className="container mx-auto">
+          <div className="grid grid-cols-1 gap-4 mx-4 md:grid-cols-2 justify-center">
+            {graves.map((grave) => (
+              <div
+                key={grave.id}
+                className="max-w-2xl w-full mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-md"
+              >
+                <Link
+                  key={grave.id}
+                  href={`/graves/${grave.id}`}
+                  className="flex"
+                >
+                  <GraveImage grave_id={grave.id} />
+                  <div className="flex flex-col justify-center p-4 leading-normal">
+                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">
+                      {grave.firstname} {grave.lastname}
+                    </h5>
+                    <p className="mb-3 font-normal text-gray-700">
+                      {grave.cemetery.name}
+                    </p>
+                  </div>
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
 
       <div className="flex justify-center my-4">
