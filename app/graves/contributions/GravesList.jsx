@@ -3,6 +3,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Link from "next/link";
 import GraveImage from "./GraveImage";
 import { Spinner, Pagination } from "flowbite-react";
+import GraveListSkeleton from "../components/GraveListSkeleton";
 
 async function getGraves(page = 1, pageSize = 5) {
   const supabase = createClientComponentClient();
@@ -87,9 +88,7 @@ export default function GravesList() {
         />
       </div>
       {loading ? (
-        <div className="text-center">
-          <Spinner aria-label="Center-aligned spinner example" size="xl" />
-        </div>
+        <GraveListSkeleton />
       ) : graves.length === 0 ? (
         <p className="text-center">No Graves</p>
       ) : (

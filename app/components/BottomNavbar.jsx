@@ -20,12 +20,12 @@ export default function BottomNavbar() {
           <AiFillHome
             size={25}
             className={`mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500 ${
-              pathname === "/" ? "text-blue-600 dark:text-blue-500" : ""
+              pathname === "/" ? "!text-blue-600 dark:text-blue-500" : ""
             }`}
           />
           <span
             className={`text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500 ${
-              pathname === "/" ? "text-blue-600 dark:text-blue-500" : ""
+              pathname === "/" ? "!text-blue-600 dark:text-blue-500" : ""
             }`}
           >
             Home
@@ -38,12 +38,12 @@ export default function BottomNavbar() {
           <FaSearchLocation
             size={25}
             className={`mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500 ${
-              pathname === "/search" ? "text-blue-600 dark:text-blue-500" : ""
+              pathname === "/search" ? "!text-blue-600 dark:text-blue-500" : ""
             }`}
           />
           <span
             className={`text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500 ${
-              pathname === "/search" ? "text-blue-600 dark:text-blue-500" : ""
+              pathname === "/search" ? "!text-blue-600 dark:text-blue-500" : ""
             }`}
           >
             Search
@@ -57,12 +57,12 @@ export default function BottomNavbar() {
           <RiMapPinAddFill
             size={25}
             className={`mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500 ${
-              pathname === "/graves" ? "text-blue-600 dark:text-blue-500" : ""
+              pathname === "/graves" ? "!text-blue-600 dark:text-blue-500" : ""
             }`}
           />
           <span
             className={`text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500 ${
-              pathname === "/graves" ? "text-blue-600 dark:text-blue-500" : ""
+              pathname === "/graves" ? "!text-blue-600 dark:text-blue-500" : ""
             }`}
           >
             New
@@ -77,14 +77,14 @@ export default function BottomNavbar() {
             size={25}
             className={`mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500 ${
               pathname === "/graves/contributions"
-                ? "text-blue-600 dark:text-blue-500"
+                ? "!text-blue-600 dark:text-blue-500"
                 : ""
             }`}
           />
           <span
             className={`text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500 ${
               pathname === "/graves/contributions"
-                ? "text-blue-600 dark:text-blue-500"
+                ? "!text-blue-600 dark:text-blue-500"
                 : ""
             }`}
           >
@@ -98,12 +98,12 @@ export default function BottomNavbar() {
           <MdAccountCircle
             size={25}
             className={`mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500 ${
-              pathname === "/account" ? "text-blue-600 dark:text-blue-500" : ""
+              pathname === "/account" ? "!text-blue-600 dark:text-blue-500" : ""
             }`}
           />
           <span
             className={`text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500 ${
-              pathname === "/account" ? "text-blue-600 dark:text-blue-500" : ""
+              pathname === "/account" ? "!text-blue-600 dark:text-blue-500" : ""
             }`}
           >
             Profile
