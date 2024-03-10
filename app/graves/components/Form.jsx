@@ -8,10 +8,9 @@ import {
   Textarea
 } from "flowbite-react";
 import {
-  APIProvider,
+  APIProvider, 
 } from '@vis.gl/react-google-maps';
 import { useEffect, useState, useMemo } from "react";
-import { usePlacesWidget } from "react-google-autocomplete";
 import { IoMdLocate } from "react-icons/io";
 import { format } from "date-fns";
 import CemeteryField from "./CemeteryField";
@@ -19,6 +18,7 @@ import CemeteryField from "./CemeteryField";
 import { useGeolocated } from "react-geolocated";
 import ImageUploadField from "./ImageUploadField";
 import MapField from "./MapField";
+import PlacesField from "./PlacesField";
 
 export default function Form({
   data,
@@ -28,6 +28,7 @@ export default function Form({
 }) {
   const API_KEY =
     globalThis.NEXT_PUBLIC_GOOGLE_MAP_API_KEY ?? (process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY);
+
   const {
     coords: deviceCoords,
     isGeolocationAvailable,
@@ -76,15 +77,12 @@ export default function Form({
     setAge(years);
   }, [birth, death]);
 
-  const { ref } = usePlacesWidget({
-    apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY,
-    onPlaceSelected: (place) => {
-      const coords = [place?.geometry.location.lng() ?? 0, place?.geometry.location.lat() ?? 0];
-      setCemeteryLocationCoordinates(coords);
-      setLocation(place?.formatted_address ?? '');
-      setHasLocation(true);
-    },
-  });
+  const handlePlaceSelect = (current) => {
+    const coords = [current.geometry.location.lng() ?? 0, current.geometry.location.lat() ?? 0];
+    setCemeteryLocationCoordinates(coords);
+    setLocation(current.formatted_address ?? '');
+    setHasLocation(true);
+  }
 
   const updateLocation = (e) => {
     console.log('Triggering getPosition()')
@@ -100,7 +98,7 @@ export default function Form({
   }, [deviceCoords])
 
   return (
-    <APIProvider apiKey={API_KEY} libraries={['marker']}>
+    <APIProvider apiKey={API_KEY} libraries={['marker', 'places']}>
       <div className={isModal ? "" : "flex items-center justify-center my-4"}>
         <Card className={isModal ? "border-none shadow-none" : "w-4/5 max-w-sm mb-16"}>
           <form action={action} className="grid grid-cols-2 gap-4">
@@ -118,14 +116,14 @@ export default function Form({
               /> 
             </div>
             <div className="relative z-0 w-full col-span-2 group">
-              <TextInput
-                ref={ref}
+              <PlacesField
                 type="text"
                 name="cemeterylocation"
                 id="cemetery_location"
                 className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                 placeholder="Search for a cemetery location (City, State, Country)"
                 defaultValue={data?.cemeteryLocationName ?? ""}
+                onPlaceSelect={handlePlaceSelect}
                 onChange={(e) => {
                   setHasLocation(false);
                 }}
