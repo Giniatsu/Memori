@@ -19,6 +19,7 @@ export default function PlacesField({
     if (!placesLib || !placesRef.current) return;
 
     const options = {
+      types: ['(cities)'],
       fields: ['geometry', 'name', 'formatted_address']
     };
 
