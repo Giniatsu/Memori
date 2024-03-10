@@ -9,7 +9,7 @@ export const metadata = {
 export default async function CreateGrave() {
   return (
     <main>
-      <h2 className="text-primary text-center">Add a new Grave</h2>
+      <h1 className="text-xl font-bold text-center mt-5">Add a new Grave</h1>
       <Form
         action={addGrave}
       />

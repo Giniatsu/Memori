@@ -1,29 +1,30 @@
 "use client";
 
-import { TiDelete } from "react-icons/ti";
+import { MdDeleteForever } from "react-icons/md";
 import { useTransition } from "react";
 import { deleteGrave } from "../actions";
+import { Button } from "flowbite-react";
 
 export default function DeleteButton({ id }) {
   const [isPending, startTransition] = useTransition();
   return (
-    <button
-      className="btn-primary"
+    <Button
+      color="gray"
       onClick={() => startTransition(() => deleteGrave(id))}
       disabled={isPending}
     >
       {isPending && (
         <>
-          <TiDelete />
+          <MdDeleteForever className="mr-3 h-4 w-4" />
           Deleting...
         </>
       )}
       {!isPending && (
         <>
-          <TiDelete />
-          Delete Grave
+          <MdDeleteForever className="mr-3 h-4 w-4" />
+          Delete
         </>
       )}
-    </button>
+    </Button>
   );
 }
