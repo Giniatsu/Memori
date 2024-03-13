@@ -4,6 +4,7 @@ import Link from "next/link";
 import GraveImage from "./GraveImage";
 import { Pagination } from "flowbite-react";
 import GraveListSkeleton from "../components/GraveListSkeleton";
+import EntriesSearch from "../components/EntriesSearch";
 
 async function getGraves(page = 1, pageSize = 5) {
   const supabase = createClientComponentClient();
@@ -79,10 +80,14 @@ export default function GravesList() {
 
   return (
     <>
+      <div className="container mx-auto">
+        <EntriesSearch />
+      </div>
       <div
         className={graves.length === 0 ? "hidden" : "flex justify-center my-4"}
       >
         <Pagination
+          layout="navigation"
           currentPage={currentPage}
           totalPages={Math.ceil(totalCount / pageSize)} // Calculate total pages
           onPageChange={handlePageChange}
@@ -92,7 +97,7 @@ export default function GravesList() {
       {loading ? (
         <GraveListSkeleton />
       ) : graves.length === 0 ? (
-        <p className="text-center font-semibold">No Graves</p>
+        <p className="text-center font-semibold mt-4">No Graves</p>
       ) : (
         <div className="container mx-auto">
           <div className="grid grid-cols-1 gap-4 mx-4 md:grid-cols-2 justify-center">
@@ -126,6 +131,7 @@ export default function GravesList() {
         className={graves.length === 0 ? "hidden" : "flex justify-center my-4"}
       >
         <Pagination
+          layout="navigation"
           currentPage={currentPage}
           totalPages={Math.ceil(totalCount / pageSize)} // Calculate total pages
           onPageChange={handlePageChange}

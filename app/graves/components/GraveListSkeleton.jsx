@@ -4,7 +4,7 @@ const GraveListSkeleton = () => {
   const numberOfSkeletons = 10;
   const skeletonData = Array.from({ length: numberOfSkeletons });
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto mt-4">
       <div className="grid grid-cols-1 gap-4 gap-x-12 mx-4 md:grid-cols-2 justify-center">
         {" "}
         {/* A container for layout */}
