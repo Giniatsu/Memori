@@ -148,7 +148,7 @@ export default function GravesList() {
         className={graves.length === 0 ? "hidden" : "flex justify-center my-4"}
       >
         <Pagination
-          layout="navigation"
+          layout="table"
           currentPage={parseInt(currentPage)}
           totalPages={Math.ceil(totalCount / pageSize)} // Calculate total pages
           onPageChange={setCurrentPage}
@@ -192,7 +192,7 @@ export default function GravesList() {
         className={graves.length === 0 ? "hidden" : "flex justify-center my-4"}
       >
         <Pagination
-          layout="navigation"
+          layout="table"
           currentPage={parseInt(currentPage)}
           totalPages={Math.ceil(totalCount / pageSize)} // Calculate total pages
           onPageChange={setCurrentPage}
