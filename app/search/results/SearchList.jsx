@@ -6,7 +6,7 @@ import GraveListSkeleton from "../../graves/components/GraveListSkeleton";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-async function getGraves(query, page = 1, pageSize = 5) {
+async function getGraves(query, page = 1, pageSize = 10) {
   const supabase = createClientComponentClient();
 
   // base query
@@ -159,9 +159,26 @@ export default function SearchList() {
 
   useEffect(() => {
     setLoading(true);
-    // add more params here if needed, follow lang sa format/pattern
-    getGraves(
-      {
+
+    const loadData = async () => {
+      const fetchedGraves = await getGraves(
+        {
+          cemetery,
+          firstName,
+          lastName,
+          aliases,
+          birth,
+          death,
+          age,
+          ageMin,
+          ageMax,
+        },
+        currentPage,
+        pageSize
+      );
+      setGraves(fetchedGraves);
+
+      const count = await getGravesTotalCount({
         cemetery,
         firstName,
         lastName,
@@ -171,13 +188,13 @@ export default function SearchList() {
         age,
         ageMin,
         ageMax,
-      },
-      currentPage,
-      pageSize
-    ).then((data) => {
-      setGraves(data);
+      });
+      setTotalCount(count);
+
       setLoading(false);
-    });
+    };
+
+    loadData();
   }, [
     cemetery,
     firstName,
@@ -192,31 +209,8 @@ export default function SearchList() {
     pageSize,
   ]);
 
-  useEffect(() => {
-    getGravesTotalCount({
-      cemetery,
-      firstName,
-      lastName,
-      aliases,
-      birth,
-      death,
-      age,
-      ageMin,
-      ageMax,
-    }).then((count) => {
-      setTotalCount(count);
-    });
-  }, [
-    cemetery,
-    firstName,
-    lastName,
-    aliases,
-    birth,
-    death,
-    age,
-    ageMin,
-    ageMax,
-  ]);
+  const firstEntry = (parseInt(currentPage) - 1) * pageSize + 1;
+  const lastEntry = Math.min(parseInt(currentPage) * pageSize, totalCount);
 
   function setCurrentPage(page) {
     const params = new URLSearchParams(searchParams);
@@ -227,12 +221,22 @@ export default function SearchList() {
   return (
     <>
       <div
-        className={graves.length === 0 ? "hidden" : "flex justify-center my-4"}
+        className={
+          graves.length === 0
+            ? "hidden"
+            : "flex flex-col justify-center items-center my-4"
+        }
       >
+        <div>
+          <p>
+            Showing <b>{firstEntry}</b> to <b>{lastEntry}</b> of{" "}
+            <b>{totalCount}</b> Entries
+          </p>
+        </div>
         <Pagination
           layout="navigation"
           currentPage={parseInt(currentPage)}
-          totalPages={Math.ceil(totalCount / pageSize)}
+          totalPages={Math.ceil(totalCount / pageSize)} // Calculate total pages
           onPageChange={setCurrentPage}
           showIcons
         />
@@ -270,12 +274,22 @@ export default function SearchList() {
         </div>
       )}
       <div
-        className={graves.length === 0 ? "hidden" : "flex justify-center my-4"}
+        className={
+          graves.length === 0
+            ? "hidden"
+            : "flex flex-col justify-center items-center my-4"
+        }
       >
+        <div>
+          <p>
+            Showing <b>{firstEntry}</b> to <b>{lastEntry}</b> of{" "}
+            <b>{totalCount}</b> Entries
+          </p>
+        </div>
         <Pagination
           layout="navigation"
           currentPage={parseInt(currentPage)}
-          totalPages={Math.ceil(totalCount / pageSize)}
+          totalPages={Math.ceil(totalCount / pageSize)} // Calculate total pages
           onPageChange={setCurrentPage}
           showIcons
         />
