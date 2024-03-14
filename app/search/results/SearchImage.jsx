@@ -50,7 +50,7 @@ export default function GraveImage({ grave_id }) {
           alt=""
           height={384}
           width={384}
-          className="h-40 w-32 object-cover md:h-48 md:w-auto"
+          className="h-svh w-32 object-cover md:h-48 md:w-auto"
         />
       </>
     )

@@ -230,7 +230,7 @@ export default function SearchList() {
         className={graves.length === 0 ? "hidden" : "flex justify-center my-4"}
       >
         <Pagination
-          layout="table"
+          layout="navigation"
           currentPage={parseInt(currentPage)}
           totalPages={Math.ceil(totalCount / pageSize)}
           onPageChange={setCurrentPage}
@@ -273,7 +273,7 @@ export default function SearchList() {
         className={graves.length === 0 ? "hidden" : "flex justify-center my-4"}
       >
         <Pagination
-          layout="table"
+          layout="navigation"
           currentPage={parseInt(currentPage)}
           totalPages={Math.ceil(totalCount / pageSize)}
           onPageChange={setCurrentPage}

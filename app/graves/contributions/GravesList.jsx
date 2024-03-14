@@ -7,7 +7,7 @@ import GraveListSkeleton from "../components/GraveListSkeleton";
 import EntriesSearch from "../components/EntriesSearch";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 
-async function getGraves(query, page = 1, pageSize = 5) {
+async function getGraves(query, page = 1, pageSize = 10) {
   const supabase = createClientComponentClient();
   const {
     data: { user },
@@ -98,40 +98,30 @@ export default function GravesList() {
 
   useEffect(() => {
     setLoading(true);
-    // add more params here if needed, follow lang sa format/pattern
-    getGraves(
-      {
+
+    const loadData = async () => {
+      const fetchedGraves = await getGraves(
+        { cemetery, firstName, lastName },
+        currentPage,
+        pageSize
+      );
+      setGraves(fetchedGraves);
+
+      const count = await getGravesTotalCount({
         cemetery,
         firstName,
         lastName,
-      },
-      currentPage,
-      pageSize
-    ).then((data) => {
-      setGraves(data);
-      setLoading(false);
-    });
-  }, [
-    cemetery,
-    firstName,
-    lastName,
-    currentPage,
-    pageSize,
-  ]);
-
-  useEffect(() => {
-    getGravesTotalCount({
-      cemetery,
-      firstName,
-      lastName,
-    }).then((count) => {
+      });
       setTotalCount(count);
-    });
-  }, [
-    cemetery,
-    firstName,
-    lastName,
-  ]);
+
+      setLoading(false);
+    };
+
+    loadData();
+  }, [cemetery, firstName, lastName, currentPage, pageSize]);
+
+  const firstEntry = (parseInt(currentPage) - 1) * pageSize + 1;
+  const lastEntry = Math.min(parseInt(currentPage) * pageSize, totalCount);
 
   function setCurrentPage(page) {
     const params = new URLSearchParams(searchParams);
@@ -145,10 +135,20 @@ export default function GravesList() {
         <EntriesSearch />
       </div>
       <div
-        className={graves.length === 0 ? "hidden" : "flex justify-center my-4"}
+        className={
+          graves.length === 0
+            ? "hidden"
+            : "flex flex-col justify-center items-center my-4"
+        }
       >
+        <div>
+          <p>
+            Showing <b>{firstEntry}</b> to <b>{lastEntry}</b> of{" "}
+            <b>{totalCount}</b> Entries
+          </p>
+        </div>
         <Pagination
-          layout="table"
+          layout="navigation"
           currentPage={parseInt(currentPage)}
           totalPages={Math.ceil(totalCount / pageSize)} // Calculate total pages
           onPageChange={setCurrentPage}
@@ -189,10 +189,20 @@ export default function GravesList() {
       )}
 
       <div
-        className={graves.length === 0 ? "hidden" : "flex justify-center my-4"}
+        className={
+          graves.length === 0
+            ? "hidden"
+            : "flex flex-col justify-center items-center my-4"
+        }
       >
+        <div>
+          <p>
+            Showing <b>{firstEntry}</b> to <b>{lastEntry}</b> of{" "}
+            <b>{totalCount}</b> Entries
+          </p>
+        </div>
         <Pagination
-          layout="table"
+          layout="navigation"
           currentPage={parseInt(currentPage)}
           totalPages={Math.ceil(totalCount / pageSize)} // Calculate total pages
           onPageChange={setCurrentPage}
