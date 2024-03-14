@@ -5,15 +5,16 @@ import GraveImage from "./GraveImage";
 import { Pagination } from "flowbite-react";
 import GraveListSkeleton from "../components/GraveListSkeleton";
 import EntriesSearch from "../components/EntriesSearch";
+import { useSearchParams, usePathname, useRouter } from "next/navigation";
 
-async function getGraves(page = 1, pageSize = 5) {
+async function getGraves(query, page = 1, pageSize = 5) {
   const supabase = createClientComponentClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
   // Fetching data and total count in parallel
-  const { data, error } = await supabase
+  let supabase_query = supabase
     .from("graves")
     .select(
       `
@@ -24,6 +25,25 @@ async function getGraves(page = 1, pageSize = 5) {
     .eq("user_email", user.email)
     .range((page - 1) * pageSize, page * pageSize - 1);
 
+  if (query.cemetery) {
+    supabase_query = supabase_query.eq("cemetery", query.cemetery.trim());
+  }
+
+  if (query.firstName) {
+    supabase_query = supabase_query.ilike(
+      "firstname",
+      `%${query.firstName.trim()}%`
+    );
+  }
+
+  if (query.lastName) {
+    supabase_query = supabase_query.ilike(
+      "lastname",
+      `%${query.lastName.trim()}%`
+    );
+  }
+
+  const { data, error } = await supabase_query;
   if (error) {
     console.log(error.message);
   }
@@ -31,18 +51,30 @@ async function getGraves(page = 1, pageSize = 5) {
   return data;
 }
 
-async function getGravesTotalCount() {
+async function getGravesTotalCount(query) {
   const supabase = createClientComponentClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Fetching data and total count in parallel
-  const { count, error } = await supabase
+  let countQuery = supabase
     .from("graves")
     .select("id", { count: "exact", head: true })
     .eq("user_email", user.email);
 
+  if (query.cemetery) {
+    countQuery = countQuery.eq("cemetery", query.cemetery.trim());
+  }
+
+  if (query.firstName) {
+    countQuery = countQuery.ilike("firstname", `%${query.firstName.trim()}%`);
+  }
+
+  if (query.lastName) {
+    countQuery = countQuery.ilike("lastname", `%${query.lastName.trim()}%`);
+  }
+
+  const { count, error } = await countQuery;
   if (error) {
     console.log(error.message);
   }
@@ -51,32 +83,61 @@ async function getGravesTotalCount() {
 }
 
 export default function GravesList() {
+  const searchParams = useSearchParams();
   const [graves, setGraves] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0); // State to hold the total count
   const [loading, setLoading] = useState(false);
   const pageSize = 10; // You can adjust the page size as needed
+  const pathname = usePathname();
+  const { push } = useRouter();
+
+  const cemetery = searchParams.get("cemetery");
+  const firstName = searchParams.get("first_name");
+  const lastName = searchParams.get("last_name");
+  const currentPage = searchParams.get("page") || 1;
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      const data = await getGraves(currentPage, pageSize);
+    setLoading(true);
+    // add more params here if needed, follow lang sa format/pattern
+    getGraves(
+      {
+        cemetery,
+        firstName,
+        lastName,
+      },
+      currentPage,
+      pageSize
+    ).then((data) => {
       setGraves(data);
       setLoading(false);
-    };
-
-    fetchData();
-  }, [currentPage, pageSize]);
+    });
+  }, [
+    cemetery,
+    firstName,
+    lastName,
+    currentPage,
+    pageSize,
+  ]);
 
   useEffect(() => {
-    getGravesTotalCount().then((count) => {
+    getGravesTotalCount({
+      cemetery,
+      firstName,
+      lastName,
+    }).then((count) => {
       setTotalCount(count);
     });
-  }, []);
+  }, [
+    cemetery,
+    firstName,
+    lastName,
+  ]);
 
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
-  };
+  function setCurrentPage(page) {
+    const params = new URLSearchParams(searchParams);
+    params.set("page", page);
+    push(`${pathname}?${params.toString()}`);
+  }
 
   return (
     <>
@@ -88,9 +149,9 @@ export default function GravesList() {
       >
         <Pagination
           layout="navigation"
-          currentPage={currentPage}
+          currentPage={parseInt(currentPage)}
           totalPages={Math.ceil(totalCount / pageSize)} // Calculate total pages
-          onPageChange={handlePageChange}
+          onPageChange={setCurrentPage}
           showIcons
         />
       </div>
@@ -132,9 +193,9 @@ export default function GravesList() {
       >
         <Pagination
           layout="navigation"
-          currentPage={currentPage}
+          currentPage={parseInt(currentPage)}
           totalPages={Math.ceil(totalCount / pageSize)} // Calculate total pages
-          onPageChange={handlePageChange}
+          onPageChange={setCurrentPage}
           showIcons
         />
       </div>

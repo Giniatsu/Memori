@@ -83,7 +83,7 @@ const EntriesSearch = () => {
         <div className="block">
           <Label htmlFor="cemeteries" value="Select your cemetery" />
         </div>
-        <Select id="cemeteries" name="cemtery">
+        <Select id="cemeteries" name="cemetery">
           <option value="">Select your cemetery</option>
           {!loading &&
             cemeteries.map((cemetery) => (

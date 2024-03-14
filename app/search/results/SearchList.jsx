@@ -134,7 +134,7 @@ async function getGravesTotalCount(query) {
   return count;
 }
 
-export default function GravesList() {
+export default function SearchList() {
   const searchParams = useSearchParams();
   const [graves, setGraves] = useState([]);
   const [loading, setLoading] = useState(false);
