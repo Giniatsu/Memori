@@ -12,7 +12,7 @@ export default function DeleteButton({ id }) {
       color="gray"
       onClick={() => startTransition(() => deleteGrave(id))}
       disabled={isPending}
-      className="mx-2 mb-2 whitespace-nowrap"
+      className="whitespace-nowrap"
     >
       {isPending && (
         <>

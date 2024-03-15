@@ -143,19 +143,23 @@ export default async function GraveDetails({ params }) {
 
   return (
     <main>
-      <div className="grid grid-cols-1">
+      <div className="grid grid-cols-1 md:grid-cols-2">
+        {" "}
         <GraveImage grave_id={params.id} multiple />
+        <div className="flex flex-col">
+          {" "}
           <Button
             color="gray"
             as={Link}
             href={`/map?grave_id=${params.id}`}
-            className="mt-2 mx-2 whitespace-nowrap hover:text-cyan-700 hover:bg-gray-100"
+            className="whitespace-nowrap hover:text-cyan-700 hover:bg-gray-100 m-2"
           >
             <GiHastyGrave className="mr-3 h-4 w-4" />
             Locate Grave
           </Button>
           {data.session?.user?.email === grave.user_email && (
-            <>
+            <div className="flex mx-2">
+              {" "}
               <UpdateModalForm
                 action={updateGravewithID}
                 graveInfo={{
@@ -165,10 +169,12 @@ export default async function GraveDetails({ params }) {
                 }}
               />
               <DeleteButton id={grave.grave_id} />
-            </>
+            </div>
           )}
+        </div>
       </div>
     </main>
+
     /* <main className="grid grid-cols-1 md:grid-cols-2">
       <GraveImage grave_id={params.id} multiple />
       {data.session?.user?.email === grave.user_email && (
