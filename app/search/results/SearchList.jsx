@@ -6,7 +6,7 @@ import GraveListSkeleton from "../../graves/components/GraveListSkeleton";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-async function getGraves(query, page = 1, pageSize = 5) {
+async function getGraves(query, page = 1, pageSize = 10) {
   const supabase = createClientComponentClient();
 
   // base query
@@ -134,7 +134,7 @@ async function getGravesTotalCount(query) {
   return count;
 }
 
-export default function GravesList() {
+export default function SearchList() {
   const searchParams = useSearchParams();
   const [graves, setGraves] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -159,7 +159,6 @@ export default function GravesList() {
 
   useEffect(() => {
     setLoading(true);
-    // add more params here if needed, follow lang sa format/pattern
     getGraves(
       {
         cemetery,
@@ -218,6 +217,9 @@ export default function GravesList() {
     ageMax,
   ]);
 
+  const firstEntry = (parseInt(currentPage) - 1) * pageSize + 1;
+  const lastEntry = Math.min(parseInt(currentPage) * pageSize, totalCount);
+
   function setCurrentPage(page) {
     const params = new URLSearchParams(searchParams);
     params.set("page", page);
@@ -227,11 +229,22 @@ export default function GravesList() {
   return (
     <>
       <div
-        className={graves.length === 0 ? "hidden" : "flex justify-center my-4"}
+        className={
+          graves.length === 0
+            ? "hidden"
+            : "flex flex-col justify-center items-center my-4"
+        }
       >
+        <div>
+          <p>
+            Showing <b>{firstEntry}</b> to <b>{lastEntry}</b> of{" "}
+            <b>{totalCount}</b> Entries
+          </p>
+        </div>
         <Pagination
+          layout="navigation"
           currentPage={parseInt(currentPage)}
-          totalPages={Math.ceil(totalCount / pageSize)}
+          totalPages={Math.ceil(totalCount / pageSize)} // Calculate total pages
           onPageChange={setCurrentPage}
           showIcons
         />
@@ -269,11 +282,22 @@ export default function GravesList() {
         </div>
       )}
       <div
-        className={graves.length === 0 ? "hidden" : "flex justify-center my-4"}
+        className={
+          graves.length === 0
+            ? "hidden"
+            : "flex flex-col justify-center items-center my-4"
+        }
       >
+        <div>
+          <p>
+            Showing <b>{firstEntry}</b> to <b>{lastEntry}</b> of{" "}
+            <b>{totalCount}</b> Entries
+          </p>
+        </div>
         <Pagination
+          layout="navigation"
           currentPage={parseInt(currentPage)}
-          totalPages={Math.ceil(totalCount / pageSize)}
+          totalPages={Math.ceil(totalCount / pageSize)} // Calculate total pages
           onPageChange={setCurrentPage}
           showIcons
         />

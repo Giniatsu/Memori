@@ -318,3 +318,25 @@ export async function addGraveRating(id, formData) {
   redirect(`/graves/${id}/search_result`);
 }
 
+const serialize = (obj) => {
+  var str = [];
+  for (var p in obj)
+    if (obj.hasOwnProperty(p)) {
+      str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+    }
+  return str.join("&");
+};
+
+export async function search(formData) {
+  const query = Object.fromEntries(formData);
+  const filteredQuery = Object.fromEntries(
+    Object.entries(query).filter(
+      ([key, value]) => value != "" && key !== "ageradio"
+    )
+  );
+
+  const queryString = serialize(filteredQuery);
+
+  revalidatePath(`/graves/contributions?${queryString}`);
+  redirect(`/graves/contributions?${queryString}`);
+}
