@@ -11,7 +11,7 @@ export default function UpdateModalForm({ action, graveInfo }) {
 
   return (
     <>
-      <Button className="whitespace-nowrap" color="gray" onClick={() => props.setOpenModal("form-elements")}>
+      <Button className="my-2 mx-2 whitespace-nowrap" color="gray" onClick={() => props.setOpenModal("form-elements")}>
         <RxUpdate className="mr-3 h-4 w-4" />
         Update Grave
       </Button>
