@@ -159,26 +159,8 @@ export default function SearchList() {
 
   useEffect(() => {
     setLoading(true);
-
-    const loadData = async () => {
-      const fetchedGraves = await getGraves(
-        {
-          cemetery,
-          firstName,
-          lastName,
-          aliases,
-          birth,
-          death,
-          age,
-          ageMin,
-          ageMax,
-        },
-        currentPage,
-        pageSize
-      );
-      setGraves(fetchedGraves);
-
-      const count = await getGravesTotalCount({
+    getGraves(
+      {
         cemetery,
         firstName,
         lastName,
@@ -188,13 +170,13 @@ export default function SearchList() {
         age,
         ageMin,
         ageMax,
-      });
-      setTotalCount(count);
-
+      },
+      currentPage,
+      pageSize
+    ).then((data) => {
+      setGraves(data);
       setLoading(false);
-    };
-
-    loadData();
+    });
   }, [
     cemetery,
     firstName,
@@ -207,6 +189,32 @@ export default function SearchList() {
     ageMax,
     currentPage,
     pageSize,
+  ]);
+
+  useEffect(() => {
+    getGravesTotalCount({
+      cemetery,
+      firstName,
+      lastName,
+      aliases,
+      birth,
+      death,
+      age,
+      ageMin,
+      ageMax,
+    }).then((count) => {
+      setTotalCount(count);
+    });
+  }, [
+    cemetery,
+    firstName,
+    lastName,
+    aliases,
+    birth,
+    death,
+    age,
+    ageMin,
+    ageMax,
   ]);
 
   const firstEntry = (parseInt(currentPage) - 1) * pageSize + 1;

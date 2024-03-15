@@ -96,29 +96,32 @@ export default function GravesList() {
   const lastName = searchParams.get("last_name");
   const currentPage = searchParams.get("page") || 1;
 
+  // Better useEffect to lessen burden on the database, than mixing the 2 useEffects below
   useEffect(() => {
     setLoading(true);
-
-    const loadData = async () => {
-      const fetchedGraves = await getGraves(
-        { cemetery, firstName, lastName },
-        currentPage,
-        pageSize
-      );
-      setGraves(fetchedGraves);
-
-      const count = await getGravesTotalCount({
+    getGraves(
+      {
         cemetery,
         firstName,
         lastName,
-      });
-      setTotalCount(count);
-
+      },
+      currentPage,
+      pageSize
+    ).then((data) => {
+      setGraves(data);
       setLoading(false);
-    };
-
-    loadData();
+    });
   }, [cemetery, firstName, lastName, currentPage, pageSize]);
+
+  useEffect(() => {
+    getGravesTotalCount({
+      cemetery,
+      firstName,
+      lastName,
+    }).then((count) => {
+      setTotalCount(count);
+    });
+  }, [cemetery, firstName, lastName]);
 
   const firstEntry = (parseInt(currentPage) - 1) * pageSize + 1;
   const lastEntry = Math.min(parseInt(currentPage) * pageSize, totalCount);
