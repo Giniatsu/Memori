@@ -56,7 +56,7 @@ const EntriesSearch = () => {
       className="flex flex-col justify-center gap-2 mx-10 md:flex-row md:items-end"
     >
       <div className="flex flex-row gap-2 md:basis-1/2">
-        <div className="md:basis-1/2">
+        <div className="basis-1/2">
           <div className="block">
             <Label htmlFor="first_name" value="First Name" />
           </div>
@@ -67,7 +67,7 @@ const EntriesSearch = () => {
             placeholder=""
           />
         </div>
-        <div className="md:basis-1/2">
+        <div className="basis-1/2">
           <div className="block">
             <Label htmlFor="last_name" value="Last Name" />
           </div>

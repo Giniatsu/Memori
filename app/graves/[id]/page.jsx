@@ -143,31 +143,30 @@ export default async function GraveDetails({ params }) {
 
   return (
     <main className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div className="min-h-full sm:h-64 xl:h-80 2xl:h-96">
-        <GraveImage grave_id={params.id} multiple />
-      </div>
-      <div className="flex flex-col justify-between">
-        <div>
-          <div className="flex items-center mb-4">
-            <Button color="gray" as={Link} href={`/map?grave_id=${params.id}`} className="whitespace-nowrap">
-              <GiHastyGrave className="mr-3 h-4 w-4" />
-              Locate Grave
-            </Button>
-            {data.session?.user?.email === grave.user_email && (
-              <>
-                <DeleteButton id={grave.grave_id} />
-                <UpdateModalForm
-                  action={updateGravewithID}
-                  graveInfo={{
-                    ...grave,
-                    id: params.id,
-                    existingImages: images,
-                  }}
-                />
-              </>
-            )}
-          </div>
-          <div>
+      <GraveImage grave_id={params.id} multiple />
+      {data.session?.user?.email === grave.user_email && (
+        <div className="grid grid-cols-3 mx-auto gap-2">
+          <Button
+            color="gray"
+            as={Link}
+            href={`/map?grave_id=${params.id}`}
+            className="whitespace-nowrap"
+          >
+            <GiHastyGrave className="mr-3 h-4 w-4" />
+            Locate Grave
+          </Button>
+          <UpdateModalForm
+            action={updateGravewithID}
+            graveInfo={{
+              ...grave,
+              id: params.id,
+              existingImages: images,
+            }}
+          />
+          <DeleteButton id={grave.grave_id} />
+        </div>
+      )}
+      {/* <div>
             <h2>Grave Details</h2>
             <h3>
               {grave.firstname} {grave.lastname}
@@ -181,7 +180,6 @@ export default async function GraveDetails({ params }) {
             </h5>
             <h5>Cemetery: {grave.cemetery_name}</h5>
           </div>
-        </div>
         <div>
           <h3>Ratings (Average: {averageRatings} stars):</h3>
           {ratings?.map(
@@ -194,8 +192,7 @@ export default async function GraveDetails({ params }) {
                 </div>
               )
           )}
-        </div>
-      </div>
+        </div> */}
     </main>
   );
 }
