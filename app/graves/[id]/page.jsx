@@ -154,11 +154,11 @@ export default async function GraveDetails({ params }) {
             href={`/map?grave_id=${params.id}`}
             className="whitespace-nowrap hover:text-cyan-700 hover:bg-gray-100 m-2"
           >
-            <GiHastyGrave className="mr-3 h-4 w-4" />
+            <GiHastyGrave className="mr-2 h-4 w-4" />
             Locate Grave
           </Button>
           {data.session?.user?.email === grave.user_email && (
-            <div className="flex mx-2">
+            <div className="flex gap-2 mx-2">
               {" "}
               <UpdateModalForm
                 action={updateGravewithID}

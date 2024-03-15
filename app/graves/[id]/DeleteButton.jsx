@@ -12,17 +12,17 @@ export default function DeleteButton({ id }) {
       color="gray"
       onClick={() => startTransition(() => deleteGrave(id))}
       disabled={isPending}
-      className="whitespace-nowrap"
+      className="w-1/2 whitespace-nowrap"
     >
       {isPending && (
         <>
-          <MdDeleteForever className="mr-3 h-4 w-4" />
+          <MdDeleteForever className="mr-1 h-5 w-5" />
           Deleting Grave...
         </>
       )}
       {!isPending && (
         <>
-          <MdDeleteForever className="mr-3 h-4 w-4" />
+          <MdDeleteForever className="mr-1 h-5 w-5" />
           Delete Grave
         </>
       )}
