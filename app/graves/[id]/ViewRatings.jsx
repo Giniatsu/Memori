@@ -1,19 +1,21 @@
 "use client";
 import { MdRateReview } from "react-icons/md";
-import { useState } from "react";
-import Sheet from "react-modal-sheet";
+import { useState, useMemo, useRef } from "react";
+import Sheet, { SheetRef } from "react-modal-sheet";
 import { Button } from "flowbite-react";
+import Avatar from "../components/UserAvatar";
 const AVATAR_URL =
   "https://plmqhcualnnsirfqjcsj.supabase.co/storage/v1/object/public/avatars/";
 
-const ViewRatings = ({ratingsInfo}) => {
+const ViewRatings = ({ ratings }) => {
   const [isRatingsOpen, setRatingsOpen] = useState(false);
-  const averageRatings =
-    ratings?.length ?? 0 > 0
+  const averageRatings = useMemo(() => {
+    return ratings?.length ?? 0 > 0
       ? ratings.reduce(function (sum, value) {
           return sum + parseInt(value.rating);
         }, 0) / ratings.length
       : 0;
+  }, [ratings]);
   return (
     <>
       <Button
@@ -24,8 +26,17 @@ const ViewRatings = ({ratingsInfo}) => {
         <MdRateReview className="mr-2 h-4 w-4" />
         View Ratings
       </Button>
-      <Sheet isOpen={isRatingsOpen} onClose={() => setRatingsOpen(false)}>
-        <Sheet.Container className="px-4">
+      <Sheet
+        isOpen={isRatingsOpen}
+        onClose={() => setRatingsOpen(false)}
+        snapPoints={[600, 400, 100, 0]}
+        initialSnap={0}
+        className=""
+      >
+        <Sheet.Container className="px-4 bg-slate-300">
+          {/* <Sheet.Header>
+            <h3>Ratings (Average: {averageRatings} stars):</h3>
+          </Sheet.Header> */}
           <Sheet.Header />
           <Sheet.Content
             style={{
@@ -33,7 +44,23 @@ const ViewRatings = ({ratingsInfo}) => {
             }}
           >
             <Sheet.Scroller draggableAt="both">
-                {/* Rating content here */}
+              {/* Rating content here */}
+              {ratings?.map(
+                (rating) =>
+                  !!rating.user_id?.id && (
+                    <div key={rating.id} className="flex gap-4">
+                      <Avatar
+                        img={AVATAR_URL + `${rating.user_id?.avatar_url}`} rounded
+                      />
+                      <div>
+                        <strong>
+                          {rating.user_id?.username} - ({rating.rating} stars)
+                        </strong>
+                        <div>{rating.comment}</div>
+                      </div>
+                    </div>
+                  )
+              )}
             </Sheet.Scroller>
           </Sheet.Content>
         </Sheet.Container>

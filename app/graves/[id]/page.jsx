@@ -135,11 +135,9 @@ export default async function GraveDetails({ params }) {
   const { data } = await supabase.auth.getSession();
   const updateGravewithID = updateGrave.bind(null, params.id);
 
-  
-
   return (
     <main>
-      <div className="grid grid-cols-1 md:grid-cols-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 mb-16 md:mb-0">
         {" "}
         <GraveImage grave_id={params.id} multiple />
         <div className="flex flex-col">
@@ -202,23 +200,12 @@ export default async function GraveDetails({ params }) {
               <b>Notes: </b>
               {grave.notes}
             </h5>
-            <ViewRatings ratingsInfo={{...ratings, id: params.id}} />
+          </div>
+          <div className="fixed bottom-20 right-4">
+            <ViewRatings ratings={ratings} />
           </div>
         </div>
       </div>
     </main>
-
-    /* I want to pass this type of details to my ViewRatings.jsx */
-    /* <h3>Ratings (Average: {averageRatings} stars):</h3>
-          {ratings?.map(
-            (rating) =>
-              !!rating.user_id?.id && (
-                <div key={rating.id} className="mb-2">
-                  <Avatar img={AVATAR_URL + `${rating.user_id?.avatar_url}`} />
-                  {rating.user_id?.username} - ({rating.rating} stars){" "}
-                  {rating.comment}
-                </div>
-              )
-          )} */
   );
 }
