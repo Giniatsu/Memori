@@ -34,10 +34,10 @@ const ViewRatings = ({ ratings }) => {
         className=""
       >
         <Sheet.Container className="px-4 bg-slate-300">
-          {/* <Sheet.Header>
-            <h3>Ratings (Average: {averageRatings} stars):</h3>
-          </Sheet.Header> */}
           <Sheet.Header />
+          <Sheet.Header>
+            <h3>Ratings (Average: {averageRatings} stars):</h3>
+          </Sheet.Header>
           <Sheet.Content
             style={{
               paddingX: "2rem",
@@ -49,14 +49,17 @@ const ViewRatings = ({ ratings }) => {
                 (rating) =>
                   !!rating.user_id?.id && (
                     <div key={rating.id} className="flex gap-4">
-                      <Avatar
-                        img={AVATAR_URL + `${rating.user_id?.avatar_url}`} rounded
-                      />
+                      <div>
+                        <Avatar
+                          img={AVATAR_URL + `${rating.user_id?.avatar_url}`}
+                          rounded
+                        />
+                      </div>
                       <div>
                         <strong>
                           {rating.user_id?.username} - ({rating.rating} stars)
                         </strong>
-                        <div>{rating.comment}</div>
+                        <p>{rating.comment}</p>
                       </div>
                     </div>
                   )

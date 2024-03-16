@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Map as GoogleMap } from "@vis.gl/react-google-maps";
 import { useGeolocated } from "react-geolocated";
 import Sheet from "react-modal-sheet";
-
+import { useRouter } from "next/navigation";
 import { GraveMarker } from "./map/grave-marker";
 import { UserMarker } from "./map/user-marker";
 import ImagesSheet from "./map/images-sheet";
@@ -23,6 +23,7 @@ const Map = ({ graveId }) => {
   const [graveTarget, setGraveTarget] = useState(null);
   const [isImagesOpen, setImagesOpen] = useState(false);
   const [autoZoomDisabled, setAutoZoomDisabled] = useState(false);
+  const router = useRouter();
 
   const getGrave = async () => {
     const { data } = await supabase
@@ -89,6 +90,10 @@ const Map = ({ graveId }) => {
         <GraveMarker grave={graveTarget} coords={dst} />
         <DirectionPolyline dst={dst} />
       </GoogleMap>
+
+      <Button color="dark" onClick={() => router.push(`/graves/${graveId}`)} className="fixed top-2 left-2">
+        Back to Grave
+      </Button>
 
       <div class="fixed bottom-2 right-2 ml-2 max-w-xs flex flex-col items-end space-y-2">
         <Button
