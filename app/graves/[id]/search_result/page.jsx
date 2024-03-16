@@ -5,6 +5,9 @@ import { notFound } from "next/navigation";
 // component
 import Link from "next/link";
 import GraveImage from "../../contributions/GraveImage";
+import Button from "../../components/LocateButton";
+import { GiHastyGrave } from "react-icons/gi";
+import ViewRatings from "../ViewRatings";
 
 export const dynamicParams = true; // default val = true
 
@@ -45,7 +48,7 @@ async function getRatings(graveId) {
     .select(
       `
       *,
-      user_id ( id, username, full_name )
+      user_id ( id, username, full_name, avatar_url )
     `
     )
     .eq("grave_id", graveId);
@@ -68,37 +71,58 @@ export default async function GraveDetails({ params }) {
 
   return (
     <main>
-      <nav>
+      <div className="grid grid-cols-1 md:grid-cols-2 mb-16 md:mb-0">
         <GraveImage grave_id={params.id} multiple />
-        <Link href={`/map?grave_id=${params.id}`}>LOCATE GRAVE HERE (MAP)</Link>
-        <h2>Grave Details</h2>
-      </nav>
-      <div className="card">
-        {grave.grave_image}
-        <h3>
-          {grave.firstname} {grave.lastname}
-        </h3>
-        <h4>Alias: {grave.aliases}</h4>
-        <small>Added by: {grave.user_email}</small>
-        <h5>Birth:{grave.birth}</h5>
-        <h5>Death:{grave.death}</h5>
-        <span>
-          Location: {grave.longitude}, {grave.latitude}
-        </span>
-        <div>Cemetery: {grave.cemetery_name}</div>
-      </div>
-      <div className="card">
-        <h3>Ratings (Average: {averageRatings} stars):</h3>
-        {ratings?.map((rating) =>
-          rating.user_id?.id ? (
-            <div key={rating.id} className="mb-2">
-              {rating.user_id?.username} - ({rating.rating} stars){" "}
-              {rating.comment}
-            </div>
-          ) : (
-            <></>
-          )
-        )}
+        <div className="flex flex-col">
+          <Button
+            color="gray"
+            as={Link}
+            href={`/map?grave_id=${params.id}`}
+            className="whitespace-nowrap hover:text-cyan-700 hover:bg-gray-100 m-2"
+          >
+            <GiHastyGrave className="mr-2 h-4 w-4" />
+            Locate Grave
+          </Button>
+          <div className="text-left mx-4">
+            <h1 className="font-bold text-2xl">Grave Details</h1>
+            <h1 className="font-light text-xs">
+              <b>Added by: </b>
+              {grave.user_email}
+            </h1>
+            <h2 className="font-medium text-lg">
+              <b>Name: </b>
+              {grave.firstname} {grave.lastname}
+            </h2>
+            <h3 className="font-normal text-base">
+              <b>Age: </b>
+              {grave.age}
+              <br />
+              <b>Birth: </b>
+              {grave.birth}
+              <br />
+              <b>Death: </b>
+              {grave.death}
+            </h3>
+            <h4 className="font-normal text-base">
+              <b>Aliases: </b>
+              <br />
+              {grave.aliases}
+            </h4>
+            <h5 className="font-normal text-base">
+              <b>Location: </b>
+              {grave.latitude}, {grave.longitude}
+              <br />
+              <b>Cemetery: </b>
+              {grave.cemetery_name}
+              <br />
+              <b>Notes: </b>
+              {grave.notes}
+            </h5>
+          </div>
+          <div className="fixed bottom-20 right-4">
+            <ViewRatings ratings={ratings} />
+          </div>
+        </div>
       </div>
     </main>
   );
