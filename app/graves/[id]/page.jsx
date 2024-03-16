@@ -14,6 +14,7 @@ import Card from "../components/GraveCard";
 import Avatar from "../components/UserAvatar";
 import Button from "../components/LocateButton";
 import { GiHastyGrave } from "react-icons/gi";
+import ViewRatings from "./ViewRatings";
 
 export async function generateMetadata({ params }) {
   const supabase = createServerComponentClient({ cookies });
@@ -134,12 +135,7 @@ export default async function GraveDetails({ params }) {
   const { data } = await supabase.auth.getSession();
   const updateGravewithID = updateGrave.bind(null, params.id);
 
-  const averageRatings =
-    ratings?.length ?? 0 > 0
-      ? ratings.reduce(function (sum, value) {
-          return sum + parseInt(value.rating);
-        }, 0) / ratings.length
-      : 0;
+  
 
   return (
     <main>
@@ -206,11 +202,13 @@ export default async function GraveDetails({ params }) {
               <b>Notes: </b>
               {grave.notes}
             </h5>
+            <ViewRatings ratingsInfo={{...ratings, id: params.id}} />
           </div>
         </div>
       </div>
     </main>
 
+    /* I want to pass this type of details to my ViewRatings.jsx */
     /* <h3>Ratings (Average: {averageRatings} stars):</h3>
           {ratings?.map(
             (rating) =>
