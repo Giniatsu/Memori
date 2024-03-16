@@ -158,7 +158,7 @@ export default async function GraveDetails({ params }) {
             Locate Grave
           </Button>
           {data.session?.user?.email === grave.user_email && (
-            <div className="flex gap-2 mx-2">
+            <div className="flex gap-2 mb-2 mx-2">
               {" "}
               <UpdateModalForm
                 action={updateGravewithID}
@@ -171,50 +171,47 @@ export default async function GraveDetails({ params }) {
               <DeleteButton id={grave.grave_id} />
             </div>
           )}
+          <div className="text-left mx-4">
+            <h1 className="font-bold text-2xl">Grave Details</h1>
+            <h1 className="font-light text-xs">
+              <b>Added by: </b>
+              {grave.user_email}
+            </h1>
+            <h2 className="font-medium text-lg">
+              <b>Name: </b>
+              {grave.firstname} {grave.lastname}
+            </h2>
+            <h3 className="font-normal text-base">
+              <b>Age: </b>
+              {grave.age}
+              <br />
+              <b>Birth: </b>
+              {grave.birth}
+              <br />
+              <b>Death: </b>
+              {grave.death}
+            </h3>
+            <h4 className="font-normal text-base">
+              <b>Aliases: </b>
+              <br />
+              {grave.aliases}
+            </h4>
+            <h5 className="font-normal text-base">
+              <b>Location: </b>
+              {grave.latitude}, {grave.longitude}
+              <br />
+              <b>Cemetery: </b>
+              {grave.cemetery_name}
+              <br />
+              <b>Notes: </b>
+              {grave.notes}
+            </h5>
+          </div>
         </div>
       </div>
     </main>
 
-    /* <main className="grid grid-cols-1 md:grid-cols-2">
-      <GraveImage grave_id={params.id} multiple />
-      {data.session?.user?.email === grave.user_email && (
-        <div className="grid grid-cols-3">
-          <Button
-            color="gray"
-            as={Link}
-            href={`/map?grave_id=${params.id}`}
-            className="whitespace-nowrap hover:text-cyan-700 hover:bg-gray-100"
-          >
-            <GiHastyGrave className="mr-3 h-4 w-4" />
-            Locate Grave
-          </Button>
-          <UpdateModalForm
-            action={updateGravewithID}
-            graveInfo={{
-              ...grave,
-              id: params.id,
-              existingImages: images,
-            }}
-          />
-          <DeleteButton id={grave.grave_id} />
-        </div>
-      )}
-      <div>
-            <h2>Grave Details</h2>
-            <h3>
-              {grave.firstname} {grave.lastname}
-            </h3>
-            <h4>Alias: {grave.aliases}</h4>
-            <small>Added by: {grave.user_email}</small>
-            <h5>Birth:{grave.birth}</h5>
-            <h5>Death:{grave.death}</h5>
-            <h5>
-              Location: {grave.longitude}, {grave.latitude}
-            </h5>
-            <h5>Cemetery: {grave.cemetery_name}</h5>
-          </div>
-        <div>
-          <h3>Ratings (Average: {averageRatings} stars):</h3>
+    /* <h3>Ratings (Average: {averageRatings} stars):</h3>
           {ratings?.map(
             (rating) =>
               !!rating.user_id?.id && (
@@ -224,8 +221,6 @@ export default async function GraveDetails({ params }) {
                   {rating.comment}
                 </div>
               )
-          )}
-        </div>
-    </main> */
+          )} */
   );
 }

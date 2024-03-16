@@ -54,7 +54,7 @@ export default function GraveImage({ grave_id, multiple }) {
     return (
       !loading && (
         <Flowbite theme={{ theme: customTheme }}>
-          <Carousel className="h-96 xl:h-80 2xl:h-96">
+          <Carousel className="h-96 md:h-screen">
             {imageUrls?.map((imageUrl) => (
               <Image
                 key={imageUrl}
