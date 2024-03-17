@@ -61,6 +61,16 @@ async function getGraves(query, page = 1, pageSize = 10) {
     supabase_query = supabase_query.eq("death", `${query.death.trim()}`);
   }
 
+  if (query.deathYearMin) {
+    const deathDate = `${query.deathYearMin.trim()}-01-01`
+    supabase_query = supabase_query.gte("death", deathDate)
+  }
+
+  if (query.deathYearMax) {
+    const deathDate = `${query.deathYearMax.trim()}-12-31`
+    supabase_query = supabase_query.lte("death", deathDate)
+  }
+
   if (query.ageMin) {
     supabase_query = supabase_query.gte("age", parseInt(query.ageMin.trim()));
   }
@@ -114,6 +124,16 @@ async function getGravesTotalCount(query) {
     countQuery = countQuery.eq("death", `${query.death.trim()}`);
   }
 
+  if (query.deathYearMin) {
+    const deathDate = `${query.deathYearMin.trim()}-01-01`
+    countQuery = countQuery.gte("death", deathDate)
+  }
+
+  if (query.deathYearMax) {
+    const deathDate = `${query.deathYearMax.trim()}-12-31`
+    countQuery = countQuery.lte("death", deathDate)
+  }
+
   if (query.ageMin) {
     countQuery = countQuery.gte("age", parseInt(query.ageMin.trim()));
   }
@@ -155,6 +175,8 @@ export default function SearchList() {
   const age = searchParams.get("age");
   const ageMin = searchParams.get("age_min");
   const ageMax = searchParams.get("age_max");
+  const deathYearMin = searchParams.get("death_year_min"); 
+  const deathYearMax = searchParams.get("death_year_max");
   const currentPage = searchParams.get("page") || 1;
 
   useEffect(() => {
@@ -170,6 +192,8 @@ export default function SearchList() {
         age,
         ageMin,
         ageMax,
+        deathYearMin,
+        deathYearMax
       },
       currentPage,
       pageSize
@@ -202,6 +226,8 @@ export default function SearchList() {
       age,
       ageMin,
       ageMax,
+      deathYearMin,
+      deathYearMax
     }).then((count) => {
       setTotalCount(count);
     });

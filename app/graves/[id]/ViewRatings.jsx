@@ -31,7 +31,6 @@ const ViewRatings = ({ ratings }) => {
         onClose={() => setRatingsOpen(false)}
         snapPoints={[600, 400, 100, 0]}
         initialSnap={0}
-        className=""
       >
         <Sheet.Container className="px-4 bg-slate-300">
           <Sheet.Header />
