@@ -170,6 +170,10 @@ export default async function GraveDetails({ params }) {
             <h1 className="font-light text-xs">
               <b>Added by: </b>
               {grave.user_email}
+              <br />
+              <b>Created at: </b>
+              {/* time and date here in PST or correct time zone */}
+              {grave.created_at}
             </h1>
             <h2 className="font-medium text-lg">
               <b>Name: </b>
