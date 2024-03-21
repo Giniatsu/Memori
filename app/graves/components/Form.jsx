@@ -12,7 +12,7 @@ import {
 } from '@vis.gl/react-google-maps';
 import { useEffect, useState, useMemo } from "react";
 import { IoMdLocate } from "react-icons/io";
-import { format } from "date-fns";
+import { format } from "date-fns-tz";
 import CemeteryField from "./CemeteryField";
 
 import { useGeolocated } from "react-geolocated";

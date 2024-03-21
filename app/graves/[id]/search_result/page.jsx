@@ -1,6 +1,7 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
+import { utcToZonedTime, format } from "date-fns-tz";
 
 // component
 import Link from "next/link";
@@ -88,6 +89,13 @@ export default async function GraveDetails({ params }) {
             <h1 className="font-light text-xs">
               <b>Added by: </b>
               {grave.user_email}
+              <br />
+              <b>Created at: </b>
+              {format(
+                utcToZonedTime(new Date(grave.created_at), "Asia/Manila"),
+                "MM/dd/yyyy",
+                { timeZone: "Asia/Manila" }
+              )}
             </h1>
             <h2 className="font-medium text-lg">
               <b>Name: </b>
