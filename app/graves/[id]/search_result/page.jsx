@@ -93,7 +93,7 @@ export default async function GraveDetails({ params }) {
               <b>Created at: </b>
               {format(
                 utcToZonedTime(new Date(grave.created_at), "Asia/Manila"),
-                "MM/dd/yyyy",
+                "MMMM dd, yyyy",
                 { timeZone: "Asia/Manila" }
               )}
             </h1>

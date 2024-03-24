@@ -107,7 +107,7 @@ export default function Form({
               value={supabasePointGeoCemetery}
               name="cemeterycoordinates"
             />
-            <div className="max-w-md" id="fileUpload">
+            <div className="col-span-2" id="fileUpload">
               <ImageUploadField
                 id="file"
                 name="grave_images"

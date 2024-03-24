@@ -159,7 +159,7 @@ export default function ImageUploadField({ id, name, existingImages, onValid }) 
             </Alert>
           )}
           <h4>Images:</h4>
-          <ul>
+          <div className="flex gap-2.5 overflow-x-auto">
             {existingImagesState.map((image, index) => (
               image && (
                 <li key={`existing_${index}`}>
@@ -175,17 +175,16 @@ export default function ImageUploadField({ id, name, existingImages, onValid }) 
               )
             ))}
             {selectedImages.map((file, index) => (
-              <li key={`selected_${index}`}>
-                <img
-                  src={URL.createObjectURL(file)}
-                  alt={`Selected Image ${index + 1}`}
-                  style={{ maxWidth: "100px", maxHeight: "100px", marginRight: "10px" }}
-                />
-                {file.name}{" "}
-                <Button onClick={() => removeImage(index)}>Remove</Button>
-              </li>
+                <div key={`selected_${index}`}>
+                  <img
+                    src={URL.createObjectURL(file)}
+                    alt={`Selected Image ${index + 1}`}
+                    className="max-h-24 max-w-24 my-2.5"
+                  />
+                  <Button color="failure" size="xs" onClick={() => removeImage(index)}>Remove</Button>
+                </div>
             ))}
-          </ul>
+          </div>
         </div>
       )}
     </>
