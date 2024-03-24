@@ -52,9 +52,9 @@ export async function middleware(req) {
   const res = NextResponse.next();
   const supabase = createMiddlewareClient({ req, res });
   const session = await supabase.auth.getUser();
-  console.log(req.nextUrl.pathname);
+  //console.log(req.nextUrl.pathname);
 
-  console.log(session)
+  //console.log(session)
   for (const pathRegex of authenticatedPathRegexes) {
     if (pathRegex.test(req.nextUrl.pathname)) {
       if (!session?.data?.user) {

@@ -2,6 +2,7 @@ import React from "react";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
+import { utcToZonedTime, format } from "date-fns-tz";
 
 // component
 import DeleteButton from "./DeleteButton";
@@ -68,6 +69,14 @@ async function getGrave(id) {
 
     ```
   */
+  /* new get_graves function
+      BEGIN
+  RETURN QUERY
+  SELECT g.id AS grave_id, c.id AS cemetery_id, c.name AS cemetery_name, c.location_name AS cemetery_location_name, ST_Y(c.location::geometry) AS cemetery_location_latitude, ST_X(c.location::geometry) AS cemetery_location_longitude, g.firstname, g.lastname, g.aliases, g.age, g.birth, g.death, g.location AS grave_location, ST_Y(g.location::geometry) AS latitude, ST_X(g.location::geometry) AS longitude, g.user_email, g.notes, g.created_at
+  FROM graves g
+  JOIN cemetery c ON g.cemetery = c.id;
+END;
+ */
   const supabase = createServerComponentClient({ cookies });
   const { data, error } = await supabase
     .rpc("get_graves")
@@ -170,6 +179,13 @@ export default async function GraveDetails({ params }) {
             <h1 className="font-light text-xs">
               <b>Added by: </b>
               {grave.user_email}
+              <br />
+              <b>Created at: </b>
+              {format(
+                utcToZonedTime(new Date(grave.created_at), "Asia/Manila"),
+                "MMMM dd, yyyy",
+                { timeZone: "Asia/Manila" }
+              )}
             </h1>
             <h2 className="font-medium text-lg">
               <b>Name: </b>

@@ -71,7 +71,7 @@ const MapField = ({ onSelect, defaultValue, ...props }) => {
             style={{ height: "calc(100vh - 18rem)" }}
             mapId={"794c1a71b3e36d6f"}
             mapTypeId="satellite"
-            zoom={16}
+            zoom={21}
             center={{
               lat:
                 defaultValue?.latitude === 0
