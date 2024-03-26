@@ -91,7 +91,11 @@ const Map = ({ graveId }) => {
         <DirectionPolyline dst={dst} />
       </GoogleMap>
 
-      <Button color="dark" onClick={() => router.push(`/graves/${graveId}`)} className="fixed top-2 left-2">
+      <Button
+        color="dark"
+        onClick={() => router.push(`/graves/${graveId}`)}
+        className="fixed top-2 left-2"
+      >
         Back to Grave
       </Button>
 
@@ -111,7 +115,13 @@ const Map = ({ graveId }) => {
         <Distance dst={dst} />
       </div>
 
-      <Sheet isOpen={isImagesOpen} onClose={() => setImagesOpen(false)}>
+      <Sheet
+        isOpen={isImagesOpen}
+        onClose={() => setImagesOpen(false)}
+        snapPoints={[600, 400, 100, 0]}
+        initialSnap={0}
+        className="w-full md:w-1/2 md:absolute md:bottom-0 md:right-0"
+      >
         <Sheet.Container className="px-4">
           <Sheet.Header />
           <Sheet.Content

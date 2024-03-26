@@ -1,11 +1,13 @@
-'use client'
+"use client";
 
-import React from 'react';
+import React from "react";
 import Image from "next/image";
+import { Carousel } from "flowbite-react";
 
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
-const BASE_URL = 'https://plmqhcualnnsirfqjcsj.supabase.co/storage/v1/object/public/grave_images/';
+const BASE_URL =
+  "https://plmqhcualnnsirfqjcsj.supabase.co/storage/v1/object/public/grave_images/";
 
 const ImagesSheet = ({ graveId }) => {
   const supabase = createClientComponentClient();
@@ -14,51 +16,44 @@ const ImagesSheet = ({ graveId }) => {
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     supabase
       .from("images")
-      .select(`
+      .select(
+        `
         *
-      `)
+      `
+      )
       .eq("grave", graveId)
-      .then(({data, error}) => {
+      .then(({ data, error }) => {
         if (error) {
-          console.log(error)
+          console.log(error);
         } else {
-          const urls = data.map((data) => (
-            BASE_URL + data.file_name
-          ))
-          setImages(urls); 
+          const urls = data.map((data) => BASE_URL + data.file_name);
+          setImages(urls);
         }
-        setLoading(false)
-      })
-  }, [supabase])
+        setLoading(false);
+      });
+  }, [supabase]);
 
   if (loading) {
-    return (
-      <div>Loading...</div>
-    )
+    return <div>Loading...</div>;
   }
 
   return (
-    <div
-        style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-        }}
-    >
-      { images.map((imageUrl) => (
-        <div key={imageUrl} className="w-full h-screen relative my-2">
+    <div className="h-96 md:h-screen">
+      <Carousel>
+        {images.map((imageUrl) => (
           <Image
-            fill
+            key={imageUrl}
             src={imageUrl ?? ""}
             alt={imageUrl}
-            sizes="100vw"
-            objectFit="contain"
+            height={1000}
+            width={750}
+            className="h-svh"
           />
-        </div>
-      )) }
+        ))}
+      </Carousel>
     </div>
   );
 };
