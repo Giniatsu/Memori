@@ -11,11 +11,16 @@ const ViewRatings = ({ ratings }) => {
   const [isRatingsOpen, setRatingsOpen] = useState(false);
   const averageRatings = useMemo(() => {
     return ratings?.length ?? 0 > 0
-      ? ratings.reduce(function (sum, value) {
-          return sum + parseInt(value.rating);
-        }, 0) / ratings.length
+      ? Math.round(
+          (ratings.reduce(function (sum, value) {
+            return sum + parseInt(value.rating);
+          }, 0) /
+            ratings.length) *
+            100
+        ) / 100 // Changes are here
       : 0;
   }, [ratings]);
+
   return (
     <>
       <Button
