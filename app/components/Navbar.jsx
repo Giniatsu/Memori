@@ -14,7 +14,7 @@ export default function Navigationbar({ user, profile }) {
         <Navbar.Brand href="/">
           <Image
             className="mr-1 rounded-full"
-            src='/Memori.png'
+            src='/MeMori.png'
             alt=""
             width={50}
             height={50}
