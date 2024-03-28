@@ -2,10 +2,10 @@
 
 import { useFormStatus } from "react-dom";
 import { Button } from "flowbite-react";
-import { TbGrave } from "react-icons/tb";
+import { MdRateReview } from "react-icons/md";
 import { Spinner } from "flowbite-react";
 
-export default function SubmitButton({ buttonText = "", loadingText = ""}) {
+export default function RateSubmitBtn() {
   const { pending } = useFormStatus();
 
   return (
@@ -13,13 +13,13 @@ export default function SubmitButton({ buttonText = "", loadingText = ""}) {
       {pending && (
         <>
           <Spinner aria-label="addgrave spinner" size="sm" />
-          <span className="pl-2">{loadingText}</span>
+          <span className="pl-2">Rating...</span>
         </>
       )}
       {!pending && (
         <>
-          <TbGrave className="mr-2 h-4 w-4" />
-          <span>{buttonText}</span>
+          <MdRateReview className="mr-2 h-4 w-4" />
+          <span>Rate</span>
         </>
       )}
     </Button>

@@ -25,6 +25,8 @@ export default function Form({
   action,
   isModal,
   onFinish,
+  buttonText = "Add Grave",
+  loadingText = "Adding Grave",
 }) {
   const API_KEY =
     globalThis.NEXT_PUBLIC_GOOGLE_MAP_API_KEY ?? (process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY);
@@ -303,7 +305,7 @@ export default function Form({
             </div>
             {imagesValid && (
               <div className="z-0">
-                <SubmitButton onFinish={onFinish} />
+                <SubmitButton buttonText={buttonText} loadingText={loadingText} onFinish={onFinish} />
               </div>
             )}
           </form>

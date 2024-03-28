@@ -44,6 +44,8 @@ export default function UpdateModalForm({ action, graveInfo }) {
               aliases: graveInfo.aliases,
               notes: graveInfo.notes,
             }}
+            buttonText="Update Grave"
+            loadingText="Updating Grave..."
           />
         </Modal.Body>
       </Modal>

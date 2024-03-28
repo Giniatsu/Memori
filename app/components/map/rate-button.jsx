@@ -10,9 +10,9 @@ import * as turf from "@turf/turf";
 import { THRESHOLD_DISTANCE_METERS } from './variables';
 import { Button, Label, Modal, Textarea} from 'flowbite-react';
 import StarRating from './star-rating';
-import SubmitButton from '../SubmitButton';
 import { addGraveRating } from '@/app/graves/actions';
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import RateSubmitBtn from './rate-submit';
 
 const RateButton = ({ dst, graveId }) => {
   const supabase = createClientComponentClient();
@@ -111,7 +111,7 @@ const RateButton = ({ dst, graveId }) => {
                 <Textarea id="comment" name="comment" placeholder="Leave a comment..." rows={4} />
               </>
             ) }
-            <SubmitButton />
+            <RateSubmitBtn />
           </form>
         </Modal.Body>
       </Modal>
