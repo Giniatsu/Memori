@@ -67,7 +67,7 @@ export default function AccountForm({ session }) {
   }
 
   return (
-    <Card className="w-4/5 max-w-sm md:mb-20">
+    <Card className="w-4/5 max-w-sm mb-16">
       <TheAvatar
         uid={user.id}
         url={avatar_url}
