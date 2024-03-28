@@ -73,35 +73,34 @@ export default function TheAvatar({ uid, url, size, onUpload }) {
         <Avatar rounded size="xl" style={{ height: size, width: size }} />
       )}
       <div style={{ width: size }}>
-        <div>
-          {uploading ? (
-            <Button
-              isProcessing
-              processingSpinner={
-                <AiOutlineLoading className="h-6 w-6 animate-spin" />
-              }
-              disabled={uploading}
-              className="mx-auto"
-            >
-              <label htmlFor="single">Uploading...</label>
-            </Button>
-          ) : (
-            <Button className="mx-auto">
-              <label htmlFor="single">Upload</label>
-            </Button>
-          )}
-          <input
-            style={{
-              visibility: "hidden",
-              position: "absolute",
-            }}
-            type="file"
-            id="single"
-            accept="image/*"
-            onChange={uploadAvatar}
+        {uploading ? (
+          <Button
+            isProcessing
+            processingSpinner={
+              <AiOutlineLoading className="h-6 w-6 animate-spin" />
+            }
             disabled={uploading}
-          />
-        </div>
+            className="mx-auto"
+          >
+            <label htmlFor="single">Uploading...</label>
+          </Button>
+        ) : (
+          <Button type="file" className="mx-auto">
+            <label htmlFor="single">Upload</label>
+          </Button>
+        )}
+        <input
+          style={{
+            visibility: "hidden",
+            position: "absolute",
+            width: 0,
+          }}
+          type="file"
+          id="single"
+          accept="image/*"
+          onChange={uploadAvatar}
+          disabled={uploading}
+        />
       </div>
     </div>
   );
