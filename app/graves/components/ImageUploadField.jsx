@@ -162,16 +162,16 @@ export default function ImageUploadField({ id, name, existingImages, onValid }) 
           <div className="flex gap-2.5 overflow-x-auto">
             {existingImagesState.map((image, index) => (
               image && (
-                <li key={`existing_${index}`}>
+                <div key={`existing_${index}`}>
                   <img
                     src={image.url}
                     alt={`Existing Image ${index + 1}`}
-                    style={{ maxWidth: "100px", maxHeight: "100px", marginRight: "10px" }}
+                    className="max-h-24 max-w-24 my-2.5"
                   />
-                  <Button onClick={() => toggleRemoveUndo(index)}>
+                  <Button size="xs" color={`${image.markedForDeletion ? "blue" : "failure"}`} onClick={() => toggleRemoveUndo(index)}>
                     {image.markedForDeletion ? "Undo" : "Remove"}
                   </Button>
-                </li>
+                </div>
               )
             ))}
             {selectedImages.map((file, index) => (
