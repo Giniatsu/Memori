@@ -2,7 +2,7 @@
 import { MdRateReview } from "react-icons/md";
 import { useState, useMemo, useRef } from "react";
 import Sheet, { SheetRef } from "react-modal-sheet";
-import { Button } from "flowbite-react";
+import { Button, Rating } from "flowbite-react";
 import Avatar from "../components/UserAvatar";
 const AVATAR_URL =
   "https://plmqhcualnnsirfqjcsj.supabase.co/storage/v1/object/public/avatars/";
@@ -40,7 +40,16 @@ const ViewRatings = ({ ratings }) => {
         <Sheet.Container className="px-4 bg-slate-300">
           <Sheet.Header />
           <Sheet.Header>
-            <h3>Ratings (Average: {averageRatings} stars):</h3>
+            <Rating>
+              <Rating.Star filled={averageRatings >= 1} />
+              <Rating.Star filled={averageRatings >= 2} />
+              <Rating.Star filled={averageRatings >= 3} />
+              <Rating.Star filled={averageRatings >= 4} />
+              <Rating.Star filled={averageRatings >= 5} />
+              <p className="ml-2 font-bold">
+                {averageRatings} out of 5 ratings
+              </p>
+            </Rating>
           </Sheet.Header>
           <Sheet.Content
             style={{
@@ -61,7 +70,10 @@ const ViewRatings = ({ ratings }) => {
                       </div>
                       <div>
                         <strong>
-                          {rating.user_id?.username} - ({rating.rating} stars)
+                          <Rating>
+                            {rating.user_id?.username} - {rating.rating}{" "}
+                            <Rating.Star filled />
+                          </Rating>
                         </strong>
                         <p>{rating.comment}</p>
                       </div>
