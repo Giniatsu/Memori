@@ -9,7 +9,7 @@ export default function RateSubmitBtn() {
   const { pending } = useFormStatus();
 
   return (
-    <Button type="submit" disabled={pending} className="whitespace-nowrap">
+    <Button type="submit" disabled={pending} className="whitespace-nowrap mt-2">
       {pending && (
         <>
           <Spinner aria-label="addgrave spinner" size="sm" />
