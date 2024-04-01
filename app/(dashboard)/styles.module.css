@@ -1,0 +1,19 @@
+.pwa-button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px; 
+  border-radius: 5px; 
+  font-size: 16px;
+  cursor: pointer; 
+  transition: all 0.2s ease-in-out; 
+}
+
+.pwa-button:hover {
+  background-color: #3e8e41; 
+  transform: scale(1.02);
+}
+
+.pwa-button[disabled] {
+  background-color: #cccccc;
+  cursor: default;
+}
