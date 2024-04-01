@@ -19,7 +19,7 @@ export default async function Home() {
               <Link href="/search" className="m-auto">
                 <IconButton
                   icon={<FaSearchLocation size={50} />}
-                  text="Search"
+                  text="Search for a Grave"
                 />
               </Link>
             </div>
