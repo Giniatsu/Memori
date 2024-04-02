@@ -1,25 +1,34 @@
 "use client";
-import { Avatar, Dropdown, Navbar } from "flowbite-react";
-import Image from 'next/image'
+import { Avatar, Dropdown, Navbar, Flowbite } from "flowbite-react";
+import Image from "next/image";
 import Link from "next/link";
 import LogoutButton from "./LogoutButton";
 import { useRouter, usePathname } from "next/navigation";
+
+const customTheme = {
+  link: {
+    active: {
+      on: "bg-blue-600 text-white dark:text-white md:bg-transparent md:text-blue-600",
+      off: "text-gray-200 hover:text-white",
+    },
+  },
+};
 
 export default function Navigationbar({ user, profile }) {
   const router = useRouter();
   const pathname = usePathname();
   if (user) {
     return (
-      <Navbar fluid className="bg-vintage-army">
+      <Navbar fluid className="bg-green-700">
         <Navbar.Brand href="/">
           <Image
             className="mr-1 rounded-full"
-            src='/MeMori.png'
+            src="/MeMori.png"
             alt=""
             width={50}
             height={50}
           />
-          <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
+          <span className="self-center whitespace-nowrap text-xl font-semibold text-white">
             MeMori
           </span>
         </Navbar.Brand>
@@ -53,10 +62,18 @@ export default function Navigationbar({ user, profile }) {
           <Navbar.Toggle />
         </div>
         <Navbar.Collapse>
-          <Navbar.Link active={pathname === "/"} href="/">
+          <Navbar.Link
+            /* active={pathname === "/"} */
+            href="/"
+            className={pathname === "/" ? "text-white" : "text-gray-950"}
+          >
             Home
           </Navbar.Link>
-          <Navbar.Link active={pathname === "/search"} href="/search">
+          <Navbar.Link
+            /* active={pathname === "/search"} */
+            href="/search"
+            className={pathname === "/search" ? "text-white" : "text-gray-950"}
+          >
             Search
           </Navbar.Link>
           {/* <Navbar.Link href="/activity">Activity</Navbar.Link> */}
@@ -64,9 +81,9 @@ export default function Navigationbar({ user, profile }) {
       </Navbar>
     );
   }
-  if(!user){
+  if (!user) {
     return (
-      <Navbar fluid className="bg-vintage-army">
+      <Navbar fluid className="bg-green-700">
         <Navbar.Brand href="/">
           <Image
             className="mr-1 rounded-full"
@@ -75,7 +92,7 @@ export default function Navigationbar({ user, profile }) {
             width={50}
             height={50}
           />
-          <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
+          <span className="self-center whitespace-nowrap text-xl font-semibold text-white">
             MeMori
           </span>
         </Navbar.Brand>
@@ -91,10 +108,18 @@ export default function Navigationbar({ user, profile }) {
           <Navbar.Toggle />
         </div>
         <Navbar.Collapse>
-          <Navbar.Link active={pathname === "/"} href="/">
+          <Navbar.Link
+            /* active={pathname === "/"} */
+            href="/"
+            className={pathname === "/" ? "text-white" : "text-gray-950"}
+          >
             Home
           </Navbar.Link>
-          <Navbar.Link active={pathname === "/search"} href="/search">
+          <Navbar.Link
+            /* active={pathname === "/search"} */
+            className={pathname === "/search" ? "text-white" : "text-gray-950"}
+            href="/search"
+          >
             Search
           </Navbar.Link>
         </Navbar.Collapse>
