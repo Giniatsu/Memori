@@ -74,7 +74,7 @@ const CemeteryField = ({
           name="cemetery"
           id="cemetery"
           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-          placeholder=" "
+          placeholder="Input Cemetery Name"
           onChange={e => {
             setCemetery(e.target.value);
           }}
@@ -91,12 +91,12 @@ const CemeteryField = ({
       </Label>
       { !createMode && (
         <Button pill fullSized className="mb-4" onClick={() => setCreateMode(true)}>
-          Add new cemetery
+          Cemetery not found? Add a new cemetery
         </Button>
       ) }
       { createMode && (
         <Button pill color="blue" fullSized className="mb-4" onClick={() => setCreateMode(false)}>
-          Search existing cemetery
+          Back to Search Existing Cemetery
         </Button>
       ) }
     </>
