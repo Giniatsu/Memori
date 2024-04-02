@@ -50,10 +50,8 @@ const MapField = ({ onSelect, defaultValue, ...props }) => {
     <>
       <Button
         color="light"
-        size="sm"
         {...props}
         onClick={() => setOpenModal("form-elements")}
-        className="whitespace-nowrap my-2"
       >
         Pin Location
       </Button>
