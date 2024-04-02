@@ -102,7 +102,7 @@ export default function Form({
   return (
     <APIProvider apiKey={API_KEY} libraries={['marker', 'places']}>
       <div className={isModal ? "" : "flex items-center justify-center my-4"}>
-        <Card className={isModal ? "border-none shadow-none" : "w-4/5 max-w-sm mb-16"}>
+        <Card className={isModal ? "border-none shadow-none" : "w-full mx-4 max-w-sm mb-16"}>
           <form action={action} className="grid grid-cols-2 gap-4">
             <input
               type="hidden"

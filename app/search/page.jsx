@@ -76,9 +76,35 @@ export default function Search() {
   }, []);
 
   return (
-    <APIProvider apiKey={API_KEY} libraries={['places']}>
+    <APIProvider apiKey={API_KEY} libraries={["places"]}>
+      <div className="container mx-auto">
+        <h1 className="text-xl font-bold text-center mt-4">
+          Search Grave Entry
+        </h1>
+        <div className="m-4 bg-green-700 text-white p-4 rounded-lg">
+          <h1 className="mb-3 text-lg">Reminders:</h1>
+          <ul className="list-disc pl-4">
+            <li className="mb-3">
+              All Fields are optional and serves as filters for searching
+            </li>
+            <li className="mb-3">
+              There are 3 way to search regarding age
+              <ul className="list-disc pl-4">
+                <li>
+                  Age Range mode narrows down search with the provided range
+                </li>
+                <li>Fixed mode is for a specific age</li>
+                <li>
+                  Date mode is viable when you only know the birth OR death date
+                  of the grave
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
       <div className="flex items-center justify-center my-4">
-        <Card className="w-4/5 max-w-sm mb-16">
+        <Card className="w-full mx-4 max-w-sm mb-16">
           <form action={search} className="grid grid-cols-2 gap-4">
             <div className="relative z-0 w-full col-span-2 group">
               <div className="block">
@@ -181,7 +207,7 @@ export default function Search() {
                 htmlFor="death_year_min"
                 className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
               >
-                Death Year min 
+                Death Year min
               </Label>
             </div>
             <div className="relative z-0 w-full group">
@@ -196,7 +222,7 @@ export default function Search() {
                 htmlFor="death_year_max"
                 className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
               >
-                Death Year max 
+                Death Year max
               </Label>
             </div>
             <div className="col-span-2">
@@ -228,7 +254,7 @@ export default function Search() {
                     checked={ageMode === "birthdeath"}
                     onChange={() => setAgeMode("birthdeath")}
                   />
-                  <Label htmlFor="bdradio">Birth&Death Date</Label>
+                  <Label htmlFor="bdradio">Date</Label>
                 </div>
               </fieldset>
               {ageMode === "range" && (
