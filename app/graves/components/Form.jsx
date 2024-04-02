@@ -284,7 +284,7 @@ export default function Form({
                     readOnly
                     required
                   />
-                  <Button color="light" onClick={updateLocation} disabled={!isGeolocationAvailable || !isGeolocationEnabled || gettingLocation}>
+                  <Button color="light" size="sm" onClick={updateLocation} disabled={!isGeolocationAvailable || !isGeolocationEnabled || gettingLocation}>
                     <IoMdLocate className="w-6 h-6" />
                   </Button>
                   <MapField

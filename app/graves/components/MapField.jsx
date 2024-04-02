@@ -50,6 +50,7 @@ const MapField = ({ onSelect, defaultValue, ...props }) => {
     <>
       <Button
         color="light"
+        size="sm"
         {...props}
         onClick={() => setOpenModal("form-elements")}
       >
