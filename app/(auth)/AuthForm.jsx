@@ -1,15 +1,17 @@
-"use client"
+"use client";
 
 import { Button, Card, Checkbox, Label, TextInput } from "flowbite-react";
 import { HiMail } from "react-icons/hi";
 import { RiLockPasswordFill } from "react-icons/ri";
 import Link from "next/link";
-import { useState } from "react"
+import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 export default function AuthForm(props) {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const { handleSubmit } = props
+  const pathname = usePathname();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { handleSubmit } = props;
   return (
     <div className="flex justify-center items-center">
       <Card className="w-3/4 max-w-sm">
@@ -47,10 +49,12 @@ export default function AuthForm(props) {
             />
           </div>
           <div className="flex items-start">
-            <div className="flex items-center gap-2">
-              <Checkbox id="remember" />
-              <Label htmlFor="remember">Remember me</Label>
-            </div>
+            {pathname === "/login" && (
+              <div className="flex items-center gap-2">
+                <Checkbox id="remember" />
+                <Label htmlFor="remember">Remember me</Label>
+              </div>
+            )}
             <Link
               href="/forgot-password"
               className="ml-auto text-sm text-blue-700 hover:underline dark:text-blue-500"
