@@ -14,7 +14,7 @@ export default function AuthForm(props) {
   const { handleSubmit } = props;
   return (
     <div className="flex justify-center items-center">
-      <Card className="w-3/4 max-w-sm">
+      <Card className="w-full max-w-sm mx-4 sm:mx-0">
         <form
           className="flex flex-col gap-4"
           onSubmit={(e) => handleSubmit(e, email, password)}
