@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Link from "next/link";
 import GraveImage from "./GraveImage";
-import { Pagination } from "flowbite-react";
+import { Pagination, Rating } from "flowbite-react";
 import GraveListSkeleton from "../components/GraveListSkeleton";
 import EntriesSearch from "../components/EntriesSearch";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
@@ -82,12 +82,45 @@ async function getGravesTotalCount(query) {
   return count;
 }
 
+// Average Rating
+async function getAverageRating(graveId) {
+  const supabase = createClientComponentClient();
+
+  try {
+    const { data: ratingData, error } = await supabase
+      .from("ratings")
+      .select("rating")
+      .eq("grave_id", graveId);
+
+    if (error) {
+      console.log("Error fetching ratings:", error.message);
+      return null;
+    }
+
+    const ratings = ratingData.map((row) => row.rating);
+    const averageRating =
+      ratings.length > 0
+        ? Math.round(
+            (ratings.reduce((sum, rating) => sum + rating, 0) /
+              ratings.length) *
+              100
+          ) / 100
+        : 0;
+
+    return averageRating;
+  } catch (error) {
+    console.log("Error calculating average rating:", error.message);
+    return null;
+  }
+}
+
 export default function GravesList() {
   const searchParams = useSearchParams();
   const [graves, setGraves] = useState([]);
   const [totalCount, setTotalCount] = useState(0); // State to hold the total count
   const [loading, setLoading] = useState(false);
   const pageSize = 10; // You can adjust the page size as needed
+  const [averageRatings, setAverageRatings] = useState([]);
   const pathname = usePathname();
   const { push } = useRouter();
 
@@ -122,6 +155,20 @@ export default function GravesList() {
       setTotalCount(count);
     });
   }, [cemetery, firstName, lastName]);
+
+  useEffect(() => {
+    const fetchAverageRatings = async () => {
+      const ratings = await Promise.all(
+        graves.map(async (grave) => {
+          const averageRating = await getAverageRating(grave.id);
+          return { graveId: grave.id, averageRating };
+        })
+      );
+      setAverageRatings(ratings);
+    };
+
+    fetchAverageRatings();
+  }, [graves]);
 
   const firstEntry = (parseInt(currentPage) - 1) * pageSize + 1;
   const lastEntry = Math.min(parseInt(currentPage) * pageSize, totalCount);
@@ -182,6 +229,28 @@ export default function GravesList() {
                     </h5>
                     <p className="mb-3 font-normal text-gray-700">
                       {grave.cemetery.name}
+                    </p>
+                    <p className="mb-3 font-semibold text-gray-700">
+                      Grave Accuracy:
+                      <Rating>
+                        {Array(5)
+                          .fill()
+                          .map((_, index) => (
+                            <Rating.Star
+                              key={index}
+                              filled={
+                                index + 1 <=
+                                averageRatings.find(
+                                  (rating) => rating.graveId === grave.id
+                                )?.averageRating
+                              }
+                            />
+                          ))}
+                      </Rating>
+                      {/* {averageRatings.find(
+                        (rating) => rating.graveId === grave.id
+                      )?.averageRating ?? "No Ratings Yet"}{" "}
+                      / 5 */}
                     </p>
                   </div>
                 </Link>
