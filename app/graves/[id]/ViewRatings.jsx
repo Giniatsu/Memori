@@ -63,10 +63,14 @@ const ViewRatings = ({ ratings }) => {
                   !!rating.user_id?.id && (
                     <div key={rating.id} className="flex gap-4">
                       <div>
-                        <Avatar
-                          img={AVATAR_URL + `${rating.user_id?.avatar_url}`}
-                          rounded
-                        />
+                        {rating.user_id?.avatar_url ? (
+                          <Avatar
+                            img={AVATAR_URL + `${rating.user_id?.avatar_url}`}
+                            rounded
+                          />
+                        ) : (
+                          <Avatar rounded />
+                        )}
                       </div>
                       <div>
                         <strong>

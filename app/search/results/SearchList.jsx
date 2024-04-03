@@ -1,7 +1,7 @@
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Link from "next/link";
 import SearchImage from "./SearchImage";
-import { Pagination } from "flowbite-react";
+import { Pagination, Rating } from "flowbite-react";
 import GraveListSkeleton from "../../graves/components/GraveListSkeleton";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -62,13 +62,13 @@ async function getGraves(query, page = 1, pageSize = 10) {
   }
 
   if (query.deathYearMin) {
-    const deathDate = `${query.deathYearMin.trim()}-01-01`
-    supabase_query = supabase_query.gte("death", deathDate)
+    const deathDate = `${query.deathYearMin.trim()}-01-01`;
+    supabase_query = supabase_query.gte("death", deathDate);
   }
 
   if (query.deathYearMax) {
-    const deathDate = `${query.deathYearMax.trim()}-12-31`
-    supabase_query = supabase_query.lte("death", deathDate)
+    const deathDate = `${query.deathYearMax.trim()}-12-31`;
+    supabase_query = supabase_query.lte("death", deathDate);
   }
 
   if (query.ageMin) {
@@ -125,13 +125,13 @@ async function getGravesTotalCount(query) {
   }
 
   if (query.deathYearMin) {
-    const deathDate = `${query.deathYearMin.trim()}-01-01`
-    countQuery = countQuery.gte("death", deathDate)
+    const deathDate = `${query.deathYearMin.trim()}-01-01`;
+    countQuery = countQuery.gte("death", deathDate);
   }
 
   if (query.deathYearMax) {
-    const deathDate = `${query.deathYearMax.trim()}-12-31`
-    countQuery = countQuery.lte("death", deathDate)
+    const deathDate = `${query.deathYearMax.trim()}-12-31`;
+    countQuery = countQuery.lte("death", deathDate);
   }
 
   if (query.ageMin) {
@@ -154,12 +154,45 @@ async function getGravesTotalCount(query) {
   return count;
 }
 
+// Average Rating
+async function getAverageRating(graveId) {
+  const supabase = createClientComponentClient();
+
+  try {
+    const { data: ratingData, error } = await supabase
+      .from("ratings")
+      .select("rating")
+      .eq("grave_id", graveId);
+
+    if (error) {
+      console.log("Error fetching ratings:", error.message);
+      return null;
+    }
+
+    const ratings = ratingData.map((row) => row.rating);
+    const averageRating =
+      ratings.length > 0
+        ? Math.round(
+            (ratings.reduce((sum, rating) => sum + rating, 0) /
+              ratings.length) *
+              100
+          ) / 100
+        : 0;
+
+    return averageRating;
+  } catch (error) {
+    console.log("Error calculating average rating:", error.message);
+    return null;
+  }
+}
+
 export default function SearchList() {
   const searchParams = useSearchParams();
   const [graves, setGraves] = useState([]);
   const [loading, setLoading] = useState(false);
   const [totalCount, setTotalCount] = useState(0); // State to hold the total count
   const pageSize = 10; // You can adjust the page size as needed
+  const [averageRatings, setAverageRatings] = useState([]);
 
   const pathname = usePathname();
   const { push } = useRouter();
@@ -175,7 +208,7 @@ export default function SearchList() {
   const age = searchParams.get("age");
   const ageMin = searchParams.get("age_min");
   const ageMax = searchParams.get("age_max");
-  const deathYearMin = searchParams.get("death_year_min"); 
+  const deathYearMin = searchParams.get("death_year_min");
   const deathYearMax = searchParams.get("death_year_max");
   const currentPage = searchParams.get("page") || 1;
 
@@ -193,7 +226,7 @@ export default function SearchList() {
         ageMin,
         ageMax,
         deathYearMin,
-        deathYearMax
+        deathYearMax,
       },
       currentPage,
       pageSize
@@ -213,6 +246,8 @@ export default function SearchList() {
     ageMax,
     currentPage,
     pageSize,
+    deathYearMin,
+    deathYearMax,
   ]);
 
   useEffect(() => {
@@ -227,7 +262,7 @@ export default function SearchList() {
       ageMin,
       ageMax,
       deathYearMin,
-      deathYearMax
+      deathYearMax,
     }).then((count) => {
       setTotalCount(count);
     });
@@ -241,7 +276,23 @@ export default function SearchList() {
     age,
     ageMin,
     ageMax,
+    deathYearMin,
+    deathYearMax,
   ]);
+
+  useEffect(() => {
+    const fetchAverageRatings = async () => {
+      const ratings = await Promise.all(
+        graves.map(async (grave) => {
+          const averageRating = await getAverageRating(grave.id);
+          return { graveId: grave.id, averageRating };
+        })
+      );
+      setAverageRatings(ratings);
+    };
+
+    fetchAverageRatings();
+  }, [graves]);
 
   const firstEntry = (parseInt(currentPage) - 1) * pageSize + 1;
   const lastEntry = Math.min(parseInt(currentPage) * pageSize, totalCount);
@@ -299,6 +350,28 @@ export default function SearchList() {
                     </h5>
                     <p className="mb-3 font-normal text-gray-700">
                       {grave.cemetery.name}
+                    </p>
+                    <p className="mb-3 font-semibold text-gray-700">
+                      Grave Accuracy: 
+                      <Rating>
+                        {Array(5)
+                          .fill()
+                          .map((_, index) => (
+                            <Rating.Star
+                              key={index}
+                              filled={
+                                index + 1 <=
+                                averageRatings.find(
+                                  (rating) => rating.graveId === grave.id
+                                )?.averageRating
+                              }
+                            />
+                          ))}
+                      </Rating>
+                      {/* {averageRatings.find(
+                        (rating) => rating.graveId === grave.id
+                      )?.averageRating ?? "No Ratings Yet"}{" "}
+                      / 5 */}
                     </p>
                   </div>
                 </Link>
