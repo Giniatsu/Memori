@@ -25,12 +25,17 @@ export async function addGrave(formData) {
   // insert the cemetery data
   const { data: cemeteryData, error: cemeteryError } = await supabase
     .from("cemetery")
-    .upsert({
-      location_name: filteredGrave.cemeterylocation,
-      location: filteredGrave.cemeterycoordinates,
-      name: filteredGrave.cemetery,
-      address: filteredGrave.cemetery_address,
-    })
+    .upsert(
+      {
+        location_name: filteredGrave.cemeterylocation,
+        location: filteredGrave.cemeterycoordinates,
+        name: filteredGrave.cemetery,
+        address: filteredGrave.cemetery_address,
+      },
+      {
+        onConflict: "name",
+      }
+    )
     .select();
 
   if (cemeteryError) {

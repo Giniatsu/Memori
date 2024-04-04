@@ -41,23 +41,6 @@ const CemeteryField = ({
     load();
   }, [location]);
 
-  // Function to handle cemetery selection
-  const handleCemeteryChange = (e) => {
-    setCemetery(e.target.value);
-
-    // Find the selected cemetery in the cemeteries array
-    const selectedCemeteryData = cemeteries.find(
-      (c) => c.name === e.target.value
-    ); // Assuming 'name' is the unique identifier
-
-    // Update the address if data is found
-    if (selectedCemeteryData) {
-      setCemeteryAddress(selectedCemeteryData.address); // Assuming 'address' is the correct field
-    } else {
-      setCemeteryAddress(""); // Clear the address if nothing found
-    }
-  };
-
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -72,7 +55,9 @@ const CemeteryField = ({
             id="cemetery"
             className="block py-2.5 mb-4 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
             placeholder=" "
-            onChange={handleCemeteryChange}
+            onChange={(e) => {
+              setCemetery(e.target.value);
+            }}
             value={cemetery}
             required
           >
