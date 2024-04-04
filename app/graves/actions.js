@@ -44,6 +44,7 @@ export async function addGrave(formData) {
   delete filteredGrave.cemetery;
   delete filteredGrave.cemeterylocation;
   delete filteredGrave.cemeterycoordinates;
+  delete filteredGrave.cemetery_address;
   delete filteredGrave.grave_images; 
   delete filteredGrave.imagesForDeletion;
 
