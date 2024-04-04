@@ -29,8 +29,9 @@ export async function addGrave(formData) {
       location_name: filteredGrave.cemeterylocation,
       location: filteredGrave.cemeterycoordinates,
       name: filteredGrave.cemetery,
+      address: filteredGrave.cemetery_address
     }, {
-      onConflict: "name",
+      onConflict: "address",
     })
     .select();
 
