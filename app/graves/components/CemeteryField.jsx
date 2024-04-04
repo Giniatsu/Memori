@@ -75,7 +75,7 @@ const CemeteryField = ({
               id="cemeteryaddress"
               type="text"
               rows={4}
-              name="address"
+              name="cemetery_address"
               className="block w-full text-sm"
               value={cemeteryAddress}
               readOnly
