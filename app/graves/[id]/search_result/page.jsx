@@ -106,10 +106,10 @@ export default async function GraveDetails({ params }) {
               {grave.age}
               <br />
               <b>Birth: </b>
-              {format(new Date(grave.birth), "MMMM dd, yyyy")}
+              {grave.birth ? format(new Date(grave.birth), "MMMM dd, yyyy") : ""}
               <br />
               <b>Death: </b>
-              {format(new Date(grave.death), "MMMM dd, yyyy")}
+              {grave.death ? format(new Date(grave.death), "MMMM dd, yyyy") : ""}
             </h3>
             <h4 className="font-normal text-base">
               <b>Aliases: </b>
