@@ -75,11 +75,11 @@ const CemeteryField = ({
               id="cemetery_address"
               type="text"
               rows={4}
-              name="cemetery_address"
+              //name="cemetery_address"
               className="block w-full text-sm"
               value={cemeteryAddress}
               readOnly
-              onChange={(e) => setCemeteryAddress(e.target.value)}
+              //onChange={(e) => setCemeteryAddress(e.target.value)}
             />
           </div>
         </>
