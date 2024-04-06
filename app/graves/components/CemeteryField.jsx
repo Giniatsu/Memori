@@ -15,6 +15,12 @@ const CemeteryField = ({
 
   const [loading, setLoading] = useState(true);
   const [cemeteries, setCemeteries] = useState([]);
+
+  const selectedCemetery = useMemo(() => {
+    if (!cemetery) return cemeteries[0]
+    return cemeteries.find((c) => c.name === cemetery)
+  }, [cemetery, cemeteries])
+
   useEffect(() => {
     if (!location) {
       setCemeteries([]);
@@ -73,13 +79,12 @@ const CemeteryField = ({
             />
             <Textarea
               id="cemetery_address"
+              name="cemetery_address"
               type="text"
               rows={4}
-              //name="cemetery_address"
               className="block w-full text-sm"
-              value={cemeteryAddress}
+              value={selectedCemetery?.address ?? ""}
               readOnly
-              //onChange={(e) => setCemeteryAddress(e.target.value)}
             />
           </div>
         </>

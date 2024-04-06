@@ -33,7 +33,7 @@ export async function addGrave(formData) {
         address: filteredGrave.cemetery_address,
       },
       {
-        onConflict: "name",
+        onConflict: "name, address",
       }
     )
     .select();
