@@ -7,8 +7,7 @@ const CemeteryField = ({
   location,
   cemetery,
   setCemetery,
-  cemeteryAddress,
-  setCemeteryAddress,
+  cemeteryId,
   ...props
 }) => {
   const [createMode, setCreateMode] = useState(false);
@@ -16,7 +15,7 @@ const CemeteryField = ({
   const [loading, setLoading] = useState(true);
   const [cemeteries, setCemeteries] = useState([]);
   
-  const [selectedCemeteryId, setSelectedCemeteryId] = useState("");
+  const [selectedCemeteryId, setSelectedCemeteryId] = useState(cemeteryId);
 
   const selectedCemetery = useMemo(() => {
     if (!selectedCemeteryId) return cemeteries[0]

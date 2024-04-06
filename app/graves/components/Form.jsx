@@ -49,8 +49,8 @@ export default function Form({
 
   const [location, setLocation] = useState(data?.cemeteryLocationName ?? "");
   const [hasLocation, setHasLocation] = useState(false);
+
   const [cemetery, setCemetery] = useState(data?.cemeteryName ?? "");
-  const [cemeteryAddress, setCemeteryAddress] = useState(data?.cemeteryAddress ?? "");
 
   const [imagesValid, setImagesValid] = useState(true);
 
@@ -146,8 +146,7 @@ export default function Form({
                   location={location}
                   cemetery={cemetery}
                   setCemetery={setCemetery}
-                  cemeteryAddress={cemeteryAddress}
-                  setCemeteryAddress={setCemeteryAddress}
+                  cemeteryId={data?.cemeteryId ?? ""}
                 />
               </div>
             )}
