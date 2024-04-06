@@ -58,7 +58,8 @@ async function getGrave(id) {
       latitude double precision,
       longitude double precision,
       user_email text,
-      notes text
+      notes text,
+      created_at timestamptz
     ) as $$
     BEGIN
       RETURN QUERY
