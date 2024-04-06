@@ -139,12 +139,12 @@ export default function Search() {
                     hasLocation ? (
                       cemetery.location_name === location && (
                         <option key={cemetery.id} value={cemetery.id}>
-                          {cemetery.name}
+                          {cemetery.name} ({cemetery.address}) 
                         </option>
                       )
                     ) : (
                       <option key={cemetery.id} value={cemetery.id}>
-                        {cemetery.name}
+                        {cemetery.name} ({cemetery.address}) 
                       </option>
                     )
                   )}
