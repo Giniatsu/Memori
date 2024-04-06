@@ -22,25 +22,33 @@ export async function addGrave(formData) {
     data: { session },
   } = await supabase.auth.getSession();
 
-  // insert the cemetery data
-  const { data: cemeteryData, error: cemeteryError } = await supabase
-    .from("cemetery")
-    .upsert(
-      {
-        location_name: filteredGrave.cemeterylocation,
-        location: filteredGrave.cemeterycoordinates,
-        name: filteredGrave.cemetery,
-        address: filteredGrave.cemetery_address,
-      },
-      {
-        onConflict: "name, address",
-      }
-    )
-    .select();
+  let cemeteryDataId = null;
 
-  if (cemeteryError) {
-    console.log(cemeteryError);
-    throw new Error("Could not add cemetery");
+  if (filteredGrave.cemetery_id) {
+    cemeteryDataId = parseInt(filteredGrave.cemetery_id)
+  } else {
+    // insert the cemetery data
+    const { data: cemeteryData, error: cemeteryError } = await supabase
+      .from("cemetery")
+      .upsert(
+        {
+          location_name: filteredGrave.cemeterylocation,
+          location: filteredGrave.cemeterycoordinates,
+          name: filteredGrave.cemetery,
+          address: filteredGrave.cemetery_address,
+        },
+        {
+          onConflict: "name, address",
+        }
+      )
+      .select();
+
+    if (cemeteryError) {
+      console.log(cemeteryError);
+      throw new Error("Could not add cemetery");
+    }
+
+    cemeteryDataId = cemeteryData[0].id
   }
 
   // remove cemetery data from grave
@@ -48,6 +56,7 @@ export async function addGrave(formData) {
   delete filteredGrave.cemeterylocation;
   delete filteredGrave.cemeterycoordinates;
   delete filteredGrave.cemetery_address;
+  delete filteredGrave.cemetery_id;
   delete filteredGrave.grave_images;
   delete filteredGrave.imagesForDeletion;
 
@@ -66,7 +75,7 @@ export async function addGrave(formData) {
     .from("graves")
     .insert({
       ...filteredGrave,
-      cemetery: cemeteryData[0].id,
+      cemetery: cemeteryDataId,
       user_email: session.user.email,
     })
     .select();

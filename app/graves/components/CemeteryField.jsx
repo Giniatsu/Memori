@@ -15,11 +15,13 @@ const CemeteryField = ({
 
   const [loading, setLoading] = useState(true);
   const [cemeteries, setCemeteries] = useState([]);
+  
+  const [selectedCemeteryId, setSelectedCemeteryId] = useState("");
 
   const selectedCemetery = useMemo(() => {
-    if (!cemetery) return cemeteries[0]
-    return cemeteries.find((c) => c.name === cemetery)
-  }, [cemetery, cemeteries])
+    if (!selectedCemeteryId) return cemeteries[0]
+    return cemeteries.find((c) => c.id === parseInt(selectedCemeteryId))
+  }, [selectedCemeteryId, cemeteries])
 
   useEffect(() => {
     if (!location) {
@@ -57,18 +59,18 @@ const CemeteryField = ({
         <>
           <Select
             type="text"
-            name="cemetery"
-            id="cemetery"
+            name="cemetery_id"
+            id="cemetery_id"
             className="block py-2.5 mb-4 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
             placeholder=" "
             onChange={(e) => {
-              setCemetery(e.target.value);
+              setSelectedCemeteryId(e.target.value);
             }}
-            value={cemetery}
+            value={selectedCemeteryId}
             required
           >
             {cemeteries.map((cemetery) => (
-              <option key={cemetery.id}>{cemetery.name}</option>
+              <option value={cemetery.id} key={cemetery.id}>{cemetery.name}</option>
             ))}
           </Select>
           <div className="relative z-0 w-full col-span-2 mb-2 group">
@@ -79,7 +81,6 @@ const CemeteryField = ({
             />
             <Textarea
               id="cemetery_address"
-              name="cemetery_address"
               type="text"
               rows={4}
               className="block w-full text-sm"
