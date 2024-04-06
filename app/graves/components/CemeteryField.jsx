@@ -17,7 +17,7 @@ const CemeteryField = ({
   const [loading, setLoading] = useState(true);
   const [cemeteries, setCemeteries] = useState([]);
   
-  const [selectedCemeteryId, setSelectedCemeteryId] = useState("");
+  const [selectedCemeteryId, setSelectedCemeteryId] = useState(cemeteryId);
 
   const selectedCemetery = useMemo(() => {
     if (!selectedCemeteryId) return cemeteries[0]
