@@ -19,10 +19,15 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
 
+const BASE_URL =
+  "https://plmqhcualnnsirfqjcsj.supabase.co/storage/v1/object/public/grave_images/";
+
 const Map = ({ graveId }) => {
   const [graveTarget, setGraveTarget] = useState(null);
   const [isImagesOpen, setImagesOpen] = useState(false);
   const [autoZoomDisabled, setAutoZoomDisabled] = useState(false);
+  const [images, setImages] = useState([])
+
   const router = useRouter();
 
   const getGrave = async () => {
@@ -31,6 +36,23 @@ const Map = ({ graveId }) => {
       .eq("grave_id", graveId)
       .single();
     setGraveTarget(data);
+
+    supabase
+      .from("images")
+      .select(
+        `
+        *
+      `
+      )
+      .eq("grave", graveId)
+      .then(({ data, error }) => {
+        if (error) {
+          console.log(error);
+        } else {
+          const urls = data.map((data) => BASE_URL + data.file_name);
+          setImages(urls);
+        }
+      });
   };
 
   useEffect(() => {
@@ -130,7 +152,7 @@ const Map = ({ graveId }) => {
             }}
           >
             <Sheet.Scroller draggableAt="both">
-              <ImagesSheet graveId={graveId} />
+              <ImagesSheet images={images} />
             </Sheet.Scroller>
           </Sheet.Content>
         </Sheet.Container>
