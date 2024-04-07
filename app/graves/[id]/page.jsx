@@ -44,6 +44,7 @@ async function getGrave(id) {
       grave_id integer,
       cemetery_id bigint,
       cemetery_name text,
+      cemetery_address text,
       cemetery_location_name text,
       cemetery_location_latitude double precision,
       cemetery_location_longitude double precision,
@@ -57,11 +58,12 @@ async function getGrave(id) {
       latitude double precision,
       longitude double precision,
       user_email text,
-      notes text
+      notes text,
+      created_at timestamptz
     ) as $$
     BEGIN
       RETURN QUERY
-      SELECT g.id AS grave_id, c.id AS cemetery_id, c.name AS cemetery_name, c.location_name AS cemetery_location_name, ST_Y(c.location::geometry) AS cemetery_location_latitude, ST_X(c.location::geometry) AS cemetery_location_longitude, g.firstname, g.lastname, g.aliases, g.age, g.birth, g.death, g.location AS grave_location, ST_Y(g.location::geometry) AS latitude, ST_X(g.location::geometry) AS longitude, g.user_email, g.notes
+      SELECT g.id AS grave_id, c.id AS cemetery_id, c.name AS cemetery_name, c.address AS cemetery_address, c.location_name AS cemetery_location_name, ST_Y(c.location::geometry) AS cemetery_location_latitude, ST_X(c.location::geometry) AS cemetery_location_longitude, g.firstname, g.lastname, g.aliases, g.age, g.birth, g.death, g.location AS grave_location, ST_Y(g.location::geometry) AS latitude, ST_X(g.location::geometry) AS longitude, g.user_email, g.notes, g.created_at
       FROM graves g
       JOIN cemetery c ON g.cemetery = c.id;
     END;
@@ -69,14 +71,6 @@ async function getGrave(id) {
 
     ```
   */
-  /* new get_graves function
-      BEGIN
-  RETURN QUERY
-  SELECT g.id AS grave_id, c.id AS cemetery_id, c.name AS cemetery_name, c.location_name AS cemetery_location_name, ST_Y(c.location::geometry) AS cemetery_location_latitude, ST_X(c.location::geometry) AS cemetery_location_longitude, g.firstname, g.lastname, g.aliases, g.age, g.birth, g.death, g.location AS grave_location, ST_Y(g.location::geometry) AS latitude, ST_X(g.location::geometry) AS longitude, g.user_email, g.notes, g.created_at
-  FROM graves g
-  JOIN cemetery c ON g.cemetery = c.id;
-END;
- */
   const supabase = createServerComponentClient({ cookies });
   const { data, error } = await supabase
     .rpc("get_graves")
@@ -196,10 +190,10 @@ export default async function GraveDetails({ params }) {
               {grave.age}
               <br />
               <b>Birth: </b>
-              {format(new Date(grave.birth), "MMMM dd, yyyy")}
+              {grave.birth ? format(new Date(grave.birth), "MMMM dd, yyyy") : ""}
               <br />
               <b>Death: </b>
-              {format(new Date(grave.death), "MMMM dd, yyyy")}
+              {grave.death ? format(new Date(grave.death), "MMMM dd, yyyy") : ""}
             </h3>
             <h4 className="font-normal text-base">
               <b>Aliases: </b>

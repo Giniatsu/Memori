@@ -6,7 +6,7 @@ import InstallPWAButton from "./InstallPWAButton";
 const InstructionManual = () => {
   return (
     <div className="p-8 rounded shadow-md max-w-lg bg-white mt-4">
-      <h1 class="font-extrabold dark:text-white mb-4">Welcome To MeMori!</h1>
+      <h1 className="font-extrabold dark:text-white mb-4">Welcome To MeMori!</h1>
       <ul className="list-disc pl-4">
         <li className="text-gray-700 mb-2">
           To Search for graves entries, please proceed to the search page, you
