@@ -11,6 +11,7 @@ import ImagesSheet from "./map/images-sheet";
 import Distance from "./map/distance";
 import DirectionPolyline from "./map/direction-polyline";
 import { createClient } from "@supabase/supabase-js";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import RateButton from "./map/rate-button";
 import { HiInformationCircle } from "react-icons/hi";
 import { Button, Spinner, Alert } from "flowbite-react";
@@ -24,6 +25,8 @@ const BASE_URL =
   "https://plmqhcualnnsirfqjcsj.supabase.co/storage/v1/object/public/grave_images/";
 
 const Map = ({ graveId }) => {
+  const supabaseauth = createClientComponentClient();
+  const [user, setUser] = useState(null);
   const [graveTarget, setGraveTarget] = useState(null);
   const [isImagesOpen, setImagesOpen] = useState(false);
   const [autoZoomDisabled, setAutoZoomDisabled] = useState(false);
@@ -59,6 +62,13 @@ const Map = ({ graveId }) => {
   useEffect(() => {
     getGrave();
   }, []);
+
+  useEffect(() => {
+    const session = supabaseauth.auth.getUser();
+    session.then((val) => {
+      setUser(val.data?.user ?? null);
+    });
+  }, [supabaseauth])
 
   const dst = useMemo(() => {
     return {
@@ -157,7 +167,9 @@ const Map = ({ graveId }) => {
 
       <Button
         color="dark"
-        onClick={() => router.push(`/graves/${graveId}`)}
+        onClick={() => {!user || user.email !== graveTarget?.user_email
+          ? router.push(`/graves/${graveId}/search_result`)
+          : router.push(`/graves/${graveId}`);}}
         className="fixed top-2 left-2"
       >
         Back to Grave
