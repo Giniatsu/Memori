@@ -84,7 +84,7 @@ const RateButton = ({ dst, graveId }) => {
             </Button>
           ) : (
             <Button color="dark" onClick={() => { setOpenEndModal(undefined); setOpenRatingModal("form-elements"); }}>
-              Rate
+              Rate Accuracy
             </Button>
           ) }
         </Modal.Footer>

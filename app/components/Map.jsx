@@ -12,7 +12,8 @@ import Distance from "./map/distance";
 import DirectionPolyline from "./map/direction-polyline";
 import { createClient } from "@supabase/supabase-js";
 import RateButton from "./map/rate-button";
-import { Button } from "flowbite-react";
+import { HiInformationCircle } from "react-icons/hi";
+import { Button, Spinner, Alert } from "flowbite-react";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -26,7 +27,7 @@ const Map = ({ graveId }) => {
   const [graveTarget, setGraveTarget] = useState(null);
   const [isImagesOpen, setImagesOpen] = useState(false);
   const [autoZoomDisabled, setAutoZoomDisabled] = useState(false);
-  const [images, setImages] = useState([])
+  const [images, setImages] = useState([]);
 
   const router = useRouter();
 
@@ -79,19 +80,60 @@ const Map = ({ graveId }) => {
   });
 
   if (!isGeolocationAvailable) {
-    return <div>Your browser does not support Geolocation</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Alert
+          color="failure"
+          icon={HiInformationCircle}
+          className="m-4 text-justify"
+        >
+          <span className="font-bold">It seems your browser does not support Geolocation.</span> Please
+          use a compatible browser such as Google Chrome.
+        </Alert>
+      </div>
+    );
   }
 
   if (!isGeolocationEnabled) {
-    return <div>Geolocation is not enabled</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Alert
+          color="failure"
+          icon={HiInformationCircle}
+          className="m-4 text-justify"
+        >
+          <span className="font-bold">Gelocation is not enabled!</span> Please
+          enable it to navigate a grave.
+        </Alert>
+      </div>
+    );
   }
 
   if (positionError) {
-    return <div>{positionError.message}</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Alert
+          color="failure"
+          icon={HiInformationCircle}
+          className="m-4 text-justify"
+        >
+          <span className="font-bold">{positionError.message}</span> Something
+          went wrong!
+        </Alert>
+      </div>
+    );
   }
 
   if (!coords) {
-    return <div>Getting the location data&hellip;</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spinner
+          color="success"
+          aria-label="Center-aligned spinner example"
+          className="h-52 w-52 self-center"
+        />
+      </div>
+    );
   }
 
   return (
