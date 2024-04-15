@@ -75,7 +75,9 @@ const RateButton = ({ dst, graveId }) => {
           <h3>You have found the grave!</h3>
         </Modal.Body>
         <Modal.Footer>
-          <Button color="dark" onClick={() => router.push(`/graves/${graveId}`)}>
+          <Button color="dark" onClick={() => {user
+            ? router.push(`/graves/${graveId}`)
+            : router.push(`/graves/${graveId}/search_result`);}}>
             Back to Grave page
           </Button>
           { user ? (

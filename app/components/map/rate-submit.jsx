@@ -13,13 +13,13 @@ export default function RateSubmitBtn() {
       {pending && (
         <>
           <Spinner aria-label="addgrave spinner" size="sm" />
-          <span className="pl-2">Rating...</span>
+          <span className="pl-2">Rating Accuracy...</span>
         </>
       )}
       {!pending && (
         <>
           <MdRateReview className="mr-2 h-4 w-4" />
-          <span>Rate</span>
+          <span>Rate Accuracy</span>
         </>
       )}
     </Button>

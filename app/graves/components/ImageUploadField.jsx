@@ -136,7 +136,7 @@ export default function ImageUploadField({ id, name, existingImages, onValid }) 
   return (
     <>
       <div className="block mb-2">
-        <Label htmlFor="file" value="Upload file" />
+        <Label htmlFor="file" value="Upload Grave Images" />
       </div>
       <FileInput
         ref={fileInputRef}
