@@ -71,7 +71,7 @@ export default function ForgotPassword(props) {
 
   return (
     <div className="flex justify-center items-center">
-      <Card className="w-3/4 max-w-sm">
+      <Card className="w-full max-w-sm">
         {!isVerified && (
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <h5 className="text-xl font-medium text-gray-900 dark:text-white">
