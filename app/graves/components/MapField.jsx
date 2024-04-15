@@ -54,7 +54,7 @@ const MapField = ({ onSelect, defaultValue, ...props }) => {
         {...props}
         onClick={() => setOpenModal("form-elements")}
       >
-        Pin Location
+        Manual Pin Location
       </Button>
 
       <Modal

@@ -83,8 +83,8 @@ const CemeteryField = ({
             <Textarea
               id="cemetery_address"
               type="text"
-              rows={4}
-              className="block w-full text-sm"
+              rows={2}
+              className="block w-full text-sm border-0 bg-white"
               value={selectedCemetery?.address ?? ""}
               readOnly
             />
