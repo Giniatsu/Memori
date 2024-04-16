@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import { PT_Serif } from 'next/font/google';
 import { Merriweather } from 'next/font/google';
 import NextTopLoader from 'nextjs-toploader';
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const dynamic = "force-dynamic";
 
@@ -23,7 +24,8 @@ export default function RootLayout({ children }) {
       <body className={merriWeather.className}>
         <NextTopLoader />
         {children}
+        <SpeedInsights />
       </body>
     </html>
-  )
+  );
 }
