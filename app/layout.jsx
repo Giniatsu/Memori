@@ -13,10 +13,11 @@ const merriWeather = Merriweather({ subsets: ['latin'], weight: ['300', '400', '
 
 
 export const metadata = {
-  title: 'MeMori',
-  description: 'A Grave Finder App',
-  manifest: '/manifest.json',
-}
+  title: "MeMori",
+  description: "A Grave Finder App",
+  manifest: "/manifest.json",
+  googleSiteVerification: "EWoDLgsigWxVnAc_AN3phlF2ZZ7xVIj3u6TtGaTE9B0",
+};
 
 export default function RootLayout({ children }) {
   return (
