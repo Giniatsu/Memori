@@ -36,7 +36,7 @@ const PWAInstallComponent = ({
   const pwaInstallRef = useRef(null);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [isInstalled, setIsInstalled] = useState(false);
-  const [showCustomButton, setShowCustomButton] = useState(true);
+  const [showCustomButton, setShowCustomButton] = useState(false);
 
   // Filter out null or undefined props
   const nonNullProps = Object.fromEntries(
