@@ -1,5 +1,5 @@
 {
-  "theme_color": "#000000",
+  "theme_color": "#046b4e",
   "background_color": "#ffffff",
   "icons": [
     {
@@ -15,6 +15,43 @@
       "type": "image/png"
     }
   ],
+  "screenshots": [
+    {
+      "src": "1.jpg",
+      "sizes": "1080x1920",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "2.jpg",
+      "sizes": "1080x1920",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "3.jpg",
+      "sizes": "1080x1920",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "4.jpg",
+      "sizes": "1080x1920",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "5.jpg",
+      "sizes": "1080x1920",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "6.jpg",
+      "sizes": "1080x1920",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "7.jpg",
+      "sizes": "1080x1920",
+      "type": "image/jpeg"
+    }
+  ],
   "orientation": "portrait",
   "display": "standalone",
   "dir": "auto",
@@ -23,5 +60,28 @@
   "short_name": "MeMori",
   "start_url": "/",
   "scope": "/",
-  "description": "Application to locate graves for public cemeteries"
+  "description": "Application to locate graves for public cemeteries",
+  "shortcuts": [
+    {
+      "name": "Home",
+      "url": "https://memoriapp.vercel.app/",
+      "description": "MeMori Home"
+    },
+    {
+      "name": "Search",
+      "url": "https://memoriapp.vercel.app/search",
+      "description": "Search for a grave"
+    },
+    {
+      "name": "Login",
+      "url": "https://memoriapp.vercel.app/login",
+      "description": "Login to contribute"
+    },
+    {
+      "name": "",
+      "url": "",
+      "description": ""
+    }
+  ],
+  "categories": ["navigation"]
 }
