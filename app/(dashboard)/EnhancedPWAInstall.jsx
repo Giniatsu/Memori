@@ -130,7 +130,11 @@ const EnhancedPWAInstall = ({
   return (
     <>
       {/* <PWAInstall ref={pwaInstallRef} {...nonNullProps} /> */}
-      <pwa-install ref={pwaInstallRef} {...nonNullProps}></pwa-install>
+      <pwa-install
+        ref={pwaInstallRef}
+        {...nonNullProps}
+        install-description="Join the MeMori community. Help others find their loved ones' resting places, and contribute to a growing database of grave locations."
+      ></pwa-install>
       <button
         disabled={isInstalled} // Only if deferredPrompt is null
         onClick={handleInstallClick}
