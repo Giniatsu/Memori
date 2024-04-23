@@ -21,6 +21,14 @@ const EnhancedPWAInstall = ({
     Object.entries(props).filter(([_, value]) => value != null)
   );
 
+  useEffect(() => {
+    // Check if the PWA is already installed
+    const isInstalled =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      navigator.standalone;
+    setIsInstalled(isInstalled);
+  }, []);
+
   // Handle the standard 'beforeinstallprompt' event
   useEffect(() => {
     const handleBeforeInstallPrompt = (event) => {
