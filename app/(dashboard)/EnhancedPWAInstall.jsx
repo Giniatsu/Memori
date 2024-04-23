@@ -118,13 +118,13 @@ const EnhancedPWAInstall = ({
   ]);
   // Show custom button if deferredPrompt, else fallback to PWAInstall behavior
   const handleInstallClick = async () => {
-    if (deferredPrompt) {
+    if (pwaInstallRef.current) {
+      pwaInstallRef.current.showDialog(true);
+    } else if (deferredPrompt) {
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
       setIsInstalled(outcome === "accepted");
       setDeferredPrompt(null);
-    } else if (pwaInstallRef.current) {
-      pwaInstallRef.current.showDialog(true);
     }
   };
   return (
