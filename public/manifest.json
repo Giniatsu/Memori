@@ -61,6 +61,7 @@
   "start_url": "/",
   "scope": "/",
   "description": "Application to locate graves for public cemeteries",
+  "install-description": "Join the MeMori community. Help others find their loved ones' resting places, and contribute to a growing database of grave locations.",
   "shortcuts": [
     {
       "name": "Home",
