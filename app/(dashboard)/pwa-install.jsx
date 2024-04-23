@@ -133,12 +133,14 @@ const PWAInstallComponent = ({
     <>
       <PWAInstall ref={pwaInstallRef} {...nonNullProps} />
       {/* Original button for triggering showDialog - Displayed first */}
-      <button
-        onClick={() => pwaInstallRef.current.showDialog(true)}
-        className={`${styles["pwa-button"]} mt-4`}
-      >
-        <span className="pwa-button-text">{"Install App"}</span>
-      </button>
+      {!showCustomButton && (
+        <button
+          onClick={() => pwaInstallRef.current.showDialog(true)}
+          className={`${styles["pwa-button"]} mt-4`}
+        >
+          <span className="pwa-button-text">{"Install App"}</span>
+        </button>
+      )}
 
       {showCustomButton && <InstallPWAButton />}
     </>
