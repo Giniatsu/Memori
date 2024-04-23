@@ -129,13 +129,16 @@ const EnhancedPWAInstall = ({
   };
   return (
     <>
-      <PWAInstall ref={pwaInstallRef} {...nonNullProps} />
+      {/* <PWAInstall ref={pwaInstallRef} {...nonNullProps} /> */}
+      <pwa-install ref={pwaInstallRef} {...nonNullProps}></pwa-install>
       <button
         disabled={isInstalled} // Only if deferredPrompt is null
         onClick={handleInstallClick}
         className={`${styles["pwa-button"]} mt-4`}
       >
-        <span className="pwa-button-text">{isInstalled ? "Installed" : "Install App"}</span>
+        <span className="pwa-button-text">
+          {isInstalled ? "Installed" : "Install App"}
+        </span>
       </button>
     </>
   );
