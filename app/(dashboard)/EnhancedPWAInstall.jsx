@@ -135,7 +135,7 @@ const EnhancedPWAInstall = ({
         onClick={handleInstallClick}
         className={`${styles["pwa-button"]} mt-4`}
       >
-        <span className="pwa-button-text">{isInstalled ? "Install App" : "Installed"}</span>
+        <span className="pwa-button-text">{isInstalled ? "Installed" : "Install App"}</span>
       </button>
     </>
   );
