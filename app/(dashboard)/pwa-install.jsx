@@ -9,6 +9,7 @@ import styles from "./styles.module.css";
 */
 import "@khmyznikov/pwa-install";
 import PWAInstall from "@khmyznikov/pwa-install/dist/pwa-install.react.js";
+import InstallPWAButton from "./InstallPWAButton";
 
 /*
   manifestUrl = '/manifest.json',
@@ -33,6 +34,7 @@ const PWAInstallComponent = ({
   ...props
 }) => {
   const pwaInstallRef = useRef(null);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [isInstalled, setIsInstalled] = useState(false);
 
   // Filter out null or undefined props
@@ -115,7 +117,7 @@ const PWAInstallComponent = ({
   return (
     <>
       <PWAInstall ref={pwaInstallRef} {...nonNullProps} />
-      <button
+      {/* <button
         disabled={isInstalled}
         onClick={() => pwaInstallRef.current.showDialog(true)}
         className={`${styles["pwa-button"]} mt-4`} // Add a custom class for styling
@@ -123,7 +125,8 @@ const PWAInstallComponent = ({
         <span className="pwa-button-text">
           {isInstalled ? "Installed" : "Install App"}
         </span>
-      </button>
+      </button> */}
+      <InstallPWAButton />
     </>
   );
 };
