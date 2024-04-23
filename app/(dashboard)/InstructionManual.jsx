@@ -30,8 +30,8 @@ const InstructionManual = () => {
           experience!
         </li>
         {/* <InstallPWAButton /> */}
-        {/* <PWAInstallComponent /> */}
-        <EnhancedPWAInstall/>
+        <PWAInstallComponent />
+        {/* <EnhancedPWAInstall/> */}
       </ul>
     </div>
   );

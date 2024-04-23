@@ -47,11 +47,11 @@ const PWAInstallComponent = ({
     const currentElement = pwaInstallRef.current;
     const handleBeforeInstallPrompt = (event) => {
       event.preventDefault();
-      setShowCustomButton(true); // Show the custom button
+      setShowCustomButton(false);
     };
     const handleInstallSuccess = (event) => {
       onInstallSuccess?.(event);
-      setShowCustomButton(false);
+      setShowCustomButton(true);
     };
     const handleInstallFail = (event) => onInstallFail?.(event);
     const handleUserChoiceResult = (event) => onUserChoiceResult?.(event);
@@ -132,17 +132,15 @@ const PWAInstallComponent = ({
   return (
     <>
       <PWAInstall ref={pwaInstallRef} {...nonNullProps} />
-      {showCustomButton && <InstallPWAButton />}
+      {/* Original button for triggering showDialog - Displayed first */}
+      <button
+        onClick={() => pwaInstallRef.current.showDialog(true)}
+        className={`${styles["pwa-button"]} mt-4`}
+      >
+        <span className="pwa-button-text">{"Install App"}</span>
+      </button>
 
-      {/* Original button for triggering showDialog */}
-      {!showCustomButton && (
-        <button
-          onClick={() => pwaInstallRef.current.showDialog(true)}
-          className={`${styles["pwa-button"]} mt-4`}
-        >
-          <span className="pwa-button-text">{"Install App"}</span>
-        </button>
-      )}
+      {showCustomButton && <InstallPWAButton />}
     </>
   );
 };
