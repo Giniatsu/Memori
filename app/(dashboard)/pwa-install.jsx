@@ -1,6 +1,6 @@
 "use client";
 import * as Reactfrom from "react";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import styles from "./styles.module.css";
 
 /*  dependencies:
@@ -33,6 +33,7 @@ const PWAInstallComponent = ({
   ...props
 }) => {
   const pwaInstallRef = useRef(null);
+  const [isInstalled, setIsInstalled] = useState(false);
 
   // Filter out null or undefined props
   const nonNullProps = Object.fromEntries(
@@ -42,7 +43,7 @@ const PWAInstallComponent = ({
   useEffect(() => {
     const currentElement = pwaInstallRef.current;
 
-    const handleInstallSuccess = (event) => onInstallSuccess?.(event);
+    const handleInstallSuccess = (event) => {onInstallSuccess?.(event); setIsInstalled(true)};
     const handleInstallFail = (event) => onInstallFail?.(event);
     const handleUserChoiceResult = (event) => onUserChoiceResult?.(event);
     const handleInstallAvailable = (event) => onInstallAvailable?.(event);
@@ -113,16 +114,15 @@ const PWAInstallComponent = ({
 
   return (
     <>
-      {/* <pwa-install ref={pwaInstallRef} {...nonNullProps}></pwa-install> */}
       <PWAInstall ref={pwaInstallRef} {...nonNullProps} />
-      {/* <button onClick={() => pwaInstallRef.current.showDialog(true)}>
-        Show Install Prompt
-      </button> */}
       <button
+        disabled={isInstalled}
         onClick={() => pwaInstallRef.current.showDialog(true)}
         className={`${styles["pwa-button"]} mt-4`} // Add a custom class for styling
       >
-        <span className="pwa-button-text">{"Install App"}</span>
+        <span className="pwa-button-text">
+          {isInstalled ? "Installed" : "Install App"}
+        </span>
       </button>
     </>
   );
