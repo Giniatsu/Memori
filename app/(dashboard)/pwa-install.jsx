@@ -36,6 +36,7 @@ const PWAInstallComponent = ({
   const pwaInstallRef = useRef(null);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [isInstalled, setIsInstalled] = useState(false);
+  const [showCustomButton, setShowCustomButton] = useState(true);
 
   // Filter out null or undefined props
   const nonNullProps = Object.fromEntries(
@@ -44,8 +45,14 @@ const PWAInstallComponent = ({
 
   useEffect(() => {
     const currentElement = pwaInstallRef.current;
-
-    const handleInstallSuccess = (event) => {onInstallSuccess?.(event); setIsInstalled(true)};
+    const handleBeforeInstallPrompt = (event) => {
+      event.preventDefault();
+      setShowCustomButton(true); // Show the custom button
+    };
+    const handleInstallSuccess = (event) => {
+      onInstallSuccess?.(event);
+      setShowCustomButton(false);
+    };
     const handleInstallFail = (event) => onInstallFail?.(event);
     const handleUserChoiceResult = (event) => onUserChoiceResult?.(event);
     const handleInstallAvailable = (event) => onInstallAvailable?.(event);
@@ -53,6 +60,10 @@ const PWAInstallComponent = ({
     const handleInstallGallery = (event) => onInstallGallery?.(event);
 
     if (currentElement) {
+      currentElement.addEventListener(
+        "beforeinstallprompt",
+        handleBeforeInstallPrompt
+      );
       currentElement.addEventListener(
         "pwa-install-success-event",
         handleInstallSuccess
@@ -79,6 +90,10 @@ const PWAInstallComponent = ({
       );
 
       return () => {
+        currentElement.removeEventListener(
+          "beforeinstallprompt",
+          handleBeforeInstallPrompt
+        );
         currentElement.removeEventListener(
           "pwa-install-success-event",
           handleInstallSuccess
@@ -117,16 +132,17 @@ const PWAInstallComponent = ({
   return (
     <>
       <PWAInstall ref={pwaInstallRef} {...nonNullProps} />
-      {/* <button
-        disabled={isInstalled}
-        onClick={() => pwaInstallRef.current.showDialog(true)}
-        className={`${styles["pwa-button"]} mt-4`} // Add a custom class for styling
-      >
-        <span className="pwa-button-text">
-          {isInstalled ? "Installed" : "Install App"}
-        </span>
-      </button> */}
-      <InstallPWAButton />
+      {showCustomButton && <InstallPWAButton />}
+
+      {/* Original button for triggering showDialog */}
+      {!showCustomButton && (
+        <button
+          onClick={() => pwaInstallRef.current.showDialog(true)}
+          className={`${styles["pwa-button"]} mt-4`}
+        >
+          <span className="pwa-button-text">{"Install App"}</span>
+        </button>
+      )}
     </>
   );
 };
