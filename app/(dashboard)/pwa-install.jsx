@@ -47,11 +47,11 @@ const PWAInstallComponent = ({
     const currentElement = pwaInstallRef.current;
     const handleBeforeInstallPrompt = (event) => {
       event.preventDefault();
-      setShowCustomButton(false);
+      setShowCustomButton(true);
     };
     const handleInstallSuccess = (event) => {
       onInstallSuccess?.(event);
-      setShowCustomButton(true);
+      setShowCustomButton(false);
     };
     const handleInstallFail = (event) => onInstallFail?.(event);
     const handleUserChoiceResult = (event) => onUserChoiceResult?.(event);
