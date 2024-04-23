@@ -7,6 +7,7 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import InstructionManual from "./InstructionManual";
 import "@khmyznikov/pwa-install";
+import PWAInstallComponent from "./pwa-install";
 
 export default async function Home({ searchParams }) {
   const supabase = createServerComponentClient({ cookies });
@@ -14,7 +15,8 @@ export default async function Home({ searchParams }) {
 
   return (
     <>
-      <pwa-install></pwa-install>
+      {/* <PWAInstallComponent/> */}
+      {/* <pwa-install></pwa-install> */}
       <main className="m-5 grid grid-cols-1 justify-items-center">
         {searchParams?.auth_error === "EXCHANGE_FAILED" && (
           <div className="m-4 bg-green-700 text-white p-4 rounded-lg">

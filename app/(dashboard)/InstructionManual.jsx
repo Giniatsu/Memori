@@ -2,6 +2,7 @@
 
 import React from "react";
 import InstallPWAButton from "./InstallPWAButton";
+import PWAInstallComponent from "./pwa-install";
 const InstructionManual = () => {
   return (
     <div className="p-8 rounded shadow-md max-w-lg bg-white mt-4">
@@ -27,7 +28,8 @@ const InstructionManual = () => {
           If you haven&apos;t yet, please Install this app as PWA for a better
           experience!
         </li>
-        <InstallPWAButton />
+        {/* <InstallPWAButton /> */}
+        <PWAInstallComponent />
       </ul>
     </div>
   );
