@@ -3,6 +3,7 @@
 import React from "react";
 import InstallPWAButton from "./InstallPWAButton";
 import PWAInstallComponent from "./pwa-install";
+import EnhancedPWAInstall from "./EnhancedPWAInstall";
 const InstructionManual = () => {
   return (
     <div className="p-8 rounded shadow-md max-w-lg bg-white mt-4">
@@ -29,7 +30,8 @@ const InstructionManual = () => {
           experience!
         </li>
         {/* <InstallPWAButton /> */}
-        <PWAInstallComponent />
+        {/* <PWAInstallComponent /> */}
+        <EnhancedPWAInstall/>
       </ul>
     </div>
   );
