@@ -32,7 +32,7 @@ export default function Navigationbar({ user, profile }) {
             MeMori
           </span>
         </Navbar.Brand>
-        <div className="flex md:order-2">
+        <div className="flex md:order-2 text-white">
           <Dropdown
             inline
             label={
@@ -59,7 +59,7 @@ export default function Navigationbar({ user, profile }) {
               <LogoutButton />
             </Dropdown.Item>
           </Dropdown>
-          <Navbar.Toggle />
+          <Navbar.Toggle className="text-white hover:bg-inherit" />
         </div>
         <Navbar.Collapse>
           <Navbar.Link
@@ -96,7 +96,7 @@ export default function Navigationbar({ user, profile }) {
             MeMori
           </span>
         </Navbar.Brand>
-        <div className="flex md:order-2">
+        <div className="flex md:order-2 text-white">
           <Dropdown inline label={<Avatar rounded />}>
             <Dropdown.Item>
               <Link href="/signup">Sign Up</Link>
@@ -105,7 +105,7 @@ export default function Navigationbar({ user, profile }) {
               <Link href="/login">Log in</Link>
             </Dropdown.Item>
           </Dropdown>
-          <Navbar.Toggle />
+          <Navbar.Toggle className="text-white hover:bg-inherit" />
         </div>
         <Navbar.Collapse>
           <Navbar.Link
