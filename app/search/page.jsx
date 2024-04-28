@@ -69,7 +69,6 @@ export default function Search() {
       }
 
       setCemeteries(cemeteries);
-      console.log(cemeteries);
       setLoading(false);
     };
     load();
