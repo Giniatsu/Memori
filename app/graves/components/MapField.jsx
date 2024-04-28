@@ -80,7 +80,7 @@ const MapField = ({ onSelect, defaultValue, ...props }) => {
 
   if (!coords) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center">
         <Spinner
           color="success"
           aria-label="Center-aligned spinner example"
