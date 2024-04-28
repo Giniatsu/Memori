@@ -18,7 +18,7 @@ async function getGraves(query, page = 1, pageSize = 10) {
       cemetery ( * )
     `
     )
-    .range((page - 1) * pageSize, page * pageSize - 1); // Calculate offset based on page and pageSize
+    .range((page - 1) * pageSize, page * pageSize - 1);
 
   // Add conditions based on the query object
   if (query.cemeterylocation) {
@@ -190,15 +190,15 @@ export default function SearchList() {
   const searchParams = useSearchParams();
   const [graves, setGraves] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [totalCount, setTotalCount] = useState(0); // State to hold the total count
-  const pageSize = 10; // You can adjust the page size as needed
+  const [totalCount, setTotalCount] = useState(0); 
+  const pageSize = 10; 
   const [averageRatings, setAverageRatings] = useState([]);
 
   const pathname = usePathname();
   const { push } = useRouter();
 
-  // get params from url (basically gamita lang tong name na element sa fields)
-  // add more params here if needed, follow lang sa format/pattern
+  // get params from url
+  // add more params if needed
   const cemetery = searchParams.get("cemetery");
   const firstName = searchParams.get("first_name");
   const lastName = searchParams.get("last_name");
@@ -368,10 +368,6 @@ export default function SearchList() {
                             />
                           ))}
                       </Rating>
-                      {/* {averageRatings.find(
-                        (rating) => rating.graveId === grave.id
-                      )?.averageRating ?? "No Ratings Yet"}{" "}
-                      / 5 */}
                     </p>
                   </div>
                 </Link>
