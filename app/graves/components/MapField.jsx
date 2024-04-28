@@ -84,7 +84,7 @@ const MapField = ({ onSelect, defaultValue, ...props }) => {
         <Spinner
           color="success"
           aria-label="Center-aligned spinner example"
-          className="h-52 w-52 self-center"
+          className="h-6 w-6 self-center"
         />
       </div>
     );
