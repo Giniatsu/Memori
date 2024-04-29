@@ -15,16 +15,16 @@ async function getGraves(query, page = 1, pageSize = 10) {
     .select(
       `
       *,
-      cemetery ( * )
+      cemetery!inner ( * )
     `
     )
     .range((page - 1) * pageSize, page * pageSize - 1);
 
   // Add conditions based on the query object
-  if (query.cemeterylocation) {
+  if (query.cemeteryLocation) {
     supabase_query = supabase_query.eq(
       "cemetery.location_name",
-      query.cemeterylocation.trim()
+      query.cemeteryLocation.trim()
     );
   }
 
@@ -97,9 +97,19 @@ async function getGravesTotalCount(query) {
   // Build the count query
   let countQuery = supabase
     .from("graves")
-    .select("id", { count: "exact", head: true });
+    .select("id, cemetery!inner(location_name)", {
+      count: "exact",
+      head: true,
+    });
 
   // Add conditions based on the query object
+  if (query.cemeteryLocation) {
+    countQuery = countQuery.eq(
+      "cemetery.location_name",
+      query.cemeteryLocation.trim()
+    );
+  }
+
   if (query.cemetery) {
     countQuery = countQuery.eq("cemetery", query.cemetery.trim());
   }
@@ -199,6 +209,7 @@ export default function SearchList() {
 
   // get params from url
   // add more params if needed
+  const cemeteryLocation = searchParams.get("cemeterylocation");
   const cemetery = searchParams.get("cemetery");
   const firstName = searchParams.get("first_name");
   const lastName = searchParams.get("last_name");
@@ -216,6 +227,7 @@ export default function SearchList() {
     setLoading(true);
     getGraves(
       {
+        cemeteryLocation,
         cemetery,
         firstName,
         lastName,
@@ -235,6 +247,7 @@ export default function SearchList() {
       setLoading(false);
     });
   }, [
+    cemeteryLocation,
     cemetery,
     firstName,
     lastName,
@@ -252,6 +265,7 @@ export default function SearchList() {
 
   useEffect(() => {
     getGravesTotalCount({
+      cemeteryLocation,
       cemetery,
       firstName,
       lastName,
@@ -267,6 +281,7 @@ export default function SearchList() {
       setTotalCount(count);
     });
   }, [
+    cemeteryLocation,
     cemetery,
     firstName,
     lastName,
@@ -349,7 +364,7 @@ export default function SearchList() {
                       {grave.firstname} {grave.lastname}
                     </h5>
                     <p className="mb-3 font-normal text-gray-700">
-                      {grave.cemetery.name}
+                      {grave.cemetery.name ?? ""}
                     </p>
                     <p className="mb-3 font-semibold text-gray-700">
                       Grave Accuracy: 
